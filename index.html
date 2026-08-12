@@ -1,1 +1,493 @@
-<h1>Hello, KRYOZEN!</h1>
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kryozen Studio — Video Editing & Post-Production">
+  <meta name="theme-color" content="#08080a">
+
+  <title>KRYOZEN STUDIO — Video Editing & Post-Production</title>
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/work.css">
+  <link rel="stylesheet" href="css/services.css">
+  <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="css/contact.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/player.css">
+
+  <script>
+    document.documentElement.classList.remove("no-js");
+    document.documentElement.classList.add("js");
+  </script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <!-- ========================= NAVBAR ========================= -->
+  <header class="navbar">
+    <div class="navbar__inner container">
+
+      <a class="navbar__brand" href="#top" aria-label="Kryozen Studio home">
+        <span class="navbar__brand-mark">
+          <img data-logo-img src="" alt="">
+        </span>
+        <span class="navbar__brand-word" id="navbar-brand-word">KRYOZEN</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="navbar__links" id="navbar-links"></ul>
+      </nav>
+
+      <a
+        class="navbar__discord btn btn--sm btn--secondary"
+        id="navbar-discord"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span id="navbar-discord-label">Discord</span>
+      </a>
+
+      <button
+        class="navbar__toggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="navbar-mobile-panel"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+    <div class="navbar__mobile-panel" id="navbar-mobile-panel">
+      <nav aria-label="Mobile navigation">
+        <ul id="navbar-mobile-links"></ul>
+      </nav>
+
+      <a
+        class="navbar__mobile-discord btn btn--secondary"
+        id="navbar-mobile-discord"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span id="navbar-mobile-discord-label">Discord</span>
+      </a>
+    </div>
+  </header>
+
+
+  <main id="main-content">
+
+    <!-- ========================= HERO ========================= -->
+    <section class="hero" id="top">
+
+      <div class="hero__backdrop"></div>
+
+      <div class="hero__content container">
+
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-dot"></span>
+          <span id="hero-eyebrow-text">REEL 001 — SHOWREEL</span>
+        </div>
+
+        <div class="hero__logo-intro" aria-hidden="true">
+          <div class="hero__logo-ring"></div>
+
+          <div class="hero__logo-mark">
+            <img data-logo-img src="" alt="">
+          </div>
+        </div>
+
+        <h1 class="hero__title" id="hero-title">KRYOZEN STUDIO</h1>
+
+        <p class="hero__intro" id="hero-intro">
+          I edit AMVs, anime and gaming edits, talking-head videos, and
+          short- and long-form content for creators who care about pacing,
+          sound design, and finishing quality.
+        </p>
+
+        <div class="hero__actions">
+
+          <a
+            class="btn btn--primary"
+            id="hero-cta-primary"
+            href="#work"
+          >
+            View Work
+          </a>
+
+          <a
+            class="btn btn--secondary"
+            id="hero-cta-secondary"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discord
+          </a>
+
+        </div>
+
+        <a class="hero__scroll" href="#work">
+          <span class="hero__scroll-line"></span>
+          <span class="hero__scroll-label">Scroll</span>
+        </a>
+
+      </div>
+    </section>
+
+
+    <!-- ========================= WORK ========================= -->
+    <section class="work" id="work">
+
+      <div class="container">
+
+        <div class="work__head">
+
+          <div class="work__eyebrow">
+            <span class="work__eyebrow-dot"></span>
+            <span id="work-eyebrow-text">REEL 002 — WORK</span>
+          </div>
+
+          <h2 class="work__title" id="work-title">
+            Selected Work
+          </h2>
+
+          <p class="work__subtitle" id="work-subtitle">
+            A growing collection of edits across formats.
+          </p>
+
+        </div>
+
+
+        <div class="work__controls">
+
+          <div
+            class="work__filters"
+            id="work-filters"
+            aria-label="Filter projects"
+          ></div>
+
+          <label class="work__search">
+            <span
+              class="work__search-icon"
+              id="work-search-icon"
+              aria-hidden="true"
+            ></span>
+
+            <span
+              class="visually-hidden"
+              id="work-search-label"
+            >
+              Search projects
+            </span>
+
+            <input
+              id="work-search-input"
+              type="search"
+              placeholder="Search projects…"
+              autocomplete="off"
+            >
+          </label>
+
+        </div>
+
+
+        <div
+          class="work__empty"
+          id="work-empty"
+          hidden
+        >
+          No projects found.
+        </div>
+
+        <div
+          class="work__grid"
+          id="work-grid"
+        ></div>
+
+        <p
+          class="visually-hidden"
+          id="work-status"
+          aria-live="polite"
+        ></p>
+
+      </div>
+    </section>
+
+
+    <!-- ========================= SERVICES ========================= -->
+    <section class="services" id="services">
+
+      <div class="container">
+
+        <div class="services__head">
+
+          <div class="services__eyebrow">
+            <span class="services__eyebrow-dot"></span>
+            <span id="services-eyebrow-text">
+              REEL 004 — SERVICES
+            </span>
+          </div>
+
+          <h2 class="services__title" id="services-title">
+            Services
+          </h2>
+
+          <p class="services__subtitle" id="services-subtitle">
+            What I offer, in plain terms.
+          </p>
+
+        </div>
+
+        <div
+          class="services__empty"
+          id="services-empty"
+          hidden
+        >
+          Services coming soon.
+        </div>
+
+        <div
+          class="services__grid"
+          id="services-grid"
+        ></div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================= ABOUT ========================= -->
+    <section class="about" id="about">
+
+      <div class="container">
+
+        <div class="about__layout">
+
+          <div class="about__media">
+            <div class="about__portrait" id="about-portrait">
+              <img
+                id="about-profile-image"
+                src=""
+                alt="Kryozen"
+                loading="lazy"
+              >
+
+              <span
+                class="about__portrait-mark"
+                aria-hidden="true"
+              >
+                K
+              </span>
+            </div>
+          </div>
+
+
+          <div class="about__content">
+
+            <div class="about__eyebrow">
+              <span class="about__eyebrow-dot"></span>
+              <span id="about-eyebrow-text">
+                REEL 003 — ABOUT
+              </span>
+            </div>
+
+            <h2 class="about__title" id="about-title">
+              About
+            </h2>
+
+            <p class="about__role" id="about-role">
+              Video Editor
+            </p>
+
+            <p class="about__intro" id="about-intro">
+              The person behind the cuts.
+            </p>
+
+            <p class="about__bio" id="about-bio">
+              I've spent the last few years cutting AMVs, gaming highlights,
+              and short-form content.
+            </p>
+
+
+            <div class="about__software">
+
+              <span class="about__software-label">
+                Software
+              </span>
+
+              <div
+                class="about__software-list"
+                id="about-software"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================= CONTACT ========================= -->
+    <section class="contact" id="contact">
+
+      <div class="container">
+
+        <div class="contact__inner">
+
+          <div class="contact__eyebrow">
+            <span class="contact__eyebrow-dot"></span>
+            <span id="contact-eyebrow-text">
+              REEL 005 — CONTACT
+            </span>
+          </div>
+
+          <h2 class="contact__title" id="contact-title">
+            Let's Work Together
+          </h2>
+
+          <p class="contact__subtitle" id="contact-subtitle">
+            Send over your footage and a deadline — happy to talk through
+            scope before you commit to anything.
+          </p>
+
+          <div
+            class="contact__methods"
+            id="contact-methods"
+          ></div>
+
+          <p
+            class="contact__empty"
+            id="contact-empty"
+            hidden
+          >
+            Contact links coming soon.
+          </p>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================= FOOTER ========================= -->
+  <footer class="footer">
+
+    <div class="footer__inner container">
+
+      <p class="footer__copy" id="footer-copy">
+        © 2026 Kryozen Studio. All rights reserved.
+      </p>
+
+      <p class="footer__note" id="footer-note">
+        Edits available worldwide, remote &amp; async.
+      </p>
+
+      <div
+        class="footer__social"
+        id="footer-social"
+        aria-label="Social links"
+      ></div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ========================= VIDEO PLAYER ========================= -->
+  <dialog
+    class="player"
+    id="player"
+    aria-labelledby="player-title"
+  >
+
+    <button
+      class="player__close"
+      id="player-close"
+      type="button"
+      aria-label="Close video player"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      >
+        <line x1="5" y1="5" x2="19" y2="19"></line>
+        <line x1="19" y1="5" x2="5" y2="19"></line>
+      </svg>
+    </button>
+
+    <div
+      class="player__media"
+      id="player-media"
+    ></div>
+
+    <div class="player__info">
+
+      <span
+        class="player__category"
+        id="player-category"
+      ></span>
+
+      <h2
+        class="player__title"
+        id="player-title"
+      ></h2>
+
+      <p
+        class="player__description"
+        id="player-description"
+      ></p>
+
+      <div
+        class="player__software"
+        id="player-software"
+      ></div>
+
+    </div>
+
+  </dialog>
+
+
+  <div
+    class="grain-overlay"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- ========================= JAVASCRIPT ========================= -->
+
+  <script src="config/site.config.js"></script>
+
+  <script src="js/content-loader.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/hero-intro.js"></script>
+  <script src="js/work.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/about.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html><h1>Hello, KRYOZEN!</h1>
+
