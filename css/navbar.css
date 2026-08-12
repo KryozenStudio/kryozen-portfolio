@@ -139,6 +139,16 @@
   height: 44px;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
+  transition: background-color var(--duration-fast) var(--ease-out), transform 220ms var(--ease-spring);
+}
+
+.navbar__toggle:hover {
+  background: var(--color-surface);
+}
+
+.navbar__toggle:active {
+  transition: transform 90ms var(--ease-out);
+  transform: scale(0.94);
 }
 
 .navbar__toggle-bar {

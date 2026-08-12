@@ -44,8 +44,8 @@
       '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="26" height="22" rx="2"/><line x1="7" y1="16" x2="33" y2="16"/><line x1="7" y1="24" x2="33" y2="24"/></svg>',
     gaming:
       '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="28" height="14" rx="7"/><circle cx="15" cy="21" r="1.4" fill="currentColor" stroke="none"/><circle cx="25" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="29" cy="21" r="1.4" fill="currentColor" stroke="none"/></svg>',
-    music:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="27" r="4"/><circle cx="26" cy="23" r="4"/><path d="M18 27V9l12-3v14"/></svg>',
+    talkinghead:
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="15" y="6" width="10" height="18" rx="5"/><path d="M10 18a10 10 0 0 0 20 0"/><line x1="20" y1="28" x2="20" y2="34"/><line x1="13" y1="34" x2="27" y2="34"/></svg>',
     thumbnail:
       '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="28" height="24" rx="3"/><circle cx="14" cy="16" r="2.2" fill="currentColor" stroke="none"/><path d="M8 27 L16 19 L22 25 L27 18 L32 27"/></svg>',
   };

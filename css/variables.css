@@ -111,6 +111,11 @@
   --------------------------------------------------------------------- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Gentle back-out — a slight overshoot past the resting value before
+     settling. Used only for the "release" half of press interactions
+     (buttons, cards, chips) — the "press" half stays a plain, fast
+     --ease-out so the down-stroke feels decisive rather than springy. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --duration-fast: 180ms;
   --duration-base: 320ms;
   --duration-slow: 600ms;

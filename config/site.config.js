@@ -9,10 +9,6 @@
  *
  * Colors/theme live in /css/variables.css (see the "COLOR SYSTEM" comment
  * at the top of that file) since they need to be real CSS custom properties.
- *
- * Sections marked "(future)" are not rendered by the current foundation
- * build — they exist here so the Work / Services / About sections can be
- * built later without redesigning the config schema.
  * =============================================================================
  */
 
@@ -64,7 +60,7 @@ window.SITE_CONFIG = {
     eyebrow: "REEL 001 — SHOWREEL",
     heading: "KRYOZEN STUDIO",
     intro:
-      "I edit AMVs, anime and gaming edits, talking-head videos, and short- and long-form content for creators who care about pacing, sound design, and finishing quality. Based on client footage, built into something worth watching twice.",
+      "I edit AMVs, gaming highlights, anime edits, and talking-head content — short-form and long-form alike — built around pacing, sound design, and a clean finish.",
     ctaPrimary: {
       label: "View Work",
       href: "#work",
@@ -85,7 +81,6 @@ window.SITE_CONFIG = {
     { name: "Discord", href: "https://discordapp.com/users/1375134237455417444", icon: "discord" },
     { name: "YouTube", href: "https://youtube.com/@kryozen-nv?si=t0jSVNsM5yNuyoPC", icon: "youtube" },
     { name: "Instagram", href: "#", icon: "instagram" },
-    { name: "TikTok", href: "#", icon: "tiktok" },
     { name: "Twitter", href: "#", icon: "twitter" },
   ],
 
@@ -116,13 +111,17 @@ window.SITE_CONFIG = {
   // Add or remove categories here — the filter chips in the Work section
   // are generated entirely from this array. Each project's `category`
   // field (below) must match one of these strings exactly.
+  //
+  // "Short Form" is the umbrella category for quick vertical/quick-cut
+  // edits (Reels, Shorts, and similar) rather than one entry per
+  // platform — keeps the filter list from fragmenting into near-
+  // duplicate categories as platforms come and go.
   // ---------------------------------------------------------------------
   categories: [
     "AMV",
     "Gaming",
     "Anime",
-    "TikTok",
-    "YouTube Shorts",
+    "Short Form",
     "Long-form",
     "Trailers",
     "Thumbnail Design",
@@ -140,7 +139,7 @@ window.SITE_CONFIG = {
     role: "Video Editor",
     profileImage: "assets/images/profile/profile.jpg",
     intro: "The person behind the cuts.",
-    bio: "I've spent the last few years cutting AMVs, gaming highlights, and short-form content — chasing the same thing every time: a cut that feels inevitable, not just correct. Every project starts from the footage, not a template.",
+    bio: "I cut AMVs, gaming highlights, and short-form edits — chasing the same thing every time: a cut that feels inevitable, not just correct. Every project starts from the footage, not a template.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name
@@ -173,7 +172,7 @@ window.SITE_CONFIG = {
     {
       id: "short-form",
       title: "Short-Form Video Editing",
-      description: "TikTok, Reels, and YouTube Shorts cut for retention — fast pacing, clean captions, built for the scroll.",
+      description: "Reels and Shorts cut for retention — fast pacing, clean captions, built for the scroll.",
       icon: "shortform",
     },
     {
@@ -189,10 +188,10 @@ window.SITE_CONFIG = {
       icon: "gaming",
     },
     {
-      id: "music-videos",
-      title: "Music Videos",
-      description: "Narrative and performance-style music video edits, graded and paced to the track.",
-      icon: "music",
+      id: "talking-head",
+      title: "Talking-Head Editing",
+      description: "Interview, podcast, and vlog-style edits — clean cuts, paced dialogue, and captions that keep viewers watching.",
+      icon: "talkinghead",
     },
     {
       id: "thumbnail-design",
@@ -206,10 +205,10 @@ window.SITE_CONFIG = {
   // CONTACT — read by js/contact.js. Deliberately has no form fields: the
   // Contact section is link/button based only (see PROJECT_RULES.md →
   // "Contact Section" → "No contact form"). Discord/YouTube/Instagram/
-  // TikTok/Twitter are NOT duplicated here — js/contact.js reads them
-  // straight from the existing `social` array above, same links the
-  // footer already uses. Only `email` is new, since no address existed
-  // anywhere in the project before this phase.
+  // Twitter are NOT duplicated here — js/contact.js reads them straight
+  // from the existing `social` array above, same links the footer
+  // already uses. Only `email` is new, since no address existed anywhere
+  // in the project before this phase.
   // =========================================================================
   contact: {
     eyebrow: "REEL 005 — CONTACT",

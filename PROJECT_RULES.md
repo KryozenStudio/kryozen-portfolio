@@ -121,8 +121,8 @@ there is enough — no other file needs to change.
 
 **Thumbnail fallback:** if `project.thumbnail` is empty, or the image fails
 to load, the card shows a gradient + category-label placeholder instead of
-a broken image. This is why the sample projects shipped with this build
-still look intentional before you've added real thumbnail files.
+a broken image — so a project can be added before its thumbnail is ready
+without ever looking broken.
 
 **Filtering/search:** both run entirely client-side against the in-memory
 `projects` array (see PROJECT_RULES.md §9.5) — there is no reload and no
@@ -136,6 +136,19 @@ custom event with the full project object as `event.detail`. `js/player.js`
 is the sole listener — see §2b "Video Player System" below for the full
 open/close/playback contract. `js/work.js` itself has no knowledge of the
 player; it only ever dispatches the event.
+
+**Future upload/project-management readiness:** this project intentionally
+does *not* have a way to add projects through the website itself — GitHub
+Pages can't write back to the repository, and building a fake "upload"
+button that can't actually persist anything would be misleading. What it
+does have is a project data shape (`id`/`title`/`category`/`thumbnail`/
+`video`/`description`/`software`/`date`) that already lives in exactly one
+place (`config.projects`) and nowhere else — no project information is
+duplicated into any other file. If a future tool (a small local script, a
+CMS, a build step) is built to generate or edit entries in this array, it
+only needs to target this one array in this one file; nothing about
+`js/work.js`, `js/player.js`, or the card/filter/search rendering needs to
+change to support it.
 
 ---
 
@@ -190,7 +203,7 @@ new cleanup steps to that one `close` listener.
   (`config.player.noVideoText` vs `config.player.videoUnavailableText`)
   but are visually identical.
 - Aspect ratio is intentionally not fixed — projects span 16:9, 9:16
-  (TikTok/Shorts), and wider trailer crops. The `<video>` sizes itself
+  (vertical short-form), and wider trailer crops. The `<video>` sizes itself
   (`max-height: 70vh`, `width: 100%`, `height: auto`) inside a
   flex-centered black `.player__media`, so nothing gets cropped.
 
@@ -268,7 +281,7 @@ link/button-based only: email (`mailto:`) plus whatever's in
 `config.social`.
 
 **Reuses `config.social` instead of duplicating contact links.** Discord,
-YouTube, Instagram, TikTok, and Twitter are *not* re-entered anywhere in
+YouTube, Instagram, and Twitter are *not* re-entered anywhere in
 `config.contact` — `js/contact.js` reads the existing `config.social`
 array directly (the same links the footer already renders) and only adds
 one new thing on top: `config.contact.email`. If you add a new entry to
@@ -276,9 +289,9 @@ one new thing on top: `config.contact.email`. If you add a new entry to
 Contact-specific config needed.
 
 **Icon set:** `js/contact.js` keeps its own small local copy of the
-`discord`/`youtube`/`instagram`/`tiktok`/`twitter` glyphs (plus a new
-`email` glyph) rather than importing `js/content-loader.js`'s icon map —
-this matches the precedent `js/work.js` already set of each section file
+`discord`/`youtube`/`instagram`/`twitter` glyphs (plus a new `email`
+glyph) rather than importing `js/content-loader.js`'s icon map — this
+matches the precedent `js/work.js` already set of each section file
 owning a small local icon set instead of sharing one across files.
 
 **Fallback behavior:** a method with no `href` still renders with `href="#"`
@@ -349,9 +362,28 @@ Use the fluid `clamp()` scale already defined in `variables.css`
 4. **No infinite animations except deliberate ambient ones** (the REC dot
    pulse, the scroll cue) — and even those must be subtle (low-amplitude,
    slow, easy to ignore).
-5. Keep the "film" motif intact when adding new motion — dissolve/wipe/iris
-   metaphors are on-brand, glossy "bounce" easing generally is not.
-   Stick to `--ease-out` / `--ease-in-out`.
+5. Keep the "film" motif intact for *content* motion — dissolve/wipe/iris
+   metaphors are on-brand for reveals (the hero intro, filter/search
+   transitions). `--ease-out` / `--ease-in-out` remain the default for
+   anything that isn't a direct press.
+6. **`--ease-spring` is reserved for interactive press/release feedback
+   only** — buttons, cards, filter chips, the player close button, the
+   navbar toggle. It is a deliberate, scoped exception to rule 5, not a
+   general replacement for it: don't use it for section reveals, the
+   hero intro, or anything that isn't responding to a direct
+   click/tap/hover. Every element using it follows the same two-rule
+   pattern so the "press" and "release" halves can use different easing:
+   ```css
+   .thing {
+     transition: transform 220ms var(--ease-spring); /* release: eases back with a slight overshoot */
+   }
+   .thing:active {
+     transition: transform 90ms var(--ease-out); /* press: fast, decisive, no bounce */
+     transform: scale(0.97);
+   }
+   ```
+   Keep press scale in the `0.94`–`0.98` range — anything smaller reads as
+   a jump, not a press.
 
 ---
 
