@@ -1,0 +1,87 @@
+/**
+ * =============================================================================
+ * FOOTER
+ * Simple, quiet, premium. No animation here — the intro already spent the
+ * page's motion budget.
+ * =============================================================================
+ */
+
+.footer {
+  position: relative;
+  border-top: 1px solid var(--color-surface-border);
+  padding: var(--space-lg) 0 calc(var(--space-lg) + env(safe-area-inset-bottom, 0));
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+}
+
+.footer__copy {
+  font-size: var(--fs-small);
+  color: var(--color-text-tertiary);
+}
+
+.footer__note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------------
+   SOCIAL ICONS
+--------------------------------------------------------------------- */
+.footer__social {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.footer__social-link {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  color: var(--color-text-secondary);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.footer__social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer__social-link:hover,
+.footer__social-link:focus-visible {
+  color: var(--color-text-primary);
+  border-color: var(--color-accent-bright);
+  background: var(--color-accent-glow-soft);
+  transform: translateY(-2px);
+}
+
+@media (min-width: 640px) {
+  .footer__inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .footer__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+}
