@@ -118,6 +118,21 @@ window.SITE_CONFIG = {
     "Long Form",
     "Thumbnail Design",
   ],
+  categoryPages: {
+    "Short Form": "short-form.html",
+    "Gaming": "gaming.html",
+    "Anime / AMV": "anime-amv.html",
+    "Long Form": "long-form.html",
+    "Thumbnail Design": "thumbnail-design.html",
+  },
+
+  categoryDescriptions: {
+    "Short Form": "Fast, focused edits built for vertical viewing — clean pacing, captions, motion, and strong visual hierarchy.",
+    "Gaming": "Gameplay edits shaped around rhythm, reactions, sound, and purposeful visual energy.",
+    "Anime / AMV": "Cinematic anime edits built around music, motion, typography, atmosphere, and emotional timing.",
+    "Long Form": "Longer-form editing with clearer structure, pacing, context, and retention-focused presentation.",
+    "Thumbnail Design": "High-contrast thumbnail design with clear hierarchy and a strong first-frame impression.",
+  },
 
   // =========================================================================
   // ABOUT — read by js/about.js. Extends the `about` object first added in
@@ -131,7 +146,7 @@ window.SITE_CONFIG = {
     role: "Video Editor",
     profileImage: "",
     intro: "The person behind the cuts.",
-    bio: "I’m Kryozen, a video editor focused on short-form, gaming, and anime/AMV work. I study references closely, rebuild the visual language as accurately as I can, then add my own emotion to the final cut. My current strengths are beat sync, typography, captions, thumbnails, and compositing — and I’m always refining the craft.",
+    bio: "Kryozen is an independent video editor focused on short-form, gaming, and anime/AMV work. Each edit starts with close attention to the reference, rhythm, and visual intent, then is shaped into a clean, purposeful final piece. The work focuses on pacing, beat sync, typography, captions, compositing, and thumbnail design — with an ongoing focus on improving the craft.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name

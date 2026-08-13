@@ -42,6 +42,7 @@
   ----------------------------------------------------------------- */
   var toggle = document.querySelector(".navbar__toggle");
   var panel = document.getElementById("navbar-mobile-panel");
+  var closeButton = document.getElementById("navbar-mobile-close");
 
   if (toggle && panel) {
     var closeMenu = function () {
@@ -55,6 +56,8 @@
       panel.classList.add("is-open");
       document.body.style.overflow = "hidden";
     };
+
+    if (closeButton) closeButton.addEventListener("click", closeMenu);
 
     toggle.addEventListener("click", function () {
       var isOpen = toggle.getAttribute("aria-expanded") === "true";

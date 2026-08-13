@@ -24,11 +24,49 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 60% 45% at 50% 28%, var(--color-accent-glow-soft), transparent 70%),
-    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0, 0, 0, 0.6), transparent 70%),
-    linear-gradient(180deg, var(--color-bg) 0%, #050506 100%);
+    radial-gradient(ellipse 70% 55% at 50% 18%, rgba(195,20,50,.12), transparent 70%),
+    radial-gradient(ellipse 90% 65% at 50% 100%, rgba(0,0,0,.72), transparent 70%),
+    linear-gradient(180deg, #08080a 0%, #050506 100%);
   background-color: var(--color-bg);
+  isolation: isolate;
 }
+
+.hero__ambient {
+  position: absolute;
+  width: 48vw;
+  height: 38vw;
+  min-width: 320px;
+  min-height: 260px;
+  border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%;
+  background: radial-gradient(circle at 35% 35%, rgba(226,33,63,.22), rgba(195,20,50,.08) 42%, transparent 72%);
+  filter: blur(56px);
+  opacity: .75;
+  will-change: transform, border-radius;
+  mix-blend-mode: screen;
+}
+.hero__ambient--one {
+  top: 7%;
+  left: 6%;
+  animation: ambientMorphOne 30s linear infinite;
+}
+.hero__ambient--two {
+  right: -4%;
+  top: 30%;
+  width: 42vw;
+  height: 34vw;
+  opacity: .52;
+  animation: ambientMorphTwo 36s linear infinite;
+}
+.hero__ambient--three {
+  left: 25%;
+  bottom: -16%;
+  width: 55vw;
+  height: 32vw;
+  opacity: .35;
+  filter: blur(72px);
+  animation: ambientMorphThree 42s linear infinite;
+}
+
 
 .hero__content {
   position: relative;
@@ -129,11 +167,13 @@
 .hero__title {
   position: relative;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
+  white-space: nowrap;
+  max-width: 100%;
   font-size: var(--fs-hero);
   line-height: .92;
-  letter-spacing: .02em;
+  letter-spacing: -.015em;
   text-indent: 0;
   opacity: 1;
   isolation: isolate;
@@ -262,9 +302,10 @@
 }
 
 @keyframes wordmarkCharIn {
-  0%{opacity:0;transform:translateY(.22em) scale(.92);filter:blur(9px);letter-spacing:.08em}
-  68%{opacity:1;transform:translateY(-.012em) scale(1.006);filter:blur(0);letter-spacing:.025em}
-  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);letter-spacing:.02em}
+  0%{opacity:0;transform:translateY(.28em) scale(.88);filter:blur(9px);letter-spacing:.08em}
+  58%{opacity:1;transform:translateY(-.035em) scale(1.025);filter:blur(0);letter-spacing:.005em}
+  78%{transform:translateY(.012em) scale(.995)}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);letter-spacing:-.015em}
 }
 @keyframes wordmarkLineIn {0%{opacity:0;transform:scaleX(0)}35%{opacity:.75}100%{opacity:.35;transform:scaleX(1)}}
 
@@ -344,6 +385,36 @@
 @media(max-width:640px){
   .hero__logo-intro{width:112px;height:112px}
   .hero__logo-mark{width:112px;height:112px;border-radius:20px}
-  .hero__title{font-size:clamp(2.8rem,14vw,5rem);max-width:100%}
-  .hero__title-char{animation-delay:calc(1320ms + (var(--i) * 34ms))}
+  .hero__title{font-size:clamp(2.35rem,11.5vw,5rem);max-width:100%;letter-spacing:-.02em}
+  .hero__title-char{animation-delay:calc(1320ms + (var(--i) * 32ms))}
+}
+
+@keyframes ambientMorphOne {
+  0% { transform: translate3d(-2%, -1%, 0) scale(.96) rotate(-3deg); border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%; }
+  25% { transform: translate3d(6%, 5%, 0) scale(1.06) rotate(3deg); border-radius: 43% 57% 37% 63% / 58% 41% 59% 42%; }
+  50% { transform: translate3d(13%, -3%, 0) scale(1.02) rotate(8deg); border-radius: 68% 32% 52% 48% / 36% 64% 42% 58%; }
+  75% { transform: translate3d(5%, -7%, 0) scale(.98) rotate(2deg); border-radius: 47% 53% 61% 39% / 40% 63% 37% 60%; }
+  100% { transform: translate3d(-2%, -1%, 0) scale(.96) rotate(-3deg); border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%; }
+}
+@keyframes ambientMorphTwo {
+  0% { transform: translate3d(3%, 4%, 0) scale(1) rotate(4deg); border-radius: 36% 64% 55% 45% / 61% 35% 65% 39%; }
+  25% { transform: translate3d(-7%, -4%, 0) scale(1.1) rotate(-2deg); border-radius: 58% 42% 43% 57% / 46% 60% 40% 54%; }
+  50% { transform: translate3d(-3%, 10%, 0) scale(.94) rotate(-12deg); border-radius: 47% 53% 68% 32% / 57% 43% 57% 43%; }
+  75% { transform: translate3d(7%, 1%, 0) scale(1.05) rotate(5deg); border-radius: 41% 59% 61% 39% / 63% 37% 55% 45%; }
+  100% { transform: translate3d(3%, 4%, 0) scale(1) rotate(4deg); border-radius: 36% 64% 55% 45% / 61% 35% 65% 39%; }
+}
+@keyframes ambientMorphThree {
+  0% { transform: translate3d(-6%, 2%, 0) scale(.95); border-radius: 63% 37% 44% 56% / 52% 61% 39% 48%; }
+  25% { transform: translate3d(4%, -5%, 0) scale(1.06); border-radius: 42% 58% 59% 41% / 62% 38% 55% 45%; }
+  50% { transform: translate3d(2%, 5%, 0) scale(1.02); border-radius: 55% 45% 34% 66% / 43% 57% 63% 37%; }
+  75% { transform: translate3d(-8%, -2%, 0) scale(.98); border-radius: 57% 43% 47% 53% / 39% 64% 36% 61%; }
+  100% { transform: translate3d(-6%, 2%, 0) scale(.95); border-radius: 63% 37% 44% 56% / 52% 61% 39% 48%; }
+}
+
+@media (max-width: 640px) {
+  .hero__ambient { min-width: 280px; min-height: 220px; filter: blur(46px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__ambient { animation: none; }
 }

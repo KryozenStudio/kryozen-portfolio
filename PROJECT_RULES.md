@@ -499,3 +499,30 @@ For whatever *does* come next:
 
 ## LOCAL MANAGER SECURITY
 The Studio Manager is a local preparation tool only. Its browser passcode is a convenience gate, not authentication, because GitHub Pages is static. Never place GitHub tokens, API keys, passwords, or other secrets in frontend code. Do not describe this local gate as secure server-side authentication.
+
+
+---
+
+## Phase 3 amendment — Public category pages and authenticated admin
+
+The public portfolio is now intentionally:
+
+`Homepage → Category page`
+
+The category pages are `short-form.html`, `gaming.html`, `anime-amv.html`,
+`long-form.html`, and `thumbnail-design.html`. No project-detail hierarchy is
+introduced.
+
+The secure admin architecture is separate from the GitHub Pages frontend.
+`admin.html` uses Google OAuth through Supabase Auth. Authorization is enforced
+by the `public.admin_users` allowlist and PostgreSQL Row Level Security in
+`supabase/schema.sql`. The browser must never receive a service-role key and
+must never collect a Google password.
+
+When the Supabase backend is configured, published projects are read from the
+`projects` table by `js/project-source.js`; if the backend is unavailable, the
+site falls back to the static `config.projects` data so the public site remains
+deployable.
+
+The local `studio-manager.html` is retained as a legacy local preparation
+utility and is not a substitute for the authenticated admin system.

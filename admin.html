@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Kryozen Studio — Admin</title><meta name="theme-color" content="#08080a"><meta name="color-scheme" content="dark">
+<link rel="icon" href="assets/images/logo/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/reset.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/buttons.css"><link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<main class="admin-shell">
+<header class="admin-head"><a href="index.html" class="admin-back">← Kryozen Studio</a><div><p class="manager-kicker">PRIVATE / ADMIN</p><h1>Studio Manager</h1><p>Authenticated portfolio management. Google handles sign-in; database permissions decide who is an admin.</p></div></header>
+<section class="admin-card" id="setup-card" hidden><p class="manager-kicker">SETUP REQUIRED</p><h2>Connect the admin backend</h2><p>Add the Supabase project URL and browser-safe anon key to <code>config/backend.config.js</code>, then configure Google OAuth and the SQL schema in <code>supabase/schema.sql</code>.</p></section>
+<section class="admin-card admin-auth-card" id="auth-card"><div><p class="manager-kicker">AUTHENTICATION</p><h2 id="auth-title">Admin access</h2><p id="auth-copy">Sign in with Google. Kryozen never asks for or stores your Google password.</p></div><button class="btn btn--primary" id="google-login" type="button">Continue with Google</button><button class="btn btn--secondary" id="logout" type="button" hidden>Log out</button></section>
+<p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
+<section id="dashboard" hidden>
+<div class="admin-grid">
+<article class="admin-card"><div class="admin-card__head"><div><p class="manager-kicker">PORTFOLIO</p><h2 id="form-title">Add project</h2></div><button class="btn btn--secondary btn--sm" id="new-project" type="button">New</button></div>
+<form id="project-form" class="admin-form">
+<input id="project-id" type="hidden">
+<label>Title<input id="project-title" maxlength="120" required></label>
+<div class="admin-form__row"><label>Category<select id="project-category" required></select></label><label>Date<input id="project-date" type="date" required></label></div>
+<label>Description<textarea id="project-description" rows="4" maxlength="800"></textarea></label>
+<div class="admin-form__row"><label>Thumbnail URL<input id="project-thumbnail" type="url" placeholder="https://..."></label><label>Video URL<input id="project-video" type="url" placeholder="https://..."></label></div>
+<label>Software<input id="project-software" value="Node Video"></label>
+<label class="admin-check"><input id="project-featured" type="checkbox"> Feature project</label>
+<label class="admin-check"><input id="project-published" type="checkbox" checked> Publish</label>
+<div class="admin-form__actions"><button class="btn btn--primary" type="submit">Save project</button><button class="btn btn--secondary" id="delete-project" type="button" hidden>Delete</button></div>
+</form></article>
+<article class="admin-card"><div class="admin-card__head"><div><p class="manager-kicker">LIBRARY</p><h2>Projects</h2></div><span class="admin-count" id="project-count">0</span></div><div class="admin-project-list" id="project-list"></div></article>
+</div>
+<article class="admin-card"><p class="manager-kicker">SECURITY</p><h2>Authorization status</h2><p id="security-status">Loading…</p><p class="admin-note">The browser only receives the public anon key. Project writes are protected by Supabase Row Level Security and an admin allowlist. Never place a service-role key in this repository.</p></article>
+</section>
+</main>
+<script src="config/site.config.js"></script><script src="config/backend.config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/backend.js"></script><script src="js/admin-auth.js"></script>
+</body></html>

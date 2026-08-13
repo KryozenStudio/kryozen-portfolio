@@ -80,7 +80,7 @@
         var li = document.createElement("li");
         var a = document.createElement("a");
         a.className = "navbar__link";
-        a.href = link.href;
+        a.href = normalizeNavHref(link.href);
         a.textContent = link.label;
         li.appendChild(a);
         desktopList.appendChild(li);
@@ -89,7 +89,7 @@
         var mLi = document.createElement("li");
         var mA = document.createElement("a");
         mA.className = "navbar__mobile-link";
-        mA.href = link.href;
+        mA.href = normalizeNavHref(link.href);
         mA.textContent = link.label;
         mLi.appendChild(mA);
         mobileList.appendChild(mLi);
@@ -103,6 +103,8 @@
   if (cfg.hero) {
     setText("hero-eyebrow-text", cfg.hero.eyebrow);
     setText("hero-title", cfg.hero.heading);
+    var heroTitle = document.getElementById("hero-title");
+    if (heroTitle && cfg.hero.heading) heroTitle.setAttribute("data-wordmark", cfg.hero.heading);
     setText("hero-intro", cfg.hero.intro);
 
     if (cfg.hero.ctaPrimary) {

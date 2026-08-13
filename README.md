@@ -450,3 +450,51 @@ npx serve .
 ```
 
 Then visit `http://localhost:8000`.
+
+
+## Phase 3 — Dedicated category pages + secure admin architecture
+
+The public portfolio now supports one page per category:
+
+- `short-form.html`
+- `gaming.html`
+- `anime-amv.html`
+- `long-form.html`
+- `thumbnail-design.html`
+
+The homepage remains the primary entry point. Category pages do not introduce
+project-detail or subcategory levels.
+
+### Admin backend setup
+
+The public site remains GitHub Pages compatible. The private manager uses
+Supabase Auth + Google OAuth + PostgreSQL Row Level Security.
+
+1. Create a Supabase project.
+2. In Authentication → Providers, enable Google OAuth and configure Google's
+   OAuth client/redirect settings for the deployed GitHub Pages origin.
+3. Run `supabase/schema.sql` in the Supabase SQL editor.
+4. Sign in once through `admin.html` with the intended Google account.
+5. In Supabase SQL, insert that authenticated user's UUID into
+   `public.admin_users`, for example:
+
+```sql
+insert into public.admin_users (user_id, active)
+values ('YOUR_AUTH_USER_UUID', true);
+```
+
+6. Put the Supabase project URL and browser-safe anon key in
+   `config/backend.config.js`.
+
+The anon key is safe to ship in a browser only because RLS policies enforce
+authorization. Never put a Supabase service-role key in this repository.
+
+Google passwords are never collected by Kryozen. Google handles account
+authentication and any Google-side 2-step verification. The database
+allowlist then decides whether the authenticated account is an authorized
+Kryozen admin.
+
+Until those backend values are configured, the existing static
+`studio-manager.html` remains available as the old local preparation tool;
+`admin.html` intentionally shows a setup state rather than pretending it is
+secure.

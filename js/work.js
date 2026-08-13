@@ -69,6 +69,19 @@
       })
     : [];
 
+  async function hydrateFromBackend() {
+    if (!window.Kryozen || typeof window.Kryozen.getProjects !== "function") return;
+    var remote = await window.Kryozen.getProjects();
+    if (!Array.isArray(remote)) return;
+    projects = remote.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+    window.Kryozen.projects = projects;
+    window.Kryozen.getLatestProject = function () { return projects.length ? projects[0] : null; };
+    grid.innerHTML = "";
+    cardEls = [];
+    buildCards();
+    applyFilters();
+  }
+
   // Exposed for a future homepage "latest project" highlight — see
   // PROJECT_RULES.md → "Work / Portfolio System". Not consumed yet.
   window.Kryozen = window.Kryozen || {};
@@ -289,6 +302,7 @@
   buildFilters();
   buildCards();
   applyFilters();
+  hydrateFromBackend();
 
   if (searchInput) {
     searchInput.addEventListener("input", applyFilters);
