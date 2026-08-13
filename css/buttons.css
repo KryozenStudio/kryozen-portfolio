@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * BUTTONS
- * Shared between the hero CTAs and the navbar's Discord pill.
+ * Shared by primary and secondary calls-to-action across the site.
  * =============================================================================
  */
 
@@ -46,7 +46,7 @@
 .btn--primary:hover,
 .btn--primary:focus-visible {
   box-shadow: 0 10px 34px var(--color-accent-glow);
-  transform: translateY(-1px) scale(1.015);
+  transform: translateY(-1px) scale(1.01);
 }
 
 /* Secondary — glass outline, quieter, sits next to primary. */
@@ -62,10 +62,10 @@
 .btn--secondary:focus-visible {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--color-accent-bright);
-  transform: translateY(-1px) scale(1.015);
+  transform: translateY(-1px) scale(1.01);
 }
 
-/* Small pill variant — used for the navbar's Discord button. */
+/* Small pill variant for compact controls. */
 .btn--sm {
   min-height: 38px;
   padding: 0 var(--space-md);

@@ -86,8 +86,8 @@
 .work__filter-chip {
   min-height: 40px;
   padding: 0 var(--space-md);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025));
   border: 1px solid var(--color-surface-border);
   color: var(--color-text-secondary);
   font-family: var(--font-body);
@@ -117,7 +117,7 @@
   background: linear-gradient(155deg, var(--color-accent-bright), var(--color-accent-dim));
   border-color: transparent;
   color: var(--color-text-on-accent);
-  transform: scale(1.03);
+  transform: scale(1.01);
 }
 
 /* ---------------------------------------------------------------------
@@ -174,8 +174,12 @@
    EMPTY STATE
 --------------------------------------------------------------------- */
 .work__empty {
-  padding: var(--space-2xl) 0;
+  padding: var(--space-xl) var(--space-md);
+  margin-top: var(--space-md);
   text-align: center;
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
   font-family: var(--font-mono);
   font-size: var(--fs-small);
   letter-spacing: var(--ls-wide);
@@ -354,3 +358,5 @@
 .project-card__software::before {
   content: "· ";
 }
+
+.project-card__featured{position:absolute;top:12px;left:12px;z-index:2;padding:6px 9px;border-radius:999px;background:rgba(8,8,10,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font:600 .62rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-primary)}

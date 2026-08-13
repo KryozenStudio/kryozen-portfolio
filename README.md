@@ -92,7 +92,7 @@ your domain, then point your domain's DNS at GitHub Pages per
      isRaster: false, // set true if you used a PNG/WebP/JPG
    },
    ```
-3. Reload the page — the navbar mark and the hero intro logo both update
+3. Reload the page — the navbar mark updates; the hero intro uses the separate supplied brand artwork
    automatically (they share the same config value).
 
 The hero intro animation (iris reveal + countdown ring) works with any
@@ -130,31 +130,27 @@ Open `config/site.config.js`:
 social: [
   { name: "Discord", href: "https://discordapp.com/users/1375134237455417444", icon: "discord" },
   { name: "YouTube", href: "https://youtube.com/@kryozen-nv?si=t0jSVNsM5yNuyoPC", icon: "youtube" },
-  { name: "Instagram", href: "#", icon: "instagram" },
-  { name: "Twitter", href: "#", icon: "twitter" },
-],
+  { name: "Instagram", href: "https://www.instagram.com/kryozen_nv/", icon: "instagram" },
+  ],
 ```
 
-Replace each `href: "#"` with your real profile URL. These render as the
-icon row in the footer, **and** as contact methods in the Contact section
-(see "How to Edit Contact Methods") — editing this one array updates both
-places. Available `icon` values: `discord`, `youtube`, `instagram`,
-`twitter` (defined in `js/content-loader.js` — add a new one there if you
-need another platform).
+These render as the icon row in the footer. The Contact section intentionally
+uses only direct contact methods (Email and Discord) so social links are not
+repeated throughout the page. Available `icon` values: `discord`, `youtube`,
+`instagram`; icon values are defined in `js/content-loader.js`.
 
-The navbar's dedicated **Discord** button and the hero's **Discord**
+The site's primary **Contact** actions
 button both read from a separate field:
 
 ```js
 nav: {
-  discord: { label: "Discord", href: "https://discordapp.com/users/1375134237455417444" },
 },
 hero: {
-  ctaSecondary: { label: "Discord", href: "https://discordapp.com/users/1375134237455417444" },
+  ctaSecondary: { label: "Contact", href: "#contact" },
 },
 ```
 
-Both are already set to the real Discord link. Update both `href` values
+Keep the primary contact link in the Contact section and update its `href` only when needed
 together if that link ever changes.
 
 > **No-JS note:** the navbar's plain-text fallback links (shown only when
@@ -175,7 +171,7 @@ hero: {
   heading: "KRYOZEN STUDIO",
   intro: "…your intro paragraph…",
   ctaPrimary: { label: "View Work", href: "#work" },
-  ctaSecondary: { label: "Discord", href: "#" },
+  ctaSecondary: { label: "Contact", href: "#contact" },
   artwork: "", // optional background image path
 },
 footer: {
@@ -204,7 +200,7 @@ projects: [
   {
     id: "example-project",        // unique, slug-style
     title: "Example Project",
-    category: "AMV",              // must match a string in `categories` below
+    category: "Anime / AMV",       // must match a string in `categories` below
     thumbnail: "assets/thumbnails/example.jpg",
     video: "assets/videos/example.mp4", // "" is valid — see "Video Player: How It Works"
     description: "Short description.", // shown in the video player, not on the card
@@ -234,8 +230,8 @@ sure every project's `category` value matches one of these strings exactly:
 
 ```js
 categories: [
-  "AMV", "Gaming", "Anime", "Short Form",
-  "Long-form", "Trailers", "Thumbnail Design",
+  "Short Form", "Gaming", "Anime / AMV",
+  "Long Form", "Thumbnail Design",
 ],
 ```
 
@@ -313,8 +309,7 @@ about: {
   ```js
   software: [
     { name: "Node Video", icon: "" },
-    { name: "Alight Motion", icon: "" },
-    { name: "Blurr", icon: "" },
+
   ],
   ```
   An empty array hides the tools strip entirely rather than showing an
@@ -354,7 +349,7 @@ services: [
   Leaving `icon` empty, or using a value not in that list, just omits the
   icon circle — the card still looks correct without one.
 - **Empty array:** if `services` is empty, the section shows a "Services
-  coming soon" message instead of a blank grid.
+  intentional empty-state message instead of a blank grid.
 
 ---
 
@@ -364,31 +359,52 @@ Open `config/site.config.js`:
 
 ```js
 contact: {
-  eyebrow: "REEL 005 — CONTACT",
+  eyebrow: "REEL 006 — CONTACT",
   heading: "Let's Work Together",
   subtitle: "…a short one-line CTA…",
-  email: "", // intentionally empty — see below
+  email: "kryozenstudio@gmail.com",
 },
 ```
 
-`email` is deliberately left empty: this project uses no email or
-contact-form messaging by design, so Discord (from the `social` array) is
-the primary — currently only — contact route. Leaving `email` empty hides
-the Email method entirely rather than showing a broken or fake address.
-If that ever changes, setting a real address here is enough to bring the
-Email method back; no other file needs to change.
+The Contact section intentionally has no form. It renders only the two
+direct contact methods currently approved for clients: **Email** and
+**Discord**. Social discovery links such as YouTube and Instagram remain in
+the footer and are not duplicated as Contact cards.
 
-That's the only Contact-specific field. Every other contact method
-(Discord, YouTube, Instagram, Twitter) is **not** duplicated here — the
-Contact section automatically reuses the same `social` array covered in
-"How to Edit Social Links" above. Add, remove, or edit an entry there and
-it updates in both the footer and Contact section at once.
+Changing the email address in `config.contact.email` updates the Contact
+section automatically. The Discord card is read from the `Discord` entry in
+`config.social`, so there is one source of truth for that link.
 
-There is intentionally **no contact form** — GitHub Pages can't process
-form submissions without a separate third-party service, so this project
-deliberately uses link/button methods only (currently just Discord and
-YouTube) instead. See `PROJECT_RULES.md` → "Contact Section" if you're
-considering adding a form, or a real email address, later.
+There is no backend submission system because the site is deployed as a
+static GitHub Pages site.
+
+---
+
+## 12. Studio Manager
+
+Open `studio-manager.html` directly when you want to prepare portfolio
+updates. The manager is a **local browser tool**, not a secure online admin
+backend. It uses IndexedDB to keep draft projects and media on the current
+device/browser.
+
+It supports:
+
+- add/edit/delete projects
+- thumbnail and video storage
+- category selection from the site's real category list
+- featured-project flag
+- project preview
+- logo replacement preview
+- exporting project metadata/config snippets
+- downloading saved media for the site's `assets/` folders
+
+After exporting, copy the project data into `config/site.config.js`, put the
+media files in `assets/thumbnails/` and `assets/videos/`, then use the normal
+Termux → GitHub Pages workflow.
+
+**Important:** GitHub Pages cannot provide private server-side authentication
+or a database. The local passcode is only a convenience gate for the current
+browser and must not be treated as a security boundary.
 
 ---
 

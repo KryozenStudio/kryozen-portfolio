@@ -20,6 +20,19 @@
   var STORAGE_KEY = "kryozenIntroPlayed";
   var root = document.documentElement;
 
+  function buildWordmark() {
+    var title=document.querySelector(".hero__title[data-wordmark]");
+    if(!title||title.dataset.split==="true") return;
+    var text=title.getAttribute("data-wordmark")||title.textContent||"";
+    title.textContent="";
+    var i=0;
+    Array.from(text).forEach(function(ch){
+      if(ch===" "){var space=document.createElement("span");space.className="hero__title-space";space.setAttribute("aria-hidden","true");title.appendChild(space);return;}
+      var span=document.createElement("span");span.className="hero__title-char";span.style.setProperty("--i",i++);span.textContent=ch;title.appendChild(span);
+    });
+    title.dataset.split="true";
+  }
+
   function markPlayed() {
     try {
       sessionStorage.setItem(STORAGE_KEY, "1");
@@ -28,6 +41,8 @@
       // it just means the intro may replay next load. Fail silently.
     }
   }
+
+  buildWordmark();
 
   // Intro was already skipped at paint time (reduced motion, or replayed
   // within this session) — nothing to wait for.

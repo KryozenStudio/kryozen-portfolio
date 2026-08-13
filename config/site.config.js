@@ -25,7 +25,7 @@ window.SITE_CONFIG = {
   },
 
   // ---------------------------------------------------------------------
-  // LOGO — used in the navbar and the hero intro animation
+  // LOGO — used in the navbar. The hero intro uses the supplied brand artwork below.
   // ---------------------------------------------------------------------
   logo: {
     path: "assets/images/logo/logo.svg",
@@ -43,14 +43,9 @@ window.SITE_CONFIG = {
       { label: "Work", href: "#work" },
       { label: "Services", href: "#services" },
       { label: "About", href: "#about" },
+      { label: "FAQ", href: "#faq" },
       { label: "Contact", href: "#contact" },
     ],
-    // Rendered as a distinct pill/button at the end of the nav, separate
-    // from the links array above.
-    discord: {
-      label: "Discord",
-      href: "https://discordapp.com/users/1375134237455417444",
-    },
   },
 
   // ---------------------------------------------------------------------
@@ -60,28 +55,27 @@ window.SITE_CONFIG = {
     eyebrow: "REEL 001 — SHOWREEL",
     heading: "KRYOZEN STUDIO",
     intro:
-      "I edit AMVs, gaming highlights, anime edits, and talking-head content — short-form and long-form alike — built around pacing, sound design, and a clean finish.",
+      "Video edits built around rhythm, typography, captions, compositing, and the feeling of the reference — with a focus on short-form, gaming, and anime/AMV work.",
     ctaPrimary: {
       label: "View Work",
       href: "#work",
     },
     ctaSecondary: {
-      label: "Discord",
-      href: "https://discordapp.com/users/1375134237455417444",
+      label: "Contact",
+      href: "#contact",
     },
-    // Optional background still — leave empty to use the default gradient.
-    // Example: "assets/images/hero/hero-artwork.webp"
-    artwork: "",
+    // Supplied brand artwork used as the hero backdrop and intro visual.
+    // Leave empty to use the default gradient.
+    artwork: "assets/images/hero/kryozen-brand.jpg",
   },
 
   // ---------------------------------------------------------------------
-  // SOCIAL / CONTACT LINKS — used in the navbar Discord pill and footer
+  // SOCIAL LINKS — discovery links rendered in the footer
   // ---------------------------------------------------------------------
   social: [
     { name: "Discord", href: "https://discordapp.com/users/1375134237455417444", icon: "discord" },
     { name: "YouTube", href: "https://youtube.com/@kryozen-nv?si=t0jSVNsM5yNuyoPC", icon: "youtube" },
-    { name: "Instagram", href: "#", icon: "instagram" },
-    { name: "Twitter", href: "#", icon: "twitter" },
+    { name: "Instagram", href: "https://www.instagram.com/kryozen_nv/", icon: "instagram" },
   ],
 
   // ---------------------------------------------------------------------
@@ -90,7 +84,7 @@ window.SITE_CONFIG = {
   footer: {
     // {year} is replaced automatically with the current year.
     copyright: "© {year} Kryozen Studio. All rights reserved.",
-    note: "Edits available worldwide, remote & async.",
+    note: "Worldwide • Remote • Async • Built with intention.",
   },
 
   // ---------------------------------------------------------------------
@@ -103,7 +97,7 @@ window.SITE_CONFIG = {
     searchLabel: "Search projects",
     searchPlaceholder: "Search projects…",
     allLabel: "All",
-    emptyStateText: "No projects found.",
+    emptyStateText: "No projects published yet.",
   },
 
   // ---------------------------------------------------------------------
@@ -118,12 +112,10 @@ window.SITE_CONFIG = {
   // duplicate categories as platforms come and go.
   // ---------------------------------------------------------------------
   categories: [
-    "AMV",
-    "Gaming",
-    "Anime",
     "Short Form",
-    "Long-form",
-    "Trailers",
+    "Gaming",
+    "Anime / AMV",
+    "Long Form",
     "Thumbnail Design",
   ],
 
@@ -137,9 +129,9 @@ window.SITE_CONFIG = {
     eyebrow: "REEL 003 — ABOUT",
     heading: "About",
     role: "Video Editor",
-    profileImage: "assets/images/profile/profile.jpg",
+    profileImage: "",
     intro: "The person behind the cuts.",
-    bio: "I cut AMVs, gaming highlights, and short-form edits — chasing the same thing every time: a cut that feels inevitable, not just correct. Every project starts from the footage, not a template.",
+    bio: "I’m Kryozen, a video editor focused on short-form, gaming, and anime/AMV work. I study references closely, rebuild the visual language as accurately as I can, then add my own emotion to the final cut. My current strengths are beat sync, typography, captions, thumbnails, and compositing — and I’m always refining the craft.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name
@@ -148,8 +140,6 @@ window.SITE_CONFIG = {
   // array when moving to PC software; nothing else needs to change.
   software: [
     { name: "Node Video", icon: "" },
-    { name: "Alight Motion", icon: "" },
-    { name: "Blurr", icon: "" },
   ],
 
   // =========================================================================
@@ -160,8 +150,8 @@ window.SITE_CONFIG = {
   servicesSection: {
     eyebrow: "REEL 004 — SERVICES",
     heading: "Services",
-    subtitle: "What I offer, in plain terms.",
-    emptyStateText: "Services coming soon.",
+    subtitle: "Focused editing for content that needs rhythm, clarity, and personality.",
+    emptyStateText: "No services are currently listed.",
   },
 
   // Services offered — rendered as cards by js/services.js. Each entry
@@ -169,57 +159,48 @@ window.SITE_CONFIG = {
   // optional and the layout holds up fine without them (see
   // PROJECT_RULES.md → "Services Section" for the fallback behavior).
   services: [
-    {
-      id: "short-form",
-      title: "Short-Form Video Editing",
-      description: "Reels and Shorts cut for retention — fast pacing, clean captions, built for the scroll.",
-      icon: "shortform",
-    },
-    {
-      id: "amv-editing",
-      title: "AMV Editing",
-      description: "Anime music video edits built around motion-matched cuts and musicality, not just clip-syncing.",
-      icon: "amv",
-    },
-    {
-      id: "gaming-montages",
-      title: "Gaming Montages",
-      description: "Highlight reels and montage edits with reactive sound design tuned to the gameplay.",
-      icon: "gaming",
-    },
-    {
-      id: "talking-head",
-      title: "Talking-Head Editing",
-      description: "Interview, podcast, and vlog-style edits — clean cuts, paced dialogue, and captions that keep viewers watching.",
-      icon: "talkinghead",
-    },
-    {
-      id: "thumbnail-design",
-      title: "Thumbnail Design",
-      description: "High-contrast, click-worthy thumbnails designed to earn the click without misleading it.",
-      icon: "thumbnail",
-    },
+    { id: "short-form", title: "Short-Form Video Editing", description: "Talking-head clips, reels, and vertical edits with clean pacing, captions, and purposeful motion.", icon: "shortform" },
+    { id: "gaming", title: "Gaming Edits", description: "Highlight-driven edits built around gameplay rhythm, beat sync, and focused visual energy.", icon: "gaming" },
+    { id: "anime-amv", title: "Anime / AMV Editing", description: "Reference-led anime edits shaped around music, motion, typography, and emotional timing.", icon: "amv" },
+    { id: "captions", title: "Captions & Subtitles", description: "Clean, readable captions and subtitle styling designed to stay in rhythm with the edit.", icon: "captions" },
+    { id: "typography", title: "Typography", description: "Kinetic type and text animation used to give a cut more personality without overwhelming it.", icon: "typography" },
+    { id: "thumbnail-design", title: "Thumbnail Design", description: "Focused thumbnails with clear hierarchy, contrast, and a strong first impression.", icon: "thumbnail" },
   ],
+
+  // =========================================================================
+  // FAQ
+  // =========================================================================
+  faq: {
+    eyebrow: "REEL 005 — FAQ",
+    heading: "Frequently Asked Questions",
+    subtitle: "A few things worth knowing before you send a project.",
+    items: [
+      { question: "What do you provide?", answer: "Short-form editing, gaming edits, anime / AMV editing, captions and subtitles, typography, and thumbnail design." },
+      { question: "How many revisions are included?", answer: "Three revisions are included. After that, additional changes are billed at 30% of the original project fee and are paid upfront before the extra work begins." },
+      { question: "How long does an edit take?", answer: "Most edits take around 4–7 days, depending on the style and scope. Larger projects may take longer." },
+      { question: "How do I send my footage?", answer: "Google Drive is the preferred way to send footage, references, and other project files." },
+      { question: "Can I send a reference?", answer: "Yes. References are welcome and help me understand the exact style you’re looking for." },
+      { question: "Do you work with clients worldwide?", answer: "Yes. Projects are handled remotely and asynchronously, so you can work with me from anywhere." },
+      { question: "Is long-form editing available?", answer: "Long-form editing is planned for the future and isn’t currently available." },
+      { question: "What software do you use?", answer: "Node Video is my current editing software." },
+      { question: "How is pricing decided?", answer: "Pricing depends on the style, scope, and amount of work involved. Contact me with the project details for a quote." },
+      { question: "How do we get started?", answer: "Send the project details, deadline, and any reference through Discord or email. We’ll discuss the scope before you commit." },
+    ],
+  },
 
   // =========================================================================
   // CONTACT — read by js/contact.js. Deliberately has no form fields: the
   // Contact section is link/button based only (see PROJECT_RULES.md →
-  // "Contact Section" → "No contact form"). Discord/YouTube/Instagram/
-  // Twitter are NOT duplicated here — js/contact.js reads them straight
-  // from the existing `social` array above, same links the footer
-  // already uses. Only `email` is new, since no address existed anywhere
-  // in the project before this phase.
+  // "Contact Section" → "No contact form"). Email and Discord are the
+  // direct contact methods; social discovery remains in the footer.
   // =========================================================================
   contact: {
-    eyebrow: "REEL 005 — CONTACT",
+    eyebrow: "REEL 006 — CONTACT",
     heading: "Let's Work Together",
-    subtitle: "Send over your footage and a deadline — happy to talk through scope before you commit to anything.",
-    // No email/contact-form messaging by design — Discord (from the
-    // `social` array above) is the primary contact route. Leave this ""
-    // to keep the Email method hidden; set a real address here only if
-    // that ever changes.
-    email: "",
-    emptyStateText: "Contact links coming soon.",
+    subtitle: "Send the footage, deadline, and reference. We’ll talk through the scope before you commit.",
+    // Direct contact route. Keep this editable from config.
+    email: "kryozenstudio@gmail.com",
+    emptyStateText: "No contact methods are currently available.",
   },
 
   // =========================================================================
@@ -239,14 +220,14 @@ window.SITE_CONFIG = {
   // Intentionally empty: no real project has been added yet, and this
   // site must never present fictional work as if it were real portfolio
   // content. js/work.js already handles an empty array correctly — the
-  // Work section shows its polished "No projects found." empty state
+  // Work section shows its polished "No projects published yet." empty state
   // (config.work.emptyStateText) instead of a blank or broken grid.
   //
   // Add real projects here following this shape:
   // {
   //   id: "example-project",
   //   title: "Example Project",
-  //   category: "AMV",              // must match a string in `categories` above
+  //   category: "Anime / AMV",     // must match a string in `categories` above
   //   thumbnail: "assets/thumbnails/example.jpg",
   //   video: "",                    // "" is valid — see PROJECT_RULES.md → "Video Player System"
   //   description: "Short description.",

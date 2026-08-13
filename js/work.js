@@ -175,6 +175,14 @@
     thumb.appendChild(playGlyph);
 
     // Meta: title, category, and — only if present — the first software tag.
+    if (project.featured) {
+      var featured = document.createElement("span");
+      featured.className = "project-card__featured";
+      featured.textContent = "Featured";
+      featured.setAttribute("aria-hidden", "true");
+      thumb.appendChild(featured);
+    }
+
     var meta = document.createElement("span");
     meta.className = "project-card__meta";
 

@@ -58,7 +58,7 @@
 
   opacity: 0;
   transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1500ms forwards;
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1200ms forwards;
 }
 
 .hero__eyebrow-dot {
@@ -71,12 +71,12 @@
 }
 
 /* ---------------------------------------------------------------------
-   LOGO INTRO — countdown ring + iris reveal
+   LOGO INTRO — supplied Kryozen artwork + countdown ring + iris reveal
 --------------------------------------------------------------------- */
 .hero__logo-intro {
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 132px;
+  height: 132px;
   display: grid;
   place-items: center;
   margin-bottom: var(--space-2xs);
@@ -94,12 +94,18 @@
 .hero__logo-mark {
   position: relative;
   z-index: 1;
-  width: 60px;
-  height: 60px;
+  width: 132px;
+  height: 132px;
   color: var(--color-accent);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 18px 50px rgba(0,0,0,.38), 0 0 34px rgba(195,20,50,.10);
+  background: #08080a;
   opacity: 0;
   clip-path: circle(0% at 50% 50%);
-  animation: irisReveal 900ms var(--ease-out) 950ms forwards;
+  filter: blur(8px);
+  animation: irisReveal 760ms var(--ease-out) 700ms forwards;
 }
 
 .hero__logo-mark img,
@@ -108,17 +114,47 @@
   height: 100%;
 }
 
+.hero__brand-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.015);
+}
+
 /* ---------------------------------------------------------------------
    TITLE — wordmark, "credits assembling into focus"
 --------------------------------------------------------------------- */
 .hero__title {
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
   font-size: var(--fs-hero);
-  line-height: 0.92;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em; /* balances the wide starting letter-spacing */
-  opacity: 0;
-  animation: titleTrackIn var(--duration-slow) var(--ease-out) 1700ms forwards;
+  line-height: .92;
+  letter-spacing: .02em;
+  text-indent: 0;
+  opacity: 1;
+  isolation: isolate;
 }
+
+.hero__title::after {
+  content: ""; position:absolute; left:8%; right:8%; bottom:-.14em; height:1px;
+  background:linear-gradient(90deg,transparent,var(--color-accent-bright),transparent);
+  transform:scaleX(0); transform-origin:center; opacity:0;
+  animation:wordmarkLineIn 700ms var(--ease-out) 2060ms forwards;
+}
+
+.hero__title-char {
+  display:inline-block; opacity:0; transform:translateY(.22em) scale(.92);
+  filter:blur(9px); letter-spacing:.04em;
+  animation:wordmarkCharIn 760ms var(--ease-out) calc(1420ms + (var(--i) * 42ms)) forwards;
+  will-change:transform,opacity,filter;
+}
+
+.hero__title-space{width:.34em}
+
 
 /* ---------------------------------------------------------------------
    INTRO COPY
@@ -131,7 +167,7 @@
 
   opacity: 0;
   transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2150ms forwards;
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1820ms forwards;
 }
 
 /* ---------------------------------------------------------------------
@@ -147,7 +183,7 @@
 
   opacity: 0;
   transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2350ms forwards;
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2020ms forwards;
 }
 
 /* ---------------------------------------------------------------------
@@ -165,7 +201,7 @@
   gap: var(--space-2xs);
 
   opacity: 0;
-  animation: heroFadeIn var(--duration-slow) var(--ease-out) 2600ms forwards;
+  animation: heroFadeIn var(--duration-slow) var(--ease-out) 2260ms forwards;
 }
 
 .hero__scroll-line {
@@ -211,25 +247,39 @@
   from {
     opacity: 0;
     clip-path: circle(0% at 50% 50%);
-    transform: scale(0.85);
+    transform: scale(0.90);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1.008);
   }
   to {
     opacity: 1;
     clip-path: circle(75% at 50% 50%);
     transform: scale(1);
+    filter: blur(0);
   }
 }
+
+@keyframes wordmarkCharIn {
+  0%{opacity:0;transform:translateY(.22em) scale(.92);filter:blur(9px);letter-spacing:.08em}
+  68%{opacity:1;transform:translateY(-.012em) scale(1.006);filter:blur(0);letter-spacing:.025em}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);letter-spacing:.02em}
+}
+@keyframes wordmarkLineIn {0%{opacity:0;transform:scaleX(0)}35%{opacity:.75}100%{opacity:.35;transform:scaleX(1)}}
 
 @keyframes titleTrackIn {
   from {
     opacity: 0;
-    letter-spacing: 0.5em;
-    transform: translateY(10px);
+    letter-spacing: 0.24em;
+    transform: translateY(12px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
     letter-spacing: 0.02em;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
@@ -278,8 +328,22 @@
   transform: none !important;
   clip-path: circle(75% at 50% 50%) !important;
   letter-spacing: 0.02em !important;
+  filter: none !important;
 }
 
 .no-intro .hero__logo-ring {
   display: none;
+}
+
+.no-intro .hero__logo-mark {
+  border-radius: 24px;
+}
+
+.no-intro .hero__title-char{animation:none!important;opacity:1!important;transform:none!important;filter:none!important;letter-spacing:.02em!important}
+.no-intro .hero__title::after{animation:none!important;opacity:0!important}
+@media(max-width:640px){
+  .hero__logo-intro{width:112px;height:112px}
+  .hero__logo-mark{width:112px;height:112px;border-radius:20px}
+  .hero__title{font-size:clamp(2.8rem,14vw,5rem);max-width:100%}
+  .hero__title-char{animation-delay:calc(1320ms + (var(--i) * 34ms))}
 }

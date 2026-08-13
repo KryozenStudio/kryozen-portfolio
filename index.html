@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Kryozen Studio — Video Editing &amp; Post-Production</title>
-  <meta
-    name="description"
-    content="Kryozen Studio — video editing and post-production. AMVs, anime and gaming edits, talking-head videos, shorts, and long-form content."
-  />
+  <meta name="description" content="Kryozen Studio — video editing for short-form, gaming, and anime/AMV content, with typography, captions, compositing, and thumbnail design." />
   <meta name="theme-color" content="#08080a" />
   <meta name="color-scheme" content="dark" />
 
@@ -17,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
 
@@ -33,6 +30,7 @@
   <link rel="stylesheet" href="css/work.css" />
   <link rel="stylesheet" href="css/services.css" />
   <link rel="stylesheet" href="css/about.css" />
+  <link rel="stylesheet" href="css/faq.css" />
   <link rel="stylesheet" href="css/contact.css" />
   <link rel="stylesheet" href="css/footer.css" />
 
@@ -78,15 +76,6 @@
       </nav>
 
       <div class="navbar__actions">
-        <a
-          class="btn btn--secondary btn--sm navbar__discord js-only"
-          id="navbar-discord"
-          href="#"
-          target="_blank"
-          rel="noopener"
-        >
-          <span id="navbar-discord-label">Discord</span>
-        </a>
 
         <button
           class="navbar__toggle"
@@ -110,17 +99,14 @@
       <a href="#work">Work</a>
       <a href="#services">Services</a>
       <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
-      <a href="https://discordapp.com/users/1375134237455417444" target="_blank" rel="noopener">Discord</a>
     </nav>
 
     <div class="navbar__mobile-panel" id="navbar-mobile-panel">
       <ul id="navbar-mobile-links">
         <!-- injected by js/content-loader.js -->
       </ul>
-      <a class="btn btn--primary" id="navbar-mobile-discord" href="#" target="_blank" rel="noopener">
-        <span id="navbar-mobile-discord-label">Discord</span>
-      </a>
     </div>
   </header>
 
@@ -140,20 +126,26 @@
         <div class="hero__logo-intro" aria-hidden="true">
           <div class="hero__logo-ring"></div>
           <div class="hero__logo-mark">
-            <img data-logo-img src="assets/images/logo/logo.svg" alt="" width="60" height="60" />
+            <img
+              class="hero__brand-art"
+              src="assets/images/hero/kryozen-brand.jpg"
+              alt=""
+              width="132"
+              height="132"
+            />
           </div>
         </div>
 
-        <h1 class="hero__title" id="hero-title">KRYOZEN STUDIO</h1>
+        <h1 class="hero__title" id="hero-title" data-wordmark="KRYOZEN STUDIO">KRYOZEN STUDIO</h1>
 
         <p class="hero__intro" id="hero-intro">
-          I edit AMVs, gaming highlights, anime edits, and talking-head content — short-form and
-          long-form alike — built around pacing, sound design, and a clean finish.
+          Video editing focused on short-form, gaming, and anime/AMV work — with rhythm,
+          typography, captions, compositing, and thumbnails built around the reference and the feeling of each piece.
         </p>
 
         <div class="hero__actions">
           <a class="btn btn--primary" id="hero-cta-primary" href="#work">View Work</a>
-          <a class="btn btn--secondary" id="hero-cta-secondary" href="#" target="_blank" rel="noopener">Discord</a>
+          <a class="btn btn--secondary" id="hero-cta-secondary" href="#contact">Contact</a>
         </div>
       </div>
 
@@ -201,7 +193,7 @@
 
       <div class="container">
         <p class="visually-hidden" id="work-status" role="status" aria-live="polite"></p>
-        <p class="work__empty" id="work-empty" hidden>No projects found.</p>
+        <p class="work__empty" id="work-empty" hidden>No projects published yet.</p>
         <div class="work__grid" id="work-grid">
           <!-- injected by js/work.js from config.projects, sorted newest first -->
         </div>
@@ -225,7 +217,7 @@
       </div>
 
       <div class="container">
-        <p class="services__empty" id="services-empty" hidden>Services coming soon.</p>
+        <p class="services__empty" id="services-empty" hidden>No services are currently listed.</p>
         <div class="services__grid" id="services-grid">
           <!-- injected by js/services.js from config.services -->
         </div>
@@ -272,6 +264,19 @@
     </section>
 
     <!-- =====================================================================
+         FAQ
+         Client-facing questions are generated from config.faq by js/faq.js.
+    ===================================================================== -->
+    <section class="faq" id="faq">
+      <div class="container faq__head">
+        <p class="faq__eyebrow"><span class="faq__eyebrow-dot" aria-hidden="true"></span><span id="faq-eyebrow-text">REEL 005 — FAQ</span></p>
+        <h2 class="faq__title" id="faq-title">Frequently Asked Questions</h2>
+        <p class="faq__subtitle" id="faq-subtitle">A few things worth knowing before you send a project.</p>
+      </div>
+      <div class="container faq__grid" id="faq-list" aria-label="Frequently asked questions"></div>
+    </section>
+
+    <!-- =====================================================================
          CONTACT
          No form — copy comes from config.contact; method links reuse
          config.social. See PROJECT_RULES.md → "Contact Section".
@@ -284,13 +289,12 @@
         </p>
         <h2 class="contact__title" id="contact-title">Let's Work Together</h2>
         <p class="contact__subtitle" id="contact-subtitle">
-          Send over your footage and a deadline — happy to talk through scope before you commit to
-          anything.
+          Send the footage, deadline, and reference. We’ll talk through the scope before you commit.
         </p>
 
-        <p class="contact__empty" id="contact-empty" hidden>Contact links coming soon.</p>
+        <p class="contact__empty" id="contact-empty" hidden>No contact methods are currently available.</p>
         <div class="contact__methods" id="contact-methods">
-          <!-- injected by js/contact.js from config.contact.email + config.social -->
+          <!-- injected by js/contact.js from the direct contact methods -->
         </div>
       </div>
     </section>
@@ -311,8 +315,7 @@
       </div>
 
       <p class="no-js-fallback">
-        <a href="https://discordapp.com/users/1375134237455417444" target="_blank" rel="noopener">Discord</a>
-      </p>
+        </p>
     </div>
   </footer>
 
@@ -350,7 +353,7 @@
   <!-- =====================================================================
        SCRIPTS
        Load order: config → content-loader → work → player → services →
-       about → contact → navbar → hero-intro → main. All deferred, so
+       about → contact → reveal → navbar → hero-intro → main. All deferred, so
        they execute in this order after the HTML is parsed, without
        blocking rendering. player.js listens for the event work.js
        dispatches; every other section loader is independent of the
@@ -362,7 +365,9 @@
   <script src="js/player.js" defer></script>
   <script src="js/services.js" defer></script>
   <script src="js/about.js" defer></script>
+  <script src="js/faq.js" defer></script>
   <script src="js/contact.js" defer></script>
+  <script src="js/reveal.js" defer></script>
   <script src="js/navbar.js" defer></script>
   <script src="js/hero-intro.js" defer></script>
   <script src="js/main.js" defer></script>

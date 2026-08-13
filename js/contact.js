@@ -4,8 +4,7 @@
  * No form — see PROJECT_RULES.md → "Contact Section" → "No contact
  * form" for why. Every method link is either config.contact.email or an
  * entry from the existing config.social array (the same links the
- * footer already renders); nothing about Discord/YouTube/etc. is
- * duplicated here.
+ * footer already renders); only the direct Discord contact method is rendered here; discovery links stay in the footer.
  * =============================================================================
  */
 
@@ -44,17 +43,11 @@
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/></svg>',
     discord:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="10" rx="5"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/><path d="M8 7 L9 4.4 M16 7 L15 4.4"/></svg>',
-    youtube:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="4"/><polygon points="10,9.5 10,14.5 15,12" fill="currentColor" stroke="none"/></svg>',
-    instagram:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="16.2" cy="7.8" r="0.9" fill="currentColor" stroke="none"/></svg>',
-    twitter:
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>',
   };
 
   /* -----------------------------------------------------------------
-     BUILD METHOD LIST — email first (if configured), then every entry
-     already in config.social, reused as-is.
+     BUILD METHOD LIST — only direct contact methods belong here.
+     Social discovery stays in the footer.
   ----------------------------------------------------------------- */
   var methods = [];
 
@@ -70,12 +63,12 @@
 
   if (Array.isArray(cfg.social)) {
     cfg.social.forEach(function (item) {
-      if (!item || !item.name) return; // skip malformed entries
+      if (!item || item.name !== "Discord" || !item.href) return;
       methods.push({
-        name: item.name,
-        value: item.href && item.href !== "#" ? item.href.replace(/^https?:\/\//, "") : "Link coming soon",
-        href: item.href || "#",
-        icon: item.icon,
+        name: "Discord",
+        value: item.href.replace(/^https?:\/\//, ""),
+        href: item.href,
+        icon: "discord",
         external: true,
       });
     });
@@ -84,7 +77,7 @@
   if (!methods.length) {
     if (emptyState) {
       emptyState.hidden = false;
-      emptyState.textContent = contactCfg.emptyStateText || "Contact links coming soon.";
+      emptyState.textContent = contactCfg.emptyStateText || "No contact methods are currently available.";
     }
     return;
   }

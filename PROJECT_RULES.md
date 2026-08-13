@@ -100,7 +100,7 @@ project card are generated at runtime.
 {
   id: "example-project",      // unique, slug-style — used as the stable key
   title: "Example Project",
-  category: "AMV",            // must exactly match a string in config.categories
+  category: "Anime / AMV",     // must exactly match a string in config.categories
   thumbnail: "assets/thumbnails/example.jpg", // "" is valid — see fallback below
   video: "",                  // "" is valid — js/player.js shows a fallback state instead of a broken player
   description: "Short description.", // shown in the video player, not on the card
@@ -273,37 +273,43 @@ malformed and skipped), `js/services.js` shows `#services-empty` with
 
 `css/contact.css` + `js/contact.js`.
 
-**No contact form — and none should be added without a deliberate,
-separate decision.** GitHub Pages is static; a real form needs a
-third-party submission endpoint (e.g. Formspree, a serverless function)
-that this project does not currently have. The Contact section is
-link/button-based only: email (`mailto:`) plus whatever's in
-`config.social`.
+**No contact form.** GitHub Pages is static, so this project does not have a
+server-side submission endpoint. The public Contact section is deliberately
+small and renders only the direct methods clients actually need: **Email** and
+**Discord**.
 
-**Reuses `config.social` instead of duplicating contact links.** Discord,
-YouTube, Instagram, and Twitter are *not* re-entered anywhere in
-`config.contact` — `js/contact.js` reads the existing `config.social`
-array directly (the same links the footer already renders) and only adds
-one new thing on top: `config.contact.email`. If you add a new entry to
-`config.social`, it automatically appears as a Contact method too, with no
-Contact-specific config needed.
+**Single sources of truth:**
+- Email comes from `config.contact.email`.
+- Discord comes from the `Discord` entry in `config.social`.
+- YouTube and Instagram are discovery links rendered in the footer only;
+  they are not duplicated as Contact cards.
 
-**Icon set:** `js/contact.js` keeps its own small local copy of the
-`discord`/`youtube`/`instagram`/`twitter` glyphs (plus a new `email`
-glyph) rather than importing `js/content-loader.js`'s icon map — this
-matches the precedent `js/work.js` already set of each section file
-owning a small local icon set instead of sharing one across files.
+If the email address changes, edit only `config.contact.email`. If the Discord
+URL changes, edit the Discord entry in `config.social`.
 
-**Fallback behavior:** a method with no `href` still renders with `href="#"`
-(matching the existing precedent in `js/content-loader.js`'s footer social
-loop) rather than being hidden — consistent with how the navbar's Discord
-button already behaves as a "#" placeholder throughout the site. Only a
-fully malformed entry (no `name` at all) is skipped. If the combined
-method list ends up empty, `#contact-empty` shows
-`config.contact.emptyStateText` instead of an empty section.
+**Fallback:** if no direct contact methods exist, `#contact-empty` displays
+`config.contact.emptyStateText`.
 
-**Config** (`config.contact`): `eyebrow`, `heading`, `subtitle`, `email`,
-`emptyStateText`.
+**Config:** `eyebrow`, `heading`, `subtitle`, `email`, `emptyStateText`.
+
+---
+
+## 2f. Studio Manager
+
+`studio-manager.html` + `js/studio-manager.js` + `css/admin.css`.
+
+The Studio Manager is a **local preparation tool** for the owner's existing
+Termux → GitHub Pages workflow. It is intentionally not linked from the public
+navigation. It stores drafts and media in browser IndexedDB and exports data for
+manual deployment.
+
+It supports project creation, editing, deletion, thumbnail/video storage, a
+featured flag, previewing, and logo asset preparation. Public visitors never
+receive these controls through `index.html`.
+
+The local passcode is a convenience gate only. GitHub Pages is static and has
+no secure server-side authentication or database, so secrets must never be
+stored in this frontend.
 
 ---
 
@@ -489,3 +495,7 @@ For whatever *does* come next:
    config array, don't fetch anything.
 6. Before adding a new dependency of any kind, ask whether vanilla
    HTML/CSS/JS can do it. The bar for adding a library is high.
+
+
+## LOCAL MANAGER SECURITY
+The Studio Manager is a local preparation tool only. Its browser passcode is a convenience gate, not authentication, because GitHub Pages is static. Never place GitHub tokens, API keys, passwords, or other secrets in frontend code. Do not describe this local gate as secure server-side authentication.

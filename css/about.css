@@ -145,8 +145,8 @@
 
 .about__software-tag {
   padding: 4px var(--space-sm);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--color-surface-border);
   font-size: var(--fs-small);
   color: var(--color-text-secondary);
