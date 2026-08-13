@@ -1,0 +1,153 @@
+/**
+ * =============================================================================
+ * ABOUT
+ * Portrait + copy, two columns on wider viewports, single column on
+ * mobile. Deliberately short-form (see PROJECT_RULES.md → "About
+ * Section") — this is not a biography page.
+ * =============================================================================
+ */
+
+.about {
+  padding: var(--space-2xl) 0;
+}
+
+.about__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+@media (min-width: 760px) {
+  .about__layout {
+    grid-template-columns: minmax(200px, 280px) 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   PORTRAIT
+--------------------------------------------------------------------- */
+.about__media {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 760px) {
+  .about__media {
+    justify-content: flex-start;
+  }
+}
+
+.about__portrait {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+}
+
+.about__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Graceful fallback: shown when there's no profileImage yet, or it
+   fails to load. Reuses the site's own logo mark rather than a generic
+   broken-image icon or a stock silhouette. */
+.about__portrait--fallback {
+  background: linear-gradient(155deg, var(--color-bg-elevated) 0%, var(--color-accent-dim) 150%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about__portrait--fallback .about__portrait-mark {
+  width: 30%;
+  height: 30%;
+  color: rgba(244, 242, 240, 0.6);
+}
+
+/* ---------------------------------------------------------------------
+   COPY
+--------------------------------------------------------------------- */
+.about__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.about__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 10px 2px var(--color-accent-glow);
+}
+
+.about__title {
+  margin-top: var(--space-2xs);
+  font-size: var(--fs-h2);
+}
+
+.about__role {
+  margin-top: var(--space-3xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-accent-bright);
+}
+
+.about__intro {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-body-lg);
+  color: var(--color-text-primary);
+}
+
+.about__bio {
+  margin-top: var(--space-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-relaxed);
+}
+
+/* ---------------------------------------------------------------------
+   SOFTWARE / TOOLS STRIP
+--------------------------------------------------------------------- */
+.about__software {
+  margin-top: var(--space-md);
+}
+
+.about__software-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-2xs);
+}
+
+.about__software-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.about__software-tag {
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  font-size: var(--fs-small);
+  color: var(--color-text-secondary);
+}

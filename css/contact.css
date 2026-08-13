@@ -1,0 +1,139 @@
+/**
+ * =============================================================================
+ * CONTACT
+ * No form — a short CTA plus a list of link/button contact methods
+ * generated from config.contact + the existing config.social array (see
+ * PROJECT_RULES.md → "Contact Section"). Styled as glass rows rather
+ * than plain text links so each is a comfortably large tap target.
+ * =============================================================================
+ */
+
+.contact {
+  padding: var(--space-2xl) 0;
+}
+
+.contact__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  max-width: 60ch;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contact__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.contact__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 10px 2px var(--color-accent-glow);
+}
+
+.contact__title {
+  font-size: var(--fs-h2);
+}
+
+.contact__subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--fs-body-lg);
+}
+
+.contact__empty {
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* ---------------------------------------------------------------------
+   METHODS
+--------------------------------------------------------------------- */
+.contact__methods {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-lg);
+}
+
+.contact__method {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  text-align: left;
+  transition:
+    transform 220ms var(--ease-spring),
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.contact__method:hover,
+.contact__method:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--color-accent-bright);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.contact__method:active {
+  transition: transform 90ms var(--ease-out);
+  transform: translateY(-1px) scale(0.98);
+}
+
+.contact__method-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent-glow-soft);
+  color: var(--color-accent-bright);
+}
+
+.contact__method-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.contact__method-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* allow the value line to ellipsis instead of overflowing */
+}
+
+.contact__method-name {
+  font-weight: 600;
+  font-size: var(--fs-small);
+  color: var(--color-text-primary);
+}
+
+.contact__method-value {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

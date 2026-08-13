@@ -1,0 +1,455 @@
+/**
+ * =============================================================================
+ * ADMIN / PRIVATE PROJECT MANAGEMENT
+ * Styles for admin/index.html only — never linked from the public site.
+ * Deliberately reuses the same design tokens as the public site
+ * (css/variables.css, css/buttons.css, css/work.css for the live project
+ * card preview) so this feels like the same product, not a bolted-on
+ * developer dashboard. See PROJECT_RULES.md → "Private Management
+ * System" for the architecture this supports.
+ * =============================================================================
+ */
+
+body.admin {
+  min-height: 100vh;
+  padding-bottom: var(--space-2xl);
+}
+
+.admin__topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--container-padding);
+  background: var(--color-bg-glass);
+  border-bottom: 1px solid var(--color-surface-border);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+}
+
+.admin__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: var(--ls-wide);
+}
+
+.admin__brand-mark {
+  width: 22px;
+  height: 22px;
+  color: var(--color-accent);
+}
+
+.admin__brand-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.admin__main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--container-padding) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+/* ---------------------------------------------------------------------
+   WARNING BANNER — the storage/security limitation, always visible.
+--------------------------------------------------------------------- */
+.admin__notice {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-glow-soft);
+  border: 1px solid var(--color-accent-glow);
+}
+
+.admin__notice-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--color-accent-bright);
+}
+
+.admin__notice-body h2 {
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-3xs);
+}
+
+.admin__notice-body p {
+  font-size: var(--fs-small);
+  color: var(--color-text-secondary);
+  line-height: var(--lh-relaxed);
+  max-width: 70ch;
+}
+
+/* ---------------------------------------------------------------------
+   SECTION SHELL
+--------------------------------------------------------------------- */
+.admin__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.admin__section-head h2 {
+  font-size: var(--fs-h3);
+}
+
+.admin__section-head p {
+  margin-top: var(--space-3xs);
+  color: var(--color-text-secondary);
+  font-size: var(--fs-small);
+}
+
+/* ---------------------------------------------------------------------
+   FORM
+--------------------------------------------------------------------- */
+.admin__form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+}
+
+@media (min-width: 760px) {
+  .admin__form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin__field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.admin__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.admin__field label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.admin__field input[type="text"],
+.admin__field input[type="date"],
+.admin__field select,
+.admin__field textarea {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+.admin__field textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.admin__field input:focus-visible,
+.admin__field select:focus-visible,
+.admin__field textarea:focus-visible {
+  border-color: var(--color-accent-bright);
+}
+
+.admin__field-hint {
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+}
+
+.admin__file-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.admin__file-row input[type="file"] {
+  flex: 1;
+  min-width: 180px;
+  font-size: var(--fs-small);
+  color: var(--color-text-secondary);
+}
+
+.admin__file-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.admin__file-preview img,
+.admin__file-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin__software-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.admin__software-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  font-size: var(--fs-small);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+
+.admin__software-chip input {
+  accent-color: var(--color-accent-bright);
+}
+
+.admin__software-chip:has(input:checked) {
+  border-color: var(--color-accent-bright);
+  color: var(--color-text-primary);
+}
+
+.admin__form-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------------------------------
+   LIVE PREVIEW — reuses .project-card from css/work.css directly, so
+   the preview is guaranteed to match the real public card exactly.
+--------------------------------------------------------------------- */
+.admin__preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.admin__preview-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.admin__preview-card {
+  max-width: 320px;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------
+   PROJECT LIST
+--------------------------------------------------------------------- */
+.admin__project-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.admin__project-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+}
+
+.admin__project-thumb {
+  width: 56px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-bg-elevated);
+}
+
+.admin__project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin__project-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin__project-title {
+  font-weight: 600;
+  font-size: var(--fs-small);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin__project-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.admin__project-actions {
+  display: flex;
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+}
+
+.admin__icon-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  color: var(--color-text-secondary);
+  transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), transform 220ms var(--ease-spring);
+}
+
+.admin__icon-btn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-accent-bright);
+}
+
+.admin__icon-btn:active {
+  transition: transform 90ms var(--ease-out);
+  transform: scale(0.94);
+}
+
+.admin__icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.admin__empty {
+  padding: var(--space-lg);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--color-text-tertiary);
+  border: 1px dashed var(--color-surface-border);
+  border-radius: var(--radius-md);
+}
+
+/* ---------------------------------------------------------------------
+   EXPORT SNIPPET
+--------------------------------------------------------------------- */
+.admin__export {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.admin__export textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: var(--lh-relaxed);
+  resize: vertical;
+}
+
+/* ---------------------------------------------------------------------
+   LOGO MANAGEMENT
+--------------------------------------------------------------------- */
+.admin__logo-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+}
+
+.admin__logo-preview {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-surface-border);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.admin__logo-preview img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  color: var(--color-accent);
+}
+
+.admin__toast {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-accent-bright);
+  color: var(--color-text-primary);
+  font-size: var(--fs-small);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+  z-index: var(--z-modal);
+}
+
+.admin__toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

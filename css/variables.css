@@ -1,0 +1,145 @@
+/**
+ * =============================================================================
+ * COLOR SYSTEM & DESIGN TOKENS
+ * =============================================================================
+ * Every color, spacing value, radius, shadow, and timing curve in this
+ * project is defined here as a CSS custom property. Nothing below is used
+ * anywhere else in the codebase by raw hex/px value — this is the only
+ * file you need to edit to re-theme the site.
+ *
+ * To change the accent color: edit --color-accent and --color-accent-dim.
+ * To change the background: edit --color-bg and --color-bg-elevated.
+ * Everything else (buttons, glass nav, focus rings, glows) derives from
+ * these via var() references, so the site restyles itself consistently.
+ * =============================================================================
+ */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOR — base surfaces
+  --------------------------------------------------------------------- */
+  --color-bg: #08080a;              /* page background, near-black */
+  --color-bg-elevated: #101012;     /* cards / elevated panels (future use) */
+  --color-bg-glass: rgba(12, 12, 14, 0.55);   /* navbar glass on scroll */
+
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-border: rgba(255, 255, 255, 0.09);
+  --color-surface-border-strong: rgba(255, 255, 255, 0.16);
+
+  /* ---------------------------------------------------------------------
+     COLOR — accent (deep cinematic red)
+  --------------------------------------------------------------------- */
+  --color-accent: #c31432;          /* primary accent */
+  --color-accent-dim: #7a0e22;      /* deeper red, used in gradients/shadows */
+  --color-accent-bright: #e2213f;   /* hover / active state */
+  --color-accent-glow: rgba(195, 20, 50, 0.35);
+  --color-accent-glow-soft: rgba(195, 20, 50, 0.14);
+
+  /* ---------------------------------------------------------------------
+     COLOR — text
+  --------------------------------------------------------------------- */
+  --color-text-primary: #f4f2f0;
+  --color-text-secondary: #a3a1a4;
+  --color-text-tertiary: #6b696d;
+  --color-text-on-accent: #f4f2f0;
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY
+  --------------------------------------------------------------------- */
+  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+
+  /* Fluid type scale — clamp(min, preferred, max) */
+  --fs-hero: clamp(3.2rem, 6vw + 1.5rem, 8.5rem);
+  --fs-h2: clamp(2rem, 3vw + 1rem, 3.5rem);
+  --fs-h3: clamp(1.25rem, 1.2vw + 1rem, 1.75rem);
+  --fs-body-lg: clamp(1.05rem, 0.4vw + 0.95rem, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+
+  --lh-tight: 1.05;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
+
+  --ls-tight: -0.02em;
+  --ls-normal: 0;
+  --ls-wide: 0.08em;
+  --ls-widest: 0.24em;
+
+  /* ---------------------------------------------------------------------
+     SPACING SCALE
+  --------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 9rem;
+
+  --container-max: 1280px;
+  --container-padding: clamp(1.25rem, 5vw, 4rem);
+
+  /* ---------------------------------------------------------------------
+     RADIUS
+  --------------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------------
+     SHADOW & GLOW
+  --------------------------------------------------------------------- */
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --shadow-accent: 0 8px 30px var(--color-accent-glow-soft);
+
+  /* ---------------------------------------------------------------------
+     GLASSMORPHISM
+  --------------------------------------------------------------------- */
+  --blur-glass: 16px;
+  --blur-glass-strong: 28px;
+
+  /* ---------------------------------------------------------------------
+     MOTION
+  --------------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Gentle back-out — a small overshoot past the resting value before
+     settling. Used only for the "release" half of press interactions
+     (buttons, cards, chips) — the "press" half stays a plain, fast
+     --ease-out so the down-stroke feels decisive rather than springy.
+     Overshoot is intentionally low (1.2, not a dramatic 1.5+) — this
+     should read as "controlled and premium," not "bouncy." */
+  --ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --duration-slow: 600ms;
+  --duration-intro: 2400ms;
+
+  /* ---------------------------------------------------------------------
+     Z-INDEX SCALE
+  --------------------------------------------------------------------- */
+  --z-base: 1;
+  --z-nav: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+}
+
+/* Reduced motion: shorten/disable durations globally. Individual
+   animations also check this via JS (matchMedia) where they need to
+   skip entirely rather than just speed up. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+    --duration-intro: 1ms;
+  }
+}

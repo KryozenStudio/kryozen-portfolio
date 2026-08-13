@@ -1,0 +1,285 @@
+/**
+ * =============================================================================
+ * HERO
+ * The page's one orchestrated motion moment: a film-leader-style countdown
+ * ring sweeps and irises open on the logo mark, then the wordmark, intro
+ * copy, and CTAs settle in with a short staggered reveal. Plays once per
+ * browser session (see js/hero-intro.js) and is skipped entirely for
+ * prefers-reduced-motion users, who see the end state immediately.
+ * =============================================================================
+ */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: calc(72px + var(--space-2xl)) 0 var(--space-2xl);
+}
+
+.hero__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 28%, var(--color-accent-glow-soft), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0, 0, 0, 0.6), transparent 70%),
+    linear-gradient(180deg, var(--color-bg) 0%, #050506 100%);
+  background-color: var(--color-bg);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+}
+
+/* ---------------------------------------------------------------------
+   EYEBROW — timecode-style label. This is the site's recurring
+   structural device (used again by future sections) in place of a
+   generic "01 / 02 / 03" marker, since it reflects how an editor's
+   timeline actually reads.
+--------------------------------------------------------------------- */
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1500ms forwards;
+}
+
+.hero__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 10px 2px var(--color-accent-glow);
+  animation: recPulse 2.2s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------------
+   LOGO INTRO — countdown ring + iris reveal
+--------------------------------------------------------------------- */
+.hero__logo-intro {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--space-2xs);
+}
+
+.hero__logo-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: ringSweep var(--duration-intro) var(--ease-in-out) forwards;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+}
+
+.hero__logo-mark {
+  position: relative;
+  z-index: 1;
+  width: 60px;
+  height: 60px;
+  color: var(--color-accent);
+  opacity: 0;
+  clip-path: circle(0% at 50% 50%);
+  animation: irisReveal 900ms var(--ease-out) 950ms forwards;
+}
+
+.hero__logo-mark img,
+.hero__logo-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------------------
+   TITLE — wordmark, "credits assembling into focus"
+--------------------------------------------------------------------- */
+.hero__title {
+  font-size: var(--fs-hero);
+  line-height: 0.92;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em; /* balances the wide starting letter-spacing */
+  opacity: 0;
+  animation: titleTrackIn var(--duration-slow) var(--ease-out) 1700ms forwards;
+}
+
+/* ---------------------------------------------------------------------
+   INTRO COPY
+--------------------------------------------------------------------- */
+.hero__intro {
+  max-width: 56ch;
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-secondary);
+
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2150ms forwards;
+}
+
+/* ---------------------------------------------------------------------
+   ACTIONS
+--------------------------------------------------------------------- */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2350ms forwards;
+}
+
+/* ---------------------------------------------------------------------
+   SCROLL CUE
+--------------------------------------------------------------------- */
+.hero__scroll {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+
+  opacity: 0;
+  animation: heroFadeIn var(--duration-slow) var(--ease-out) 2600ms forwards;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, var(--color-accent-bright), transparent);
+  animation: scrollPulse 2.4s var(--ease-in-out) infinite;
+}
+
+.hero__scroll-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--ls-widest);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .hero__scroll {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   KEYFRAMES
+--------------------------------------------------------------------- */
+@keyframes ringSweep {
+  0% {
+    background: conic-gradient(from -90deg, var(--color-accent-bright) 0deg, transparent 0deg);
+    opacity: 1;
+  }
+  65% {
+    background: conic-gradient(from -90deg, var(--color-accent-bright) 360deg, transparent 360deg);
+    opacity: 1;
+  }
+  100% {
+    background: conic-gradient(from -90deg, var(--color-accent-bright) 360deg, transparent 360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes irisReveal {
+  from {
+    opacity: 0;
+    clip-path: circle(0% at 50% 50%);
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    clip-path: circle(75% at 50% 50%);
+    transform: scale(1);
+  }
+}
+
+@keyframes titleTrackIn {
+  from {
+    opacity: 0;
+    letter-spacing: 0.5em;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.02em;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes recPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes scrollPulse {
+  0% { transform: scaleY(0.3); opacity: 0.3; transform-origin: top; }
+  50% { transform: scaleY(1); opacity: 1; transform-origin: top; }
+  100% { transform: scaleY(0.3); opacity: 0.3; transform-origin: bottom; }
+}
+
+/* ---------------------------------------------------------------------
+   INTRO SKIP STATE
+   Applied to <html> by an inline script before first paint when the
+   intro has already played this session, and permanently for
+   prefers-reduced-motion. Elements jump straight to their end state
+   with no animation.
+--------------------------------------------------------------------- */
+.no-intro .hero__eyebrow,
+.no-intro .hero__logo-mark,
+.no-intro .hero__title,
+.no-intro .hero__intro,
+.no-intro .hero__actions,
+.no-intro .hero__scroll {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: circle(75% at 50% 50%) !important;
+  letter-spacing: 0.02em !important;
+}
+
+.no-intro .hero__logo-ring {
+  display: none;
+}
