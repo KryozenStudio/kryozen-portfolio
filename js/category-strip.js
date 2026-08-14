@@ -1,7 +1,15 @@
 (function(){
   "use strict";
   var cfg=window.SITE_CONFIG, grid=document.getElementById("category-strip-grid");
-  if(!cfg||!grid||!Array.isArray(cfg.categories)) return;
+  if(!cfg) return;
+
+  var workCfg=cfg.work||{};
+  var eyebrowEl=document.getElementById("category-strip-eyebrow-text");
+  var headingEl=document.getElementById("category-strip-title");
+  if(eyebrowEl&&workCfg.eyebrow) eyebrowEl.textContent=workCfg.eyebrow;
+  if(headingEl&&workCfg.heading) headingEl.textContent=workCfg.heading;
+
+  if(!grid||!Array.isArray(cfg.categories)) return;
   var slugs=cfg.categoryPages||{};
   cfg.categories.forEach(function(name,i){
     var slug=slugs[name];

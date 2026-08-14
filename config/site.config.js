@@ -88,21 +88,21 @@ window.SITE_CONFIG = {
   },
 
   // ---------------------------------------------------------------------
-  // WORK / PORTFOLIO — section copy + behavior text. Read by js/work.js.
+  // WORK — copy for the homepage's category-strip section (the only
+  // "work" entry point on the homepage now — see PROJECT_RULES.md →
+  // "Work / Portfolio System"). Read by js/category-strip.js.
   // ---------------------------------------------------------------------
   work: {
-    eyebrow: "WORK",
-    heading: "Work",
-    subtitle: "Explore each discipline on its own page, with focused search and filtering.",
-    allLabel: "All",
-    emptyStateText: "No projects published yet.",
+    eyebrow: "Explore the work",
+    heading: "Choose a category",
   },
 
   // ---------------------------------------------------------------------
   // WORK CATEGORIES
-  // Add or remove categories here — the filter chips in the Work section
-  // are generated entirely from this array. Each project's `category`
-  // field (below) must match one of these strings exactly.
+  // Add or remove categories here — the filter chips on each category
+  // page (see config.categoryPages below) are generated from this array.
+  // Each project's `category` field must match one of these strings
+  // exactly.
   //
   // "Short Form" is the umbrella category for quick vertical/quick-cut
   // edits (Reels, Shorts, and similar) rather than one entry per
@@ -227,14 +227,16 @@ window.SITE_CONFIG = {
     videoUnavailableText: "Video unavailable.",
   },
 
-  // Portfolio projects — rendered by js/work.js. Order here doesn't matter:
-  // the Work section always sorts by `date`, newest first, at render time.
+  // Portfolio projects. js/work.js sorts these by `date` (newest first)
+  // and exposes them as window.Kryozen.projects / getLatestProject() for
+  // future use; the actual per-category browsing UI (search, filter,
+  // grid, empty state) lives on each category page — see
+  // js/category-page.js and config.categoryPages above.
   //
   // Intentionally empty: no real project has been added yet, and this
   // site must never present fictional work as if it were real portfolio
-  // content. js/work.js already handles an empty array correctly — the
-  // Work section shows its polished "No projects published yet." empty state
-  // (config.work.emptyStateText) instead of a blank or broken grid.
+  // content. Every category page already handles an empty/no-match
+  // result with a clean message instead of a blank or broken grid.
   //
   // Add real projects here following this shape:
   // {

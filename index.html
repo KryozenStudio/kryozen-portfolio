@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="css/player.css" />
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/hero.css" />
-  <link rel="stylesheet" href="css/work.css" />
   <link rel="stylesheet" href="css/category-strip.css" />
   <link rel="stylesheet" href="css/services.css" />
   <link rel="stylesheet" href="css/about.css" />
@@ -112,6 +111,9 @@
       <a class="navbar__mobile-admin" href="admin.html">
         <span>Admin</span><span aria-hidden="true">↗</span>
       </a>
+      <a class="navbar__mobile-admin" href="studio-manager.html">
+        <span>Studio Manager (local)</span><span aria-hidden="true">↗</span>
+      </a>
     </div>
   </header>
 
@@ -167,37 +169,20 @@
     </section>
 
     <!-- =====================================================================
-         WORK / PORTFOLIO
-         All copy comes from config.work; all cards are generated from
-         config.projects by js/work.js — nothing here is hand-authored
-         per project. See PROJECT_RULES.md → "Work / Portfolio System".
+         WORK / PORTFOLIO ENTRY POINT
+         This is the homepage's only "work" section — it hands off to a
+         dedicated page per category (see config.categoryPages), which is
+         where the real project search/filter/grid lives. There is
+         deliberately no second "browse everything" list here; see
+         PROJECT_RULES.md → "Work / Portfolio System" for why.
     ===================================================================== -->
-    <section class="category-strip" aria-labelledby="category-strip-title">
+    <section class="category-strip" id="work" aria-labelledby="category-strip-title">
       <div class="container">
         <div class="category-strip__head">
-          <p class="category-strip__eyebrow">Explore the work</p>
-          <h2 id="category-strip-title">Choose a discipline.</h2>
+          <p class="category-strip__eyebrow" id="category-strip-eyebrow-text">Explore the work</p>
+          <h2 id="category-strip-title">Choose a category</h2>
         </div>
         <div class="category-strip__grid" id="category-strip-grid"></div>
-      </div>
-    </section>
-
-    <section class="work" id="work">
-      <div class="container work__head">
-        <p class="work__eyebrow">
-          <span class="work__eyebrow-dot" aria-hidden="true"></span>
-          <span id="work-eyebrow-text">WORK</span>
-        </p>
-        <h2 class="work__title" id="work-title">Work</h2>
-        <p class="work__subtitle" id="work-subtitle">
-          Explore each discipline on its own page, with focused search and filtering.
-        </p>
-      </div>
-      <div class="container">
-        <div class="work__category-cta">
-          <span>Choose a discipline above to explore the full portfolio.</span>
-          <a class="btn btn--secondary btn--sm" href="#category-strip-title">Browse categories</a>
-        </div>
       </div>
     </section>
 

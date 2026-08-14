@@ -223,9 +223,11 @@
     display: flex;
   }
 
-  .navbar__toggle {
-    display: none;
-  }
+  /* The hamburger stays visible on desktop too — it's the only route to
+     the side panel, and the side panel is the only route to Admin (see
+     PROJECT_RULES.md → "Private Management System"). Hiding it here
+     would make Admin unreachable on desktop without shrinking the
+     window, since Admin is deliberately not in the public nav row. */
 }
 
 
