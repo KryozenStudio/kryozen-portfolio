@@ -1,10 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-  <!-- Outer ring: replace this whole file with your own mark. Keep viewBox 0 0 120 120
-       and 'currentColor' strokes if you want the mark to inherit the accent color token. -->
-  <circle cx="60" cy="60" r="54" stroke="currentColor" stroke-width="1.5" opacity="0.55" />
-  <circle cx="60" cy="60" r="47" stroke="currentColor" stroke-width="0.75" opacity="0.3" />
-  <!-- Monogram K, monoline / geometric -->
-  <path d="M42 34 L42 86" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
-  <path d="M42 61 L79 34" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M42 61 L79 87" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Kryozen Studio mark</title>
+  <desc id="logoDesc">A circular geometric K monogram.</desc>
+  <circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="1.75" opacity=".72"/>
+  <circle cx="60" cy="60" r="47.5" stroke="currentColor" stroke-width="1" opacity=".28"/>
+  <path d="M42 34V86M42 61L79 34M42 61L79 87" stroke="currentColor" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

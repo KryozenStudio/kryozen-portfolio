@@ -24,7 +24,7 @@
      overrides this for the press itself, which stays fast and decisive
      (no bounce going down, only coming back up). */
   transition:
-    transform 220ms var(--ease-spring),
+    transform 180ms var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out),
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);

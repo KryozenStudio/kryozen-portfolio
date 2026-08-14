@@ -47,26 +47,24 @@
   }
 
   /* -----------------------------------------------------------------
-     PORTRAIT — real photo if configured and it loads; otherwise the
-     brand mark on a gradient, matching the thumbnail/player fallback
-     visual language used elsewhere in the site.
+     PORTRAIT — optional. No placeholder logo is used when a photo has
+     not been configured, keeping the About section free of extra marks.
   ----------------------------------------------------------------- */
   var portrait = document.getElementById("about-portrait");
+  var portraitMedia = document.querySelector(".about__media");
   var portraitImg = document.getElementById("about-portrait-img");
-
-  function showPortraitFallback() {
-    if (portrait) portrait.classList.add("about__portrait--fallback");
-    if (portraitImg) portraitImg.hidden = true;
-  }
 
   if (portrait && portraitImg) {
     if (aboutCfg.profileImage) {
       portraitImg.src = aboutCfg.profileImage;
       portraitImg.alt = "";
       portraitImg.hidden = false;
-      portraitImg.addEventListener("error", showPortraitFallback, { once: true });
+      if (portraitMedia) portraitMedia.hidden = false;
+      portraitImg.addEventListener("error", function () {
+        if (portraitMedia) portraitMedia.hidden = true;
+      }, { once: true });
     } else {
-      showPortraitFallback();
+      if (portraitMedia) portraitMedia.hidden = true;
     }
   }
 

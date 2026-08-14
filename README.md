@@ -167,7 +167,7 @@ Still in `config/site.config.js`:
 
 ```js
 hero: {
-  eyebrow: "REEL 001 — SHOWREEL",
+  eyebrow: "SHOWREEL",
   heading: "KRYOZEN STUDIO",
   intro: "…your intro paragraph…",
   ctaPrimary: { label: "View Work", href: "#work" },
@@ -287,7 +287,7 @@ Open `config/site.config.js`:
 
 ```js
 about: {
-  eyebrow: "REEL 003 — ABOUT",
+  eyebrow: "ABOUT",
   heading: "About",
   role: "Video Editor",
   profileImage: "assets/images/profile/profile.jpg",
@@ -326,7 +326,7 @@ list are two separate objects:
 
 ```js
 servicesSection: {
-  eyebrow: "REEL 004 — SERVICES",
+  eyebrow: "SERVICES",
   heading: "Services",
   subtitle: "What I offer, in plain terms.",
 },
@@ -359,7 +359,7 @@ Open `config/site.config.js`:
 
 ```js
 contact: {
-  eyebrow: "REEL 006 — CONTACT",
+  eyebrow: "CONTACT",
   heading: "Let's Work Together",
   subtitle: "…a short one-line CTA…",
   email: "kryozenstudio@gmail.com",

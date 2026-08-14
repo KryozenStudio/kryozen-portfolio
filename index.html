@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap"
     rel="stylesheet"
   />
 
@@ -125,24 +125,29 @@
       <div class="container hero__content">
         <p class="hero__eyebrow">
           <span class="hero__eyebrow-dot" aria-hidden="true"></span>
-          <span id="hero-eyebrow-text">REEL 001 — SHOWREEL</span>
+          <span id="hero-eyebrow-text">KRYOZEN / STUDIO</span>
         </p>
 
-        <div class="hero__logo-intro" aria-hidden="true">
-          <div class="hero__logo-ring"></div>
-          <div class="hero__logo-mark">
-            <img
-              class="hero__brand-art"
-              data-logo-img
-              src="assets/images/logo/logo.svg"
-              alt=""
-              width="132"
-              height="132"
-            />
+        <div class="hero__brand-lockup" aria-hidden="true">
+          <div class="hero__logo-intro">
+            <span class="hero__logo-sweep"></span>
+            <div class="hero__logo-mark">
+              <img
+                class="hero__brand-art"
+                data-logo-img
+                src="assets/images/logo/logo.svg"
+                alt=""
+                width="112"
+                height="112"
+              />
+            </div>
+          </div>
+
+          <div class="hero__wordmark" id="hero-title" data-wordmark="KRYOZEN STUDIO">
+            <span class="hero__wordmark-line hero__wordmark-line--main">KRYOZEN</span>
+            <span class="hero__wordmark-line hero__wordmark-line--sub">STUDIO</span>
           </div>
         </div>
-
-        <h1 class="hero__title" id="hero-title" data-wordmark="KRYOZEN STUDIO">KRYOZEN STUDIO</h1>
 
         <p class="hero__intro" id="hero-intro">
           Video editing focused on short-form, gaming, and anime/AMV work — with rhythm,
@@ -181,37 +186,17 @@
       <div class="container work__head">
         <p class="work__eyebrow">
           <span class="work__eyebrow-dot" aria-hidden="true"></span>
-          <span id="work-eyebrow-text">REEL 002 — WORK</span>
+          <span id="work-eyebrow-text">WORK</span>
         </p>
-        <h2 class="work__title" id="work-title">Selected Work</h2>
+        <h2 class="work__title" id="work-title">Work</h2>
         <p class="work__subtitle" id="work-subtitle">
-          A growing collection of edits across formats — filter by category or search by title.
+          Explore each discipline on its own page, with focused search and filtering.
         </p>
       </div>
-
-      <div class="container work__controls">
-        <div class="work__filters" id="work-filters" role="group" aria-label="Filter projects by category">
-          <!-- injected by js/work.js from config.categories -->
-        </div>
-
-        <div class="work__search" role="search">
-          <label class="visually-hidden" id="work-search-label" for="work-search-input">Search projects</label>
-          <span class="work__search-icon" id="work-search-icon" aria-hidden="true"></span>
-          <input
-            class="work__search-input"
-            type="search"
-            id="work-search-input"
-            placeholder="Search projects…"
-            autocomplete="off"
-          />
-        </div>
-      </div>
-
       <div class="container">
-        <p class="visually-hidden" id="work-status" role="status" aria-live="polite"></p>
-        <p class="work__empty" id="work-empty" hidden>No projects published yet.</p>
-        <div class="work__grid" id="work-grid">
-          <!-- injected by js/work.js from config.projects, sorted newest first -->
+        <div class="work__category-cta">
+          <span>Choose a discipline above to explore the full portfolio.</span>
+          <a class="btn btn--secondary btn--sm" href="#category-strip-title">Browse categories</a>
         </div>
       </div>
     </section>
@@ -226,7 +211,7 @@
       <div class="container services__head">
         <p class="services__eyebrow">
           <span class="services__eyebrow-dot" aria-hidden="true"></span>
-          <span id="services-eyebrow-text">REEL 004 — SERVICES</span>
+          <span id="services-eyebrow-text">SERVICES</span>
         </p>
         <h2 class="services__title" id="services-title">Services</h2>
         <p class="services__subtitle" id="services-subtitle">What I offer, in plain terms.</p>
@@ -251,14 +236,14 @@
         <div class="about__media">
           <div class="about__portrait" id="about-portrait">
             <img id="about-portrait-img" src="" alt="" loading="lazy" hidden />
-            <img class="about__portrait-mark" data-logo-img src="assets/images/logo/logo.svg" alt="" aria-hidden="true" />
+
           </div>
         </div>
 
         <div class="about__content">
           <p class="about__eyebrow">
             <span class="about__eyebrow-dot" aria-hidden="true"></span>
-            <span id="about-eyebrow-text">REEL 003 — ABOUT</span>
+            <span id="about-eyebrow-text">ABOUT</span>
           </p>
           <h2 class="about__title" id="about-title">About</h2>
           <p class="about__role" id="about-role">KRYOZEN — Video Editor</p>
@@ -285,7 +270,7 @@
     ===================================================================== -->
     <section class="faq" id="faq">
       <div class="container faq__head">
-        <p class="faq__eyebrow"><span class="faq__eyebrow-dot" aria-hidden="true"></span><span id="faq-eyebrow-text">REEL 005 — FAQ</span></p>
+        <p class="faq__eyebrow"><span class="faq__eyebrow-dot" aria-hidden="true"></span><span id="faq-eyebrow-text">FAQ</span></p>
         <h2 class="faq__title" id="faq-title">Frequently Asked Questions</h2>
         <p class="faq__subtitle" id="faq-subtitle">A few things worth knowing before you send a project.</p>
       </div>
@@ -301,7 +286,7 @@
       <div class="container contact__inner">
         <p class="contact__eyebrow">
           <span class="contact__eyebrow-dot" aria-hidden="true"></span>
-          <span id="contact-eyebrow-text">REEL 005 — CONTACT</span>
+          <span id="contact-eyebrow-text">CONTACT</span>
         </p>
         <h2 class="contact__title" id="contact-title">Let's Work Together</h2>
         <p class="contact__subtitle" id="contact-subtitle">

@@ -360,3 +360,6 @@
 }
 
 .project-card__featured{position:absolute;top:12px;left:12px;z-index:2;padding:6px 9px;border-radius:999px;background:rgba(8,8,10,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font:600 .62rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-primary)}
+
+.work__category-cta{display:flex;align-items:center;justify-content:space-between;gap:var(--space-md);padding:1rem 1.1rem;border:1px solid var(--color-surface-border);border-radius:var(--radius-md);background:rgba(255,255,255,.025);color:var(--color-text-secondary);backdrop-filter:blur(var(--blur-glass))}
+@media(max-width:600px){.work__category-cta{align-items:flex-start;flex-direction:column}.work__category-cta .btn{width:100%}}

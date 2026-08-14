@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#08080a"><meta name="color-scheme" content="dark">
 <link rel="icon" href="assets/images/logo/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/variables.css"><link rel="stylesheet" href="css/reset.css"><link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/buttons.css"><link rel="stylesheet" href="css/navbar.css"><link rel="stylesheet" href="css/category-intro.css"><link rel="stylesheet" href="css/category-page.css"><link rel="stylesheet" href="css/player.css"><link rel="stylesheet" href="css/footer.css">
 </head>
@@ -18,7 +18,7 @@
       <span class="category-intro__ring"></span>
       <div class="category-intro__logo"><img src="assets/images/logo/logo.svg" alt=""></div>
     </div>
-    <div class="category-intro__wordmark" data-intro-wordmark="KRYOZEN STUDIO">KRYOZEN STUDIO</div>
+    <div class="category-intro__wordmark" data-intro-wordmark="KRYOZEN STUDIO"><span class="category-intro__line category-intro__line--main">KRYOZEN</span><span class="category-intro__line category-intro__line--sub">STUDIO</span></div>
     <span class="category-intro__rule"></span>
   </div>
 </div>
@@ -33,7 +33,12 @@
 <main id="main" class="category-page" data-category="Anime / AMV">
 <div class="container">
 <a class="category-page__back" href="index.html#work">← All work</a>
-<div class="category-page__head"><p class="category-page__eyebrow">KRYOZEN / WORK</p><h1 class="category-page__title" id="category-title">Anime / AMV</h1><p class="category-page__description" id="category-description"></p><div class="category-page__meta"><span class="category-page__pill" id="category-count">0 projects</span><span class="category-page__pill">Selected work</span></div></div>
+<div class="category-page__head"><p class="category-page__eyebrow">KRYOZEN / WORK</p><h1 class="category-page__title" id="category-title">Anime / AMV</h1><p class="category-page__description" id="category-description"></p><div class="category-page__meta"><span class="category-page__pill" id="category-count">0 projects</span><span class="category-page__pill">Category portfolio</span></div>
+<div class="category-page__controls" role="search">
+  <label class="visually-hidden" for="category-search">Search this category</label>
+  <input class="category-page__search" id="category-search" type="search" placeholder="Search this category…" autocomplete="off">
+  <div class="category-page__filters" id="category-filters" role="group" aria-label="Filter this category"></div>
+</div></div>
 <div class="category-page__grid" id="category-grid"></div>
 </div></main>
 <footer class="footer"><div class="container footer__inner"><div><p class="footer__copy" id="footer-copy">© 2026 Kryozen Studio. All rights reserved.</p><p class="footer__note" id="footer-note">Worldwide • Remote • Async • Built with intention.</p></div><div class="footer__social" id="footer-social"></div></div></footer>

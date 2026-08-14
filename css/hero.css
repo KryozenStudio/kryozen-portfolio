@@ -1,14 +1,8 @@
 /**
- * =============================================================================
- * HERO
- * The page's one orchestrated motion moment: a film-leader-style countdown
- * ring sweeps and irises open on the logo mark, then the wordmark, intro
- * copy, and CTAs settle in with a short staggered reveal. Plays once per
- * browser session (see js/hero-intro.js) and is skipped entirely for
- * prefers-reduced-motion users, who see the end state immediately.
- * =============================================================================
+ * KRYOZEN HERO — one connected brand reveal.
+ * The mark establishes the motion, the sweep carries that motion into the
+ * wordmark, then both settle into one quiet identity lockup.
  */
-
 .hero {
   position: relative;
   min-height: 100svh;
@@ -20,401 +14,163 @@
 }
 
 .hero__backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  position:absolute; inset:0; z-index:0; isolation:isolate;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 18%, rgba(195,20,50,.12), transparent 70%),
-    radial-gradient(ellipse 90% 65% at 50% 100%, rgba(0,0,0,.72), transparent 70%),
-    linear-gradient(180deg, #08080a 0%, #050506 100%);
-  background-color: var(--color-bg);
-  isolation: isolate;
+    radial-gradient(ellipse 72% 58% at 50% 18%, rgba(195,20,50,.09), transparent 72%),
+    linear-gradient(180deg,#09090b 0%,#050506 100%);
 }
-
 .hero__ambient {
-  position: absolute;
-  width: 48vw;
-  height: 38vw;
-  min-width: 320px;
-  min-height: 260px;
-  border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%;
-  background: radial-gradient(circle at 35% 35%, rgba(226,33,63,.22), rgba(195,20,50,.08) 42%, transparent 72%);
-  filter: blur(56px);
-  opacity: .75;
-  will-change: transform, border-radius;
-  mix-blend-mode: screen;
+  position:absolute; width:46vw; height:34vw; min-width:300px; min-height:240px;
+  border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
+  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.16),rgba(195,20,50,.055) 44%,transparent 72%);
+  filter:blur(64px); opacity:.62; will-change:transform;
+  mix-blend-mode:screen;
 }
-.hero__ambient--one {
-  top: 7%;
-  left: 6%;
-  animation: ambientMorphOne 30s linear infinite;
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 34s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 40s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 46s ease-in-out infinite}
+
+.hero__content{
+  position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:var(--space-md);
 }
-.hero__ambient--two {
-  right: -4%;
-  top: 30%;
-  width: 42vw;
-  height: 34vw;
-  opacity: .52;
-  animation: ambientMorphTwo 36s linear infinite;
+.hero__eyebrow{
+  display:inline-flex;align-items:center;gap:var(--space-2xs);
+  font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--color-text-tertiary);opacity:0;transform:translateY(8px);
+  animation:heroFadeUp 520ms var(--ease-out) 1680ms forwards;
 }
-.hero__ambient--three {
-  left: 25%;
-  bottom: -16%;
-  width: 55vw;
-  height: 32vw;
-  opacity: .35;
-  filter: blur(72px);
-  animation: ambientMorphThree 42s linear infinite;
+.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow)}
+
+.hero__brand-lockup{
+  display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.4vw,32px);
+  width:min(100%,760px); padding:14px 0;
+  margin:var(--space-sm) 0 var(--space-2xs);
+  isolation:isolate;
 }
-
-
-.hero__content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--space-md);
+.hero__logo-intro{
+  position:relative;flex:0 0 clamp(88px,10vw,112px);
+  width:clamp(88px,10vw,112px);height:clamp(88px,10vw,112px);
+  display:grid;place-items:center;
 }
-
-/* ---------------------------------------------------------------------
-   EYEBROW — timecode-style label. This is the site's recurring
-   structural device (used again by future sections) in place of a
-   generic "01 / 02 / 03" marker, since it reflects how an editor's
-   timeline actually reads.
---------------------------------------------------------------------- */
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-
-  opacity: 0;
-  transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1200ms forwards;
+.hero__logo-mark{
+  position:relative;z-index:2;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:rgba(8,8,10,.92);border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 18px 50px rgba(0,0,0,.42),0 0 32px rgba(195,20,50,.09);
+  opacity:0;transform:scale(.82);clip-path:circle(0% at 50% 50%);filter:blur(6px);
+  animation:brandMarkReveal 700ms var(--ease-out) 520ms forwards;
 }
-
-.hero__eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent-bright);
-  box-shadow: 0 0 10px 2px var(--color-accent-glow);
-  animation: recPulse 2.2s ease-in-out infinite;
+.hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
+.hero__logo-sweep{
+  position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
+  background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
+  box-shadow:0 0 16px rgba(226,33,63,.18);
+  transform:translateY(-50%);opacity:0;
+  animation:brandSweep 720ms var(--ease-out) 1030ms forwards;
 }
-
-/* ---------------------------------------------------------------------
-   LOGO INTRO — supplied Kryozen artwork + countdown ring + iris reveal
---------------------------------------------------------------------- */
-.hero__logo-intro {
-  position: relative;
-  width: 132px;
-  height: 132px;
-  display: grid;
-  place-items: center;
-  margin-bottom: var(--space-2xs);
+.hero__logo-intro::after{
+  content:"";position:absolute;z-index:0;right:-1px;top:50%;
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(226,33,63,.26);
+  transform:translate(50%,-50%) scale(.55);
+  opacity:0;
+  animation:brandConnector 520ms var(--ease-out) 980ms forwards;
 }
-
-.hero__logo-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  animation: ringSweep var(--duration-intro) var(--ease-in-out) forwards;
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+.hero__wordmark{
+  position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
+  min-width:0;max-width:100%;overflow:visible;text-align:left;
+  opacity:1;
 }
-
-.hero__logo-mark {
-  position: relative;
-  z-index: 1;
-  width: 132px;
-  height: 132px;
-  color: var(--color-accent);
-  border-radius: 24px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,.10);
-  box-shadow: 0 18px 50px rgba(0,0,0,.38), 0 0 34px rgba(195,20,50,.10);
-  background: #08080a;
-  opacity: 0;
-  clip-path: circle(0% at 50% 50%);
-  filter: blur(8px);
-  animation: irisReveal 760ms var(--ease-out) 700ms forwards;
+.hero__wordmark-line{
+  display:block;overflow:hidden;white-space:nowrap;
+  clip-path:inset(0 100% 0 0);transform:translateX(-16px);filter:blur(7px);
+  will-change:clip-path,transform,filter;
 }
-
-.hero__logo-mark img,
-.hero__logo-mark svg {
-  width: 100%;
-  height: 100%;
+.hero__wordmark-line--main{
+  font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
+  line-height:.9;font-weight:800;letter-spacing:-.055em;color:var(--color-text-primary);
+  animation:wordmarkReveal 780ms var(--ease-out) 1110ms forwards;
 }
-
-.hero__brand-art {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transform: scale(1.015);
+.hero__wordmark-line--sub{
+  margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
+  line-height:1;font-weight:600;letter-spacing:.48em;color:var(--color-text-secondary);
+  animation:wordmarkReveal 620ms var(--ease-out) 1250ms forwards;
 }
-
-/* ---------------------------------------------------------------------
-   TITLE — wordmark, "credits assembling into focus"
---------------------------------------------------------------------- */
-.hero__title {
-  position: relative;
-  display: inline-flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  white-space: nowrap;
-  max-width: 100%;
-  font-size: var(--fs-hero);
-  line-height: .92;
-  letter-spacing: -.015em;
-  text-indent: 0;
-  opacity: 1;
-  isolation: isolate;
+.hero__intro{
+  max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1710ms forwards;
 }
-
-.hero__title::after {
-  content: ""; position:absolute; left:8%; right:8%; bottom:-.14em; height:1px;
-  background:linear-gradient(90deg,transparent,var(--color-accent-bright),transparent);
-  transform:scaleX(0); transform-origin:center; opacity:0;
-  animation:wordmarkLineIn 700ms var(--ease-out) 2060ms forwards;
+.hero__actions{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1900ms forwards;
 }
-
-.hero__title-char {
-  display:inline-block; opacity:0; transform:translateY(.22em) scale(.92);
-  filter:blur(9px); letter-spacing:.04em;
-  animation:wordmarkCharIn 760ms var(--ease-out) calc(1420ms + (var(--i) * 42ms)) forwards;
-  will-change:transform,opacity,filter;
+.hero__scroll{
+  position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
+  color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 2360ms forwards;
 }
+.hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
 
-.hero__title-space{width:.34em}
-
-
-/* ---------------------------------------------------------------------
-   INTRO COPY
---------------------------------------------------------------------- */
-.hero__intro {
-  max-width: 56ch;
-  font-size: var(--fs-body-lg);
-  line-height: var(--lh-relaxed);
-  color: var(--color-text-secondary);
-
-  opacity: 0;
-  transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 1820ms forwards;
+@keyframes brandMarkReveal{
+  0%{opacity:0;clip-path:circle(0% at 50% 50%);transform:scale(.78);filter:blur(7px)}
+  58%{opacity:1;clip-path:circle(54% at 50% 50%);transform:scale(1.01);filter:blur(0)}
+  78%{clip-path:circle(51% at 50% 50%);transform:scale(.995)}
+  100%{opacity:1;clip-path:circle(50% at 50% 50%);transform:scale(1);filter:blur(0)}
 }
-
-/* ---------------------------------------------------------------------
-   ACTIONS
---------------------------------------------------------------------- */
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-
-  opacity: 0;
-  transform: translateY(14px);
-  animation: heroFadeUp var(--duration-slow) var(--ease-out) 2020ms forwards;
+@keyframes brandConnector{
+  0%{opacity:0;transform:translate(50%,-50%) scale(.55)}
+  55%{opacity:.9;transform:translate(50%,-50%) scale(1)}
+  100%{opacity:.18;transform:translate(50%,-50%) scale(1)}
 }
-
-/* ---------------------------------------------------------------------
-   SCROLL CUE
---------------------------------------------------------------------- */
-.hero__scroll {
-  position: absolute;
-  bottom: var(--space-lg);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2xs);
-
-  opacity: 0;
-  animation: heroFadeIn var(--duration-slow) var(--ease-out) 2260ms forwards;
+@keyframes brandSweep{
+  0%{width:0;opacity:0}
+  16%{opacity:.82}
+  100%{width:clamp(40px,10vw,108px);opacity:.38}
 }
-
-.hero__scroll-line {
-  width: 1px;
-  height: 34px;
-  background: linear-gradient(180deg, var(--color-accent-bright), transparent);
-  animation: scrollPulse 2.4s var(--ease-in-out) infinite;
+@keyframes wordmarkReveal{
+  0%{clip-path:inset(0 100% 0 0);transform:translateX(-16px);filter:blur(7px)}
+  70%{clip-path:inset(0 3% 0 0);transform:translateX(1px);filter:blur(0)}
+  100%{clip-path:inset(0 0 0 0);transform:translateX(0);filter:blur(0)}
 }
+@keyframes heroFadeUp{to{opacity:1;transform:none}}
+@keyframes heroScrollIn{to{opacity:1}}
+@keyframes ambientDriftOne{0%,100%{transform:translate3d(-2%,0,0) scale(.98)}50%{transform:translate3d(8%,5%,0) scale(1.04)}}
+@keyframes ambientDriftTwo{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-7%,-5%,0) scale(1.06)}}
+@keyframes ambientDriftThree{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4%,-6%,0) scale(1.03)}}
 
-.hero__scroll-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: var(--ls-widest);
-  color: var(--color-text-tertiary);
-  text-transform: uppercase;
-}
-
-@media (max-width: 640px) {
-  .hero__scroll {
-    display: none;
-  }
-}
-
-/* ---------------------------------------------------------------------
-   KEYFRAMES
---------------------------------------------------------------------- */
-@keyframes ringSweep {
-  0% {
-    background: conic-gradient(from -90deg, var(--color-accent-bright) 0deg, transparent 0deg);
-    opacity: 1;
-  }
-  65% {
-    background: conic-gradient(from -90deg, var(--color-accent-bright) 360deg, transparent 360deg);
-    opacity: 1;
-  }
-  100% {
-    background: conic-gradient(from -90deg, var(--color-accent-bright) 360deg, transparent 360deg);
-    opacity: 0;
-  }
-}
-
-@keyframes irisReveal {
-  from {
-    opacity: 0;
-    clip-path: circle(0% at 50% 50%);
-    transform: scale(0.90);
-  }
-  72% {
-    opacity: 1;
-    transform: scale(1.008);
-  }
-  to {
-    opacity: 1;
-    clip-path: circle(75% at 50% 50%);
-    transform: scale(1);
-    filter: blur(0);
-  }
-}
-
-@keyframes wordmarkCharIn {
-  0%{opacity:0;transform:translateY(.28em) scale(.88);filter:blur(9px);letter-spacing:.08em}
-  58%{opacity:1;transform:translateY(-.035em) scale(1.025);filter:blur(0);letter-spacing:.005em}
-  78%{transform:translateY(.012em) scale(.995)}
-  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);letter-spacing:-.015em}
-}
-@keyframes wordmarkLineIn {0%{opacity:0;transform:scaleX(0)}35%{opacity:.75}100%{opacity:.35;transform:scaleX(1)}}
-
-@keyframes titleTrackIn {
-  from {
-    opacity: 0;
-    letter-spacing: 0.24em;
-    transform: translateY(12px);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    letter-spacing: 0.02em;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes heroFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes heroFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes recPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
-
-@keyframes scrollPulse {
-  0% { transform: scaleY(0.3); opacity: 0.3; transform-origin: top; }
-  50% { transform: scaleY(1); opacity: 1; transform-origin: top; }
-  100% { transform: scaleY(0.3); opacity: 0.3; transform-origin: bottom; }
-}
-
-/* ---------------------------------------------------------------------
-   INTRO SKIP STATE
-   Applied to <html> by an inline script before first paint when the
-   intro has already played this session, and permanently for
-   prefers-reduced-motion. Elements jump straight to their end state
-   with no animation.
---------------------------------------------------------------------- */
 .no-intro .hero__eyebrow,
 .no-intro .hero__logo-mark,
-.no-intro .hero__title,
+.no-intro .hero__wordmark-line,
 .no-intro .hero__intro,
 .no-intro .hero__actions,
-.no-intro .hero__scroll {
-  animation: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  clip-path: circle(75% at 50% 50%) !important;
-  letter-spacing: 0.02em !important;
-  filter: none !important;
-}
+.no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;filter:none;animation:none}
+.no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
+.no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
 
-.no-intro .hero__logo-ring {
-  display: none;
-}
-
-.no-intro .hero__logo-mark {
-  border-radius: 24px;
-}
-
-.no-intro .hero__title-char{animation:none!important;opacity:1!important;transform:none!important;filter:none!important;letter-spacing:.02em!important}
-.no-intro .hero__title::after{animation:none!important;opacity:0!important}
 @media(max-width:640px){
-  .hero__logo-intro{width:112px;height:112px}
-  .hero__logo-mark{width:112px;height:112px;border-radius:20px}
-  .hero__title{font-size:clamp(2.35rem,11.5vw,5rem);max-width:100%;letter-spacing:-.02em}
-  .hero__title-char{animation-delay:calc(1320ms + (var(--i) * 32ms))}
+  .hero{padding-top:calc(64px + var(--space-xl))}
+  .hero__brand-lockup{gap:14px;width:100%;padding-inline:4px}
+  .hero__logo-intro{flex-basis:78px;width:78px;height:78px}
+  .hero__wordmark-line--main{font-size:clamp(2.1rem,12vw,3.5rem);letter-spacing:-.05em}
+  .hero__wordmark-line--sub{font-size:.64rem;letter-spacing:.38em}
+  .hero__logo-sweep{left:70%}
+  .hero__intro{font-size:1rem;max-width:34ch}
 }
-
-@keyframes ambientMorphOne {
-  0% { transform: translate3d(-2%, -1%, 0) scale(.96) rotate(-3deg); border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%; }
-  25% { transform: translate3d(6%, 5%, 0) scale(1.06) rotate(3deg); border-radius: 43% 57% 37% 63% / 58% 41% 59% 42%; }
-  50% { transform: translate3d(13%, -3%, 0) scale(1.02) rotate(8deg); border-radius: 68% 32% 52% 48% / 36% 64% 42% 58%; }
-  75% { transform: translate3d(5%, -7%, 0) scale(.98) rotate(2deg); border-radius: 47% 53% 61% 39% / 40% 63% 37% 60%; }
-  100% { transform: translate3d(-2%, -1%, 0) scale(.96) rotate(-3deg); border-radius: 58% 42% 63% 37% / 43% 61% 39% 57%; }
+@media(max-width:420px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:72px;width:72px;height:72px}
+  .hero__wordmark-line--main{font-size:clamp(1.85rem,11vw,2.8rem)}
+  .hero__wordmark-line--sub{font-size:.56rem;letter-spacing:.32em}
 }
-@keyframes ambientMorphTwo {
-  0% { transform: translate3d(3%, 4%, 0) scale(1) rotate(4deg); border-radius: 36% 64% 55% 45% / 61% 35% 65% 39%; }
-  25% { transform: translate3d(-7%, -4%, 0) scale(1.1) rotate(-2deg); border-radius: 58% 42% 43% 57% / 46% 60% 40% 54%; }
-  50% { transform: translate3d(-3%, 10%, 0) scale(.94) rotate(-12deg); border-radius: 47% 53% 68% 32% / 57% 43% 57% 43%; }
-  75% { transform: translate3d(7%, 1%, 0) scale(1.05) rotate(5deg); border-radius: 41% 59% 61% 39% / 63% 37% 55% 45%; }
-  100% { transform: translate3d(3%, 4%, 0) scale(1) rotate(4deg); border-radius: 36% 64% 55% 45% / 61% 35% 65% 39%; }
+@media(max-width:360px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:68px;width:68px;height:68px}
+  .hero__wordmark-line--main{font-size:1.95rem}
+  .hero__wordmark-line--sub{font-size:.58rem}
 }
-@keyframes ambientMorphThree {
-  0% { transform: translate3d(-6%, 2%, 0) scale(.95); border-radius: 63% 37% 44% 56% / 52% 61% 39% 48%; }
-  25% { transform: translate3d(4%, -5%, 0) scale(1.06); border-radius: 42% 58% 59% 41% / 62% 38% 55% 45%; }
-  50% { transform: translate3d(2%, 5%, 0) scale(1.02); border-radius: 55% 45% 34% 66% / 43% 57% 63% 37%; }
-  75% { transform: translate3d(-8%, -2%, 0) scale(.98); border-radius: 57% 43% 47% 53% / 39% 64% 36% 61%; }
-  100% { transform: translate3d(-6%, 2%, 0) scale(.95); border-radius: 63% 37% 44% 56% / 52% 61% 39% 48%; }
-}
-
-@media (max-width: 640px) {
-  .hero__ambient { min-width: 280px; min-height: 220px; filter: blur(46px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__ambient { animation: none; }
+@media(prefers-reduced-motion:reduce){
+  .hero__ambient{animation:none}
+  .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
+  .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
 }

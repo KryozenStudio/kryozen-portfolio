@@ -478,8 +478,8 @@ For whatever *does* come next:
    (`projects`, `services`) — rather than inventing a parallel config
    file or overloading an existing field's shape.
 2. Follow the existing eyebrow-label pattern (timecode-style, e.g.
-   `"REEL 002 — WORK"`) for each new section's heading treatment, so the
-   motif stays consistent site-wide. `REEL 001`–`005` are taken (hero
+   `"WORK"`) for each new section's heading treatment, so the
+   motif stays consistent site-wide. the old numbered reel motif is retired (hero
    through contact); the next section continues the sequence.
 3. New sections get `scroll-margin-top` for free (see `base.css`'s
    `[id] { scroll-margin-top: 88px; }` rule) — just give the section a

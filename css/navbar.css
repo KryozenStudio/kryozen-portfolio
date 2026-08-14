@@ -274,3 +274,31 @@
 }
 .navbar__mobile-admin:hover,
 .navbar__mobile-admin:focus-visible { color: var(--color-text-primary); }
+
+/* Navigation remains a single intentional row on narrow screens when the
+   primary links are exposed; the compact mobile menu remains available for
+   very small widths. */
+.navbar__links{white-space:nowrap}
+.navbar__links .navbar__link{white-space:nowrap}
+@media(max-width:859px){
+  .navbar__links{gap:clamp(7px,1.8vw,14px);width:100%;justify-content:center}
+  .navbar__links .navbar__link{font-size:.66rem;letter-spacing:.015em}
+}
+@media(max-width:520px){
+  .navbar__links{gap:clamp(4px,1.6vw,7px)}
+  .navbar__links .navbar__link{font-size:clamp(.56rem,2.05vw,.61rem);letter-spacing:.01em}
+}
+
+@media(max-width:859px){
+  .navbar__inner{gap:6px}
+  .navbar__brand{flex:0 0 auto}
+  .navbar__brand-word{display:none}
+  .navbar__links{display:flex;flex:1;justify-content:flex-end;gap:clamp(4px,1.5vw,9px);min-width:0}
+  .navbar__link{font-size:clamp(.58rem,2.2vw,.7rem);letter-spacing:0;padding:6px 0}
+  .navbar__actions{display:none}
+}
+@media(max-width:360px){
+  .navbar__brand-mark{width:26px;height:26px}
+  .navbar__links{gap:4px}
+  .navbar__link{font-size:.55rem}
+}

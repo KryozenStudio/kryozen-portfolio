@@ -52,7 +52,7 @@ window.SITE_CONFIG = {
   // HERO
   // ---------------------------------------------------------------------
   hero: {
-    eyebrow: "REEL 001 — SHOWREEL",
+    eyebrow: "KRYOZEN / STUDIO",
     heading: "KRYOZEN STUDIO",
     intro:
       "Video edits built around rhythm, typography, captions, compositing, and the feeling of the reference — with a focus on short-form, gaming, and anime/AMV work.",
@@ -91,11 +91,9 @@ window.SITE_CONFIG = {
   // WORK / PORTFOLIO — section copy + behavior text. Read by js/work.js.
   // ---------------------------------------------------------------------
   work: {
-    eyebrow: "REEL 002 — WORK",
-    heading: "Selected Work",
-    subtitle: "A growing collection of edits across formats — filter by category or search by title.",
-    searchLabel: "Search projects",
-    searchPlaceholder: "Search projects…",
+    eyebrow: "WORK",
+    heading: "Work",
+    subtitle: "Explore each discipline on its own page, with focused search and filtering.",
     allLabel: "All",
     emptyStateText: "No projects published yet.",
   },
@@ -141,7 +139,7 @@ window.SITE_CONFIG = {
   // `brand.shortName` directly (see PROJECT_RULES.md → "About Section").
   // =========================================================================
   about: {
-    eyebrow: "REEL 003 — ABOUT",
+    eyebrow: "ABOUT",
     heading: "About",
     role: "Video Editor",
     profileImage: "",
@@ -163,7 +161,7 @@ window.SITE_CONFIG = {
   // separate from `categories`/`projects` (data).
   // =========================================================================
   servicesSection: {
-    eyebrow: "REEL 004 — SERVICES",
+    eyebrow: "SERVICES",
     heading: "Services",
     subtitle: "Focused editing for content that needs rhythm, clarity, and personality.",
     emptyStateText: "No services are currently listed.",
@@ -186,7 +184,7 @@ window.SITE_CONFIG = {
   // FAQ
   // =========================================================================
   faq: {
-    eyebrow: "REEL 005 — FAQ",
+    eyebrow: "FAQ",
     heading: "Frequently Asked Questions",
     subtitle: "A few things worth knowing before you send a project.",
     items: [
@@ -210,7 +208,7 @@ window.SITE_CONFIG = {
   // direct contact methods; social discovery remains in the footer.
   // =========================================================================
   contact: {
-    eyebrow: "REEL 006 — CONTACT",
+    eyebrow: "CONTACT",
     heading: "Let's Work Together",
     subtitle: "Send the footage, deadline, and reference. We’ll talk through the scope before you commit.",
     // Direct contact route. Keep this editable from config.
