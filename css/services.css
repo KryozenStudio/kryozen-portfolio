@@ -1,0 +1,128 @@
+/**
+ * =============================================================================
+ * SERVICES
+ * A simple, restrained card grid generated from config.services. Icons
+ * are optional per card — the layout holds up with or without one (see
+ * js/services.js). No hover choreography beyond the same quiet lift
+ * used by project cards, for visual consistency.
+ * =============================================================================
+ */
+
+.services {
+  padding: var(--space-2xl) 0;
+}
+
+.services__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xs);
+  max-width: 60ch;
+  margin: 0 auto var(--space-xl);
+  text-align: center;
+}
+
+.services__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.services__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 10px 2px var(--color-accent-glow);
+}
+
+.services__title {
+  font-size: var(--fs-h2);
+}
+
+.services__subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--fs-body-lg);
+}
+
+.services__empty {
+  padding: var(--space-2xl) 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
+@media (max-width: 480px) {
+  .services__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+  border: 1px solid var(--color-surface-border);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  transition:
+    transform 220ms var(--ease-spring),
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-surface-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.service-card:active {
+  transition: transform 90ms var(--ease-out);
+  transform: translateY(-1px) scale(0.98);
+}
+
+.service-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent-glow-soft);
+  color: var(--color-accent-bright);
+}
+
+.service-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.service-card__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  color: var(--color-text-primary);
+}
+
+.service-card__description {
+  color: var(--color-text-secondary);
+  font-size: var(--fs-small);
+  line-height: var(--lh-relaxed);
+}

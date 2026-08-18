@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Kryozen Studio mark</title>
+  <desc id="logoDesc">A circular geometric K monogram.</desc>
+  <circle cx="60" cy="60" r="55" stroke="#f4f2f0" stroke-width="1.75" opacity=".72"/>
+  <circle cx="60" cy="60" r="47.5" stroke="#f4f2f0" stroke-width="1" opacity=".28"/>
+  <path d="M42 34V86M42 61L79 34M42 61L79 87" stroke="#f4f2f0" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

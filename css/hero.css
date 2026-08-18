@@ -1,0 +1,201 @@
+/**
+ * KRYOZEN HERO — one connected brand reveal.
+ * The mark establishes the motion, the sweep carries that motion into the
+ * wordmark, then both settle into one quiet identity lockup.
+ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: calc(72px + var(--space-2xl)) 0 var(--space-2xl);
+}
+
+.hero__backdrop {
+  position:absolute; inset:0; z-index:0; isolation:isolate;
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 18%, rgba(195,20,50,.09), transparent 72%),
+    linear-gradient(180deg,#09090b 0%,#050506 100%);
+}
+.hero__ambient {
+  position:absolute; width:46vw; height:34vw; min-width:300px; min-height:240px;
+  border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
+  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.16),rgba(195,20,50,.055) 44%,transparent 72%);
+  filter:blur(64px); opacity:.62; will-change:transform;
+  mix-blend-mode:screen;
+}
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 34s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 40s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 46s ease-in-out infinite}
+
+/* Pointer-reactive ambient light — desktop only (js/hero-pointer.js sets
+   --pointer-x/--pointer-y and toggles .has-pointer-light; the class only
+   ever gets added on fine-pointer, non-reduced-motion devices, but the
+   media query below is a belt-and-braces guard against the effect
+   showing on touch or reduced-motion in case that logic ever changes). */
+.hero__backdrop::after{
+  content:"";
+  position:absolute;inset:0;z-index:1;
+  background:radial-gradient(560px circle at var(--pointer-x,50%) var(--pointer-y,32%),rgba(226,33,63,.09),transparent 62%);
+  opacity:0;
+  transition:opacity 520ms var(--ease-out);
+  pointer-events:none;
+}
+@media (hover:hover) and (pointer:fine){
+  .hero.has-pointer-light .hero__backdrop::after{opacity:1}
+}
+
+.hero__content{
+  position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:var(--space-md);
+}
+.hero__eyebrow{
+  display:inline-flex;align-items:center;gap:var(--space-2xs);
+  font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--color-text-tertiary);opacity:0;transform:translateY(8px);
+  animation:heroFadeUp 520ms var(--ease-out) 1680ms forwards;
+}
+.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow)}
+
+.hero__brand-lockup{
+  display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.4vw,32px);
+  width:min(100%,760px); padding:14px 0;
+  margin:var(--space-sm) 0 var(--space-2xs);
+  isolation:isolate;
+}
+.hero__logo-intro{
+  position:relative;flex:0 0 clamp(88px,10vw,112px);
+  width:clamp(88px,10vw,112px);height:clamp(88px,10vw,112px);
+  display:grid;place-items:center;
+}
+.hero__logo-mark{
+  position:relative;z-index:2;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:rgba(8,8,10,.92);border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 18px 50px rgba(0,0,0,.42),0 0 32px rgba(195,20,50,.09);
+  /* Iris reveal: the mark opens from a closed circular mask rather than
+     just fading in, matching the "countdown-iris" brand moment this
+     lockup is meant to be (see PROJECT_RULES.md §5) and the wipe/iris
+     film-reveal metaphor used elsewhere on the site. */
+  opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82);
+  animation:brandMarkReveal 700ms var(--ease-out) 520ms forwards;
+}
+.hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
+.hero__logo-sweep{
+  position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
+  background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
+  box-shadow:0 0 16px rgba(226,33,63,.18);
+  transform:translateY(-50%);opacity:0;
+  animation:brandSweep 720ms var(--ease-out) 1030ms forwards;
+}
+.hero__logo-intro::after{
+  content:"";position:absolute;z-index:0;right:-1px;top:50%;
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(226,33,63,.26);
+  transform:translate(50%,-50%) scale(.55);
+  opacity:0;
+  animation:brandConnector 520ms var(--ease-out) 980ms forwards;
+}
+.hero__wordmark{
+  position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
+  min-width:0;max-width:100%;overflow:visible;text-align:left;
+  opacity:1;
+}
+.hero__wordmark-line{
+  display:block;overflow:hidden;white-space:nowrap;
+  /* Wipe reveal: the line uncovers left-to-right behind a clip-path mask
+     instead of just sliding/fading, so it reads as the same "film wipe"
+     gesture as the logo iris and the sweep connecting them — one
+     continuous reveal rather than three unrelated motions. */
+  opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0);
+  will-change:clip-path,transform,opacity;
+}
+.hero__wordmark-line--main{
+  font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
+  line-height:.9;font-weight:800;letter-spacing:-.055em;color:var(--color-text-primary);
+  animation:wordmarkReveal 780ms var(--ease-out) 1110ms forwards;
+}
+.hero__wordmark-line--sub{
+  margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
+  line-height:1;font-weight:600;letter-spacing:.48em;color:var(--color-text-secondary);
+  animation:wordmarkReveal 620ms var(--ease-out) 1250ms forwards;
+}
+.hero__intro{
+  max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1710ms forwards;
+}
+.hero__actions{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1900ms forwards;
+}
+.hero__scroll{
+  position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
+  color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 2360ms forwards;
+}
+.hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
+
+@keyframes brandMarkReveal{
+  0%{opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82)}
+  68%{opacity:1;clip-path:circle(58% at 50% 50%);transform:translate3d(0,0,0) scale(1.015)}
+  100%{opacity:1;clip-path:circle(50% at 50% 50%);transform:translate3d(0,0,0) scale(1)}
+}
+@keyframes brandConnector{
+  0%{opacity:0;transform:translate(50%,-50%) scale(.55)}
+  55%{opacity:.9;transform:translate(50%,-50%) scale(1)}
+  100%{opacity:.18;transform:translate(50%,-50%) scale(1)}
+}
+@keyframes brandSweep{
+  0%{width:0;opacity:0}
+  16%{opacity:.82}
+  100%{width:clamp(40px,10vw,108px);opacity:.38}
+}
+@keyframes wordmarkReveal{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0)}
+  72%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(1px,0,0)}
+  100%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(0,0,0)}
+}
+@keyframes heroFadeUp{to{opacity:1;transform:none}}
+@keyframes heroScrollIn{to{opacity:1}}
+@keyframes ambientDriftOne{0%,100%{transform:translate3d(-2%,0,0) scale(.98)}50%{transform:translate3d(8%,5%,0) scale(1.04)}}
+@keyframes ambientDriftTwo{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-7%,-5%,0) scale(1.06)}}
+@keyframes ambientDriftThree{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4%,-6%,0) scale(1.03)}}
+
+.no-intro .hero__eyebrow,
+.no-intro .hero__logo-mark,
+.no-intro .hero__wordmark-line,
+.no-intro .hero__intro,
+.no-intro .hero__actions,
+.no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
+.no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
+.no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
+
+@media(max-width:640px){
+  .hero{padding-top:calc(64px + var(--space-xl))}
+  .hero__brand-lockup{gap:14px;width:100%;padding-inline:4px}
+  .hero__logo-intro{flex-basis:78px;width:78px;height:78px}
+  .hero__wordmark-line--main{font-size:clamp(2.1rem,12vw,3.5rem);letter-spacing:-.05em}
+  .hero__wordmark-line--sub{font-size:.64rem;letter-spacing:.38em}
+  .hero__logo-sweep{left:70%}
+  .hero__intro{font-size:1rem;max-width:34ch}
+}
+@media(max-width:420px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:72px;width:72px;height:72px}
+  .hero__wordmark-line--main{font-size:clamp(1.85rem,11vw,2.8rem)}
+  .hero__wordmark-line--sub{font-size:.56rem;letter-spacing:.32em}
+}
+@media(max-width:360px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:68px;width:68px;height:68px}
+  .hero__wordmark-line--main{font-size:1.95rem}
+  .hero__wordmark-line--sub{font-size:.58rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero__ambient{animation:none}
+  .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
+  .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
+  .hero__backdrop::after{display:none}
+}
