@@ -249,5 +249,17 @@ window.SITE_CONFIG = {
   //   software: ["Node Video"],
   //   date: "2026-08-07",
   // },
-  projects: [],
+  projects: [
+    {
+      id: "testing-video-player",
+      title: "Testing Video Player",
+      category: "Anime / AMV",
+      thumbnail: "",
+      video: "assets/videos/testing-video-player.mp4",
+      description: "",
+      software: ["Node Video"],
+      date: "2026-08-18",
+      featured: false
+    }
+  ],
 };
