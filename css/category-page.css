@@ -31,7 +31,15 @@ body:has(.category-page) {
 @media(prefers-reduced-motion:reduce){.category-page::before,.category-page::after{animation:none}}
 
 /* Dedicated category view */
-.category-page { min-height:100svh; padding: calc(100px + var(--space-lg)) 0 var(--space-2xl); }
+.category-page { min-height:100svh; padding: calc(var(--navbar-h-desktop) + 28px + var(--space-lg)) 0 var(--space-2xl); }
+
+/* Matches the navbar's own <=859px cutoff (see navbar.css), not the
+   700px this used to trigger at — between 701-859px the navbar is
+   already in its taller mobile-height-plus-strip form, so anything
+   still assuming the desktop offset there would sit under the bar. */
+@media(max-width:859px){
+  .category-page{padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + 28px)}
+}
 .category-page__head { max-width:760px; margin-bottom:var(--space-xl); }
 .category-page__back { display:inline-flex; gap:.45rem; align-items:center; color:var(--color-text-tertiary); font:500 .72rem var(--font-mono); letter-spacing:.14em; text-transform:uppercase; margin-bottom:var(--space-lg); }
 .category-page__back:hover{color:var(--color-text-primary)}
@@ -51,7 +59,7 @@ body:has(.category-page) {
 .category-project__desc{margin-top:.45rem;color:var(--color-text-secondary);line-height:var(--lh-normal);}
 .category-project__tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:var(--space-sm);font:500 .66rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);}
 .category-page__empty{grid-column:1/-1;padding:var(--space-xl);border:1px solid var(--color-surface-border);border-radius:var(--radius-lg);color:var(--color-text-tertiary);text-align:center;}
-@media(max-width:700px){.category-page__grid{display:grid;grid-template-columns:1fr}.category-project{grid-column:auto}.category-page{padding-top:92px}}
+@media(max-width:700px){.category-page__grid{display:grid;grid-template-columns:1fr}.category-project{grid-column:auto}}
 
 .category-page__controls{display:flex;align-items:center;gap:var(--space-sm);flex-wrap:wrap;margin:var(--space-md) 0 var(--space-lg)}
 .category-page__search{min-width:min(100%,360px);height:44px;padding:0 1rem;border-radius:var(--radius-pill);border:1px solid var(--color-surface-border);background:rgba(255,255,255,.035);color:var(--color-text-primary);outline:none;backdrop-filter:blur(var(--blur-glass))}

@@ -64,10 +64,19 @@ p {
 /* ---------------------------------------------------------------------
    ANCHOR OFFSET — keeps in-page links from landing under the fixed navbar.
    Applied to every element with an id rather than per-section, so future
-   sections get correct offset scrolling automatically.
+   sections get correct offset scrolling automatically. 88px/124px = the
+   navbar's own height (--navbar-h-desktop/--navbar-h-mobile, plus
+   --navbar-strip-h on mobile — see navbar.css) with ~16px breathing room
+   on top, kept in sync with those same tokens rather than guessed.
 --------------------------------------------------------------------- */
 [id] {
-  scroll-margin-top: 88px;
+  scroll-margin-top: calc(var(--navbar-h-desktop) + 16px);
+}
+
+@media (max-width: 859px) {
+  [id] {
+    scroll-margin-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + 16px);
+  }
 }
 
 /* ---------------------------------------------------------------------

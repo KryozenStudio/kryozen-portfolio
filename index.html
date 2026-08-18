@@ -105,6 +105,16 @@
       </div>
     </div>
 
+    <!-- Mobile link strip: same six links as .navbar__links above, shown
+         directly below the bar on screens under 860px (where the row
+         above is hidden) instead of requiring a hamburger tap. See
+         .navbar__mobile-strip in css/navbar.css. -->
+    <nav class="navbar__mobile-strip js-only" id="navbar-mobile-strip" aria-label="Primary">
+      <ul id="navbar-strip-links">
+        <!-- injected by js/content-loader.js from config.nav.links -->
+      </ul>
+    </nav>
+
     <!-- No-JS fallback: static links, visible only when JavaScript is
          unavailable (the dynamic list above depends on config injection). -->
     <nav class="container no-js-fallback" aria-label="Primary">

@@ -40,12 +40,18 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
-  height: 72px;
+  height: var(--navbar-h-desktop);
 }
 
-@media (max-width: 640px) {
+/* Matches the same 859px cutoff .navbar__links/.navbar__brand-word use
+   below to switch to mobile nav — previously this height rule only
+   kicked in at 640px, so 641-859px screens had mobile-style hidden links
+   but a desktop-height (72px) bar. Unified so every consumer of
+   --navbar-h-mobile (hero padding, mobile panel offset, scroll-margin)
+   is correct for the same range the nav links actually collapse in. */
+@media (max-width: 859px) {
   .navbar__inner {
-    height: 64px;
+    height: var(--navbar-h-mobile);
   }
 }
 
@@ -190,7 +196,12 @@
   left: 0;
   right: 0;
   z-index: calc(var(--z-nav) - 1);
-  padding: calc(64px + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
+  /* Top offset must clear the actual rendered bar: desktop-width panel
+     opens (the hamburger stays reachable at every width — see the
+     860px note below) sit under the 72px bar; mobile-width opens sit
+     under the 64px bar plus the 44px link strip. The <=859px override
+     just below supplies that second case. */
+  padding: calc(var(--navbar-h-desktop) + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
   /* Deliberately NOT --color-bg-glass (55% opaque) — that value is tuned
      for the thin persistent top bar, where a little of the page showing
      through on scroll is the intended "atmospheric glass" look. This
@@ -321,7 +332,7 @@
 --------------------------------------------------------------------- */
 @media (max-width: 859px) {
   .navbar {
-    min-height: 64px;
+    min-height: calc(var(--navbar-h-mobile) + var(--navbar-strip-h));
   }
 
   .navbar__inner {
@@ -334,6 +345,80 @@
 
   .navbar__links {
     display: none;
+  }
+
+  /* The hamburger panel opens under a taller bar here (top row + link
+     strip) than it does at desktop widths — see the base rule above. */
+  .navbar__mobile-panel {
+    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + env(safe-area-inset-top, 0));
+  }
+}
+
+/* ---------------------------------------------------------------------
+   MOBILE LINK STRIP
+   The desktop link row is unreachable below 860px (see .navbar__links
+   above), so on mobile the same six links reappear here instead — a
+   single-line, horizontally scrollable row directly under the bar. The
+   hamburger panel keeps its own full copy of the same links too (plus
+   Admin/Studio Manager), so nothing is mobile-only or desktop-only.
+--------------------------------------------------------------------- */
+.navbar__mobile-strip {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  .navbar__mobile-strip {
+    display: block;
+    width: 100%;
+    height: var(--navbar-strip-h);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .navbar__mobile-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar__mobile-strip > ul {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--container-padding);
+    width: max-content;
+  }
+
+  .navbar__strip-link {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: var(--ls-normal);
+    color: var(--color-text-secondary);
+    padding: 6px 13px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-surface-border);
+    background: rgba(255, 255, 255, 0.03);
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .navbar__strip-link:hover,
+  .navbar__strip-link:focus-visible,
+  .navbar__strip-link:active {
+    color: var(--color-text-primary);
+    border-color: var(--color-surface-border-strong);
+    background: rgba(255, 255, 255, 0.065);
   }
 }
 

@@ -122,6 +122,16 @@
   --duration-intro: 2200ms;
 
   /* ---------------------------------------------------------------------
+     LAYOUT — fixed navbar heights. Referenced by the hero's top padding,
+     the mobile panel's top offset, and [id] scroll-margin-top so all of
+     them stay in sync with the navbar's actual rendered height instead
+     of each guessing their own copy of the same number.
+  --------------------------------------------------------------------- */
+  --navbar-h-desktop: 72px;   /* .navbar__inner height at >=860px */
+  --navbar-h-mobile: 64px;    /* .navbar__inner height at <=859px */
+  --navbar-strip-h: 44px;     /* .navbar__mobile-strip height, <=859px only */
+
+  /* ---------------------------------------------------------------------
      Z-INDEX SCALE
   --------------------------------------------------------------------- */
   --z-base: 1;

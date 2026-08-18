@@ -113,13 +113,21 @@
   if (cfg.nav && Array.isArray(cfg.nav.links)) {
     var desktopList = document.getElementById("navbar-links");
     var mobileList = document.getElementById("navbar-mobile-links");
+    // Mobile link strip: the same six links, shown directly in the bar
+    // below 860px instead of only inside the hamburger panel (see
+    // .navbar__mobile-strip in navbar.css). Optional element — pages
+    // without it (there are none currently, but keep this defensive)
+    // just skip this list.
+    var stripList = document.getElementById("navbar-strip-links");
 
     cfg.nav.links.forEach(function (link) {
+      var href = normalizeNavHref(link.href);
+
       if (desktopList) {
         var li = document.createElement("li");
         var a = document.createElement("a");
         a.className = "navbar__link";
-        a.href = normalizeNavHref(link.href);
+        a.href = href;
         a.textContent = link.label;
         li.appendChild(a);
         desktopList.appendChild(li);
@@ -128,10 +136,19 @@
         var mLi = document.createElement("li");
         var mA = document.createElement("a");
         mA.className = "navbar__mobile-link";
-        mA.href = normalizeNavHref(link.href);
+        mA.href = href;
         mA.textContent = link.label;
         mLi.appendChild(mA);
         mobileList.appendChild(mLi);
+      }
+      if (stripList) {
+        var sLi = document.createElement("li");
+        var sA = document.createElement("a");
+        sA.className = "navbar__strip-link";
+        sA.href = href;
+        sA.textContent = link.label;
+        sLi.appendChild(sA);
+        stripList.appendChild(sLi);
       }
     });
   }
