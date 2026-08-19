@@ -2,19 +2,24 @@
  * =============================================================================
  * VIDEO PLAYER
  * The ONLY listener for the "kryozen:project-open" event dispatched by
- * js/work.js (see PROJECT_RULES.md → "Video Player System"). This file
- * does not create a second project-opening system — it is purely a
- * consumer of the existing Phase 2 integration point.
+ * js/category-page.js (see PROJECT_RULES.md → "Video Player System").
+ * This file does not create a second project-opening system — it is
+ * purely a consumer of the existing integration point.
+ *
+ * Videos are unlisted YouTube uploads (see PROJECT_RULES.md → "Video
+ * Hosting"). There is no local/self-hosted video path, no upload system,
+ * and no backend — a project just carries a youtubeId string.
  *
  * Responsibilities:
  *   1. Populate the single reusable <dialog id="player"> with the
  *      clicked project's title/category/description/software/video.
- *   2. Load the project's video with native controls, ready for the user
- *      to press play themselves — it never starts automatically, even
- *      though opening the player is itself a user action. Show a
- *      polished fallback if there is no video / it fails to load.
- *   3. Guarantee only one video ever plays: any previous video is torn
- *      down before a new one is built, and fully unloaded on close.
+ *   2. Build a YouTube /embed/ iframe for project.youtubeId. Show a
+ *      polished fallback if there is no youtubeId.
+ *   3. Guarantee only one iframe ever exists: any previous one is torn
+ *      down before a new one is built, and fully removed on close —
+ *      removing the iframe (not just navigating it) is what actually
+ *      stops YouTube playback, and it's the only way to guarantee a
+ *      project's embed is never left running or recreated needlessly.
  *   4. Lock/restore background scroll while open.
  *   5. Animate open/close consistently across every close path (button,
  *      backdrop click, Escape) by intercepting the native "cancel"
@@ -55,23 +60,23 @@
   var ICON_NO_VIDEO =
     '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="20" cy="20" r="18"/><polygon points="16,13 28,20 16,27" fill="currentColor" stroke="none" opacity="0.5"/><line x1="10" y1="10" x2="30" y2="30"/></svg>';
 
-  var currentVideoEl = null;
   var closeTimer = null;
   var isClosing = false;
 
-  /** Fully stop and release any video currently attached to the player. */
+  /** Remove any iframe/fallback currently in the media area. Removing
+   *  the iframe element itself (rather than e.g. blanking its src) is
+   *  what stops YouTube playback — there is no other teardown step
+   *  needed for an embed. */
   function teardownMedia() {
-    if (currentVideoEl) {
-      currentVideoEl.pause();
-      currentVideoEl.removeAttribute("src");
-      currentVideoEl.load(); // forces the browser to drop the buffered resource
-      currentVideoEl = null;
+    if (mediaEl) {
+      mediaEl.innerHTML = "";
+      mediaEl.classList.remove("player__media--fallback", "player__media--video");
     }
-    if (mediaEl) mediaEl.innerHTML = "";
   }
 
   function renderFallback(reasonText) {
     if (!mediaEl) return;
+    mediaEl.classList.remove("player__media--video");
     mediaEl.classList.add("player__media--fallback");
 
     var wrap = document.createElement("div");
@@ -91,41 +96,42 @@
     mediaEl.appendChild(wrap);
   }
 
-  function renderVideo(src) {
+  /** youtubeId is trusted config data (edited directly in
+   *  config/site.config.js by the site owner, not user input), but it's
+   *  still validated against YouTube's actual ID shape before being
+   *  dropped into a URL — a malformed value falls back cleanly instead
+   *  of producing a broken embed. */
+  var YOUTUBE_ID_RE = /^[a-zA-Z0-9_-]{11}$/;
+
+  function renderYouTube(youtubeId) {
     if (!mediaEl) return;
+    if (!YOUTUBE_ID_RE.test(youtubeId)) {
+      renderFallback();
+      return;
+    }
     mediaEl.classList.remove("player__media--fallback");
+    mediaEl.classList.add("player__media--video");
 
-    var video = document.createElement("video");
-    video.className = "player__video";
-    video.controls = true;
-    video.playsInline = true;
-    video.preload = "none"; // never preload — only this file, only on open
-    video.src = src;
+    var iframe = document.createElement("iframe");
+    iframe.className = "player__iframe";
+    // rel=0 limits "related videos" at the end to the same channel;
+    // playsinline keeps iOS from forcing native fullscreen on play.
+    iframe.src = "https://www.youtube.com/embed/" + encodeURIComponent(youtubeId) + "?rel=0&playsinline=1";
+    iframe.title = "YouTube video player";
+    iframe.setAttribute("frameborder", "0");
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    // Deliberately no autoplay param — opening the player is not
+    // treated as consent to start playback; the visitor presses play
+    // themselves inside YouTube's own controls.
 
-    video.addEventListener(
-      "error",
-      function () {
-        // Invalid/broken video URL — swap to the same polished fallback
-        // used when no video is configured at all, rather than leaving
-        // a broken native video element on screen.
-        teardownMedia();
-        renderFallback();
-      },
-      { once: true }
-    );
-
-    mediaEl.appendChild(video);
-    currentVideoEl = video;
-    // Deliberately no .play() call and no autoplay attribute here — the
-    // video loads with native controls visible and stays paused until
-    // the user presses play themselves. Opening the player is not
-    // treated as consent to start playback.
+    mediaEl.appendChild(iframe);
   }
 
   function openPlayer(project) {
     if (!project) return;
 
-    // Guarantees only one video ever plays, even if openPlayer is
+    // Guarantees only one embed ever exists, even if openPlayer is
     // somehow called again before a prior close finished.
     teardownMedia();
 
@@ -148,8 +154,8 @@
       }
     }
 
-    if (project.video) {
-      renderVideo(project.video);
+    if (project.youtubeId) {
+      renderYouTube(project.youtubeId);
     } else {
       renderFallback(playerCfg.noVideoText || "No video has been added for this project yet.");
     }
@@ -164,8 +170,8 @@
     }
 
     // Force a reflow so the browser registers the pre-transition state
-    // before .is-open changes it — same pattern as js/work.js's filter
-    // transitions.
+    // before .is-open changes it — same pattern as js/category-page.js's
+    // filter transitions.
     void dialog.offsetWidth;
     dialog.classList.add("is-open");
   }

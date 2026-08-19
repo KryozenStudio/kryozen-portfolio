@@ -97,9 +97,12 @@
 
 /* ---------------------------------------------------------------------
    MEDIA AREA
-   No fixed aspect-ratio on purpose — projects span 16:9 and other source aspect ratios,
-   9:16 (vertical short-form), and wider trailer crops. The video/fallback is
-   let to size naturally and centered, so nothing gets cropped.
+   The no-video fallback still sizes/centers itself naturally (min-height
+   below). A YouTube embed, though, has no intrinsic size the browser can
+   read (cross-origin iframe) — .player__media--video pins it to 16:9,
+   which is what YouTube's own embed frame always renders as regardless
+   of the source video's original aspect ratio (vertical Shorts-style
+   uploads get letterboxed by YouTube itself, not by this CSS).
 --------------------------------------------------------------------- */
 .player__media {
   position: relative;
@@ -110,11 +113,16 @@
   min-height: 220px;
 }
 
-.player__video {
+.player__media--video {
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+}
+
+.player__iframe {
   display: block;
   width: 100%;
-  max-height: 70vh;
-  height: auto;
+  height: 100%;
+  border: 0;
 }
 
 .player__media--fallback {

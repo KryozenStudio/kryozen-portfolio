@@ -219,7 +219,7 @@ window.SITE_CONFIG = {
   // =========================================================================
   // VIDEO PLAYER — read by js/player.js. Section copy for the two
   // fallback states, not project data (that stays on each project's own
-  // `video` field in `projects` above).
+  // `youtubeId` field in `projects` below).
   // =========================================================================
   player: {
     closeLabel: "Close video player",
@@ -238,13 +238,16 @@ window.SITE_CONFIG = {
   // content. Every category page already handles an empty/no-match
   // result with a clean message instead of a blank or broken grid.
   //
-  // Add real projects here following this shape:
+  // Add real projects here following this shape. Videos are unlisted
+  // YouTube uploads (see PROJECT_RULES.md → "Video Hosting"): upload the
+  // video, set it Unlisted, and paste just the 11-character video ID
+  // from its URL (the part after "watch?v=") — not the full URL.
   // {
   //   id: "example-project",
   //   title: "Example Project",
   //   category: "Anime / AMV",     // must match a string in `categories` above
   //   thumbnail: "assets/thumbnails/example.jpg",
-  //   video: "",                    // "" is valid — see PROJECT_RULES.md → "Video Player System"
+  //   youtubeId: "",                // "" is valid — renders the no-video fallback
   //   description: "Short description.",
   //   software: ["Node Video"],
   //   date: "2026-08-07",

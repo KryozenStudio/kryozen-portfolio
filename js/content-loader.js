@@ -56,11 +56,11 @@
   /**
    * Section hrefs in config.nav.links are always written relative to the
    * homepage ("#work", "#about", ...) — that's correct as-is on
-   * index.html, but on every other page (the category pages, admin,
-   * etc.) an in-page anchor with nothing to scroll to just does nothing
-   * when clicked. Prefix those with "index.html" on any non-homepage
-   * page, matching the pattern already used by the category page's own
-   * "← All work" link (href="index.html#work").
+   * index.html, but on every other page (the category pages) an in-page
+   * anchor with nothing to scroll to just does nothing when clicked.
+   * Prefix those with "index.html" on any non-homepage page, matching
+   * the pattern already used by the category page's own "← All work"
+   * link (href="index.html#work").
    */
   function normalizeNavHref(href) {
     if (!href || href.charAt(0) !== "#") return href;

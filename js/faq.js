@@ -7,6 +7,29 @@
   setText("faq-eyebrow-text", cfg.faq.eyebrow);
   setText("faq-title", cfg.faq.heading);
   setText("faq-subtitle", cfg.faq.subtitle);
+
+  // Single-open accordion: every panel this file builds is tracked here so
+  // opening one can close whichever other one is currently open. Each
+  // entry's own click handler still only ever touches ITS OWN closed-over
+  // btn/panel/answer — this array is just how "close the others" reaches
+  // across items, not shared mutable animation state.
+  var panels = [];
+  var openPanel = null;
+
+  function close(entry) {
+    entry.btn.setAttribute("aria-expanded", "false");
+    entry.panel.classList.remove("is-open");
+    if (openPanel === entry) openPanel = null;
+  }
+
+  function open(entry) {
+    if (openPanel && openPanel !== entry) close(openPanel);
+    entry.answer.hidden = false;
+    entry.btn.setAttribute("aria-expanded", "true");
+    entry.panel.classList.add("is-open");
+    openPanel = entry;
+  }
+
   (Array.isArray(cfg.faq.items)?cfg.faq.items:[]).forEach(function(item,index){
     if(!item||!item.question||!item.answer) return;
     var panel=document.createElement("article"); panel.className="faq__item";
@@ -14,14 +37,21 @@
     var q=document.createElement("span"); q.className="faq__question-text"; q.textContent=item.question;
     var icon=document.createElement("span"); icon.className="faq__icon"; icon.setAttribute("aria-hidden","true"); icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
     btn.append(q,icon);
-    var answer=document.createElement("div"); answer.className="faq__answer"; answer.id="faq-answer-"+index; answer.setAttribute("role","region"); answer.setAttribute("aria-labelledby",btn.id); answer.hidden=true; answer.innerHTML="<p></p>"; answer.querySelector("p").textContent=item.answer;
+    var answer=document.createElement("div"); answer.className="faq__answer"; answer.id="faq-answer-"+index; answer.setAttribute("role","region"); answer.setAttribute("aria-labelledby",btn.id); answer.hidden=true; answer.innerHTML="<div><p></p></div>"; answer.querySelector("p").textContent=item.answer;
+
+    var entry = { btn: btn, panel: panel, answer: answer };
+    panels.push(entry);
+
     btn.addEventListener("click",function(){
-      var open=btn.getAttribute("aria-expanded")==="true";
-      btn.setAttribute("aria-expanded",String(!open)); panel.classList.toggle("is-open",!open);
-      if(!open){ answer.hidden=false; requestAnimationFrame(function(){ answer.style.maxHeight=answer.scrollHeight+"px"; }); }
-      else { answer.style.maxHeight=answer.scrollHeight+"px"; requestAnimationFrame(function(){ answer.style.maxHeight="0px"; }); }
+      var isOpen = btn.getAttribute("aria-expanded")==="true";
+      if (isOpen) close(entry); else open(entry);
     });
-    answer.addEventListener("transitionend",function(e){ if(e.propertyName==="max-height" && btn.getAttribute("aria-expanded")==="false") answer.hidden=true; });
+    // No scrollHeight measurement, no inline max-height/style writes: the
+    // reveal itself is pure CSS (grid-template-rows 0fr -> 1fr, see
+    // faq.css), so opening/closing never forces a synchronous layout
+    // read/write from JS. This listener only re-hides the answer from
+    // assistive tech once the CSS collapse has actually finished.
+    answer.addEventListener("transitionend",function(e){ if(e.propertyName==="grid-template-rows" && btn.getAttribute("aria-expanded")==="false") answer.hidden=true; });
     panel.append(btn,answer); list.appendChild(panel);
   });
 })();

@@ -36,8 +36,10 @@ kryozen-studio/
 │   └── footer.css
 ├── js/
 │   ├── content-loader.js Injects config into the page (nav/hero/footer)
-│   ├── work.js           Work section: filters, search, cards, sorting
-│   ├── player.js         Video player: open/close, playback, fallback
+│   ├── project-source.js Resolves config.projects for the public pages
+│   ├── work.js           Homepage: latest-project bookkeeping
+│   ├── category-page.js  Category pages: filters, search, cards
+│   ├── player.js         Video player: open/close, YouTube embed, fallback
 │   ├── services.js       Services section: cards from config.services
 │   ├── about.js          About section: portrait, copy, tools strip
 │   ├── contact.js        Contact section: methods from config + config.social
@@ -49,7 +51,7 @@ kryozen-studio/
 │   │   ├── logo/          logo.svg (replace this)
 │   │   ├── hero/          optional hero background artwork
 │   │   └── profile/        About section portrait (see "How to Edit About Content")
-│   ├── videos/            project videos (see "Video Player: How It Works")
+│   ├── videos/            not used — videos live on YouTube, see "Video Player: How It Works"
 │   └── thumbnails/         project card thumbnails (see "How to Add / Edit Work Projects")
 ├── PROJECT_RULES.md       Design/coding rules for all future work
 └── README.md              This file
@@ -202,7 +204,7 @@ projects: [
     title: "Example Project",
     category: "Anime / AMV",       // must match a string in `categories` below
     thumbnail: "assets/thumbnails/example.jpg",
-    video: "assets/videos/example.mp4", // "" is valid — see "Video Player: How It Works"
+    youtubeId: "dQw4w9WgXcQ",     // from the YouTube URL, not the full URL — "" is valid, see "Video Player: How It Works"
     description: "Short description.", // shown in the video player, not on the card
     software: ["Node Video"],     // card shows only the first entry; the player shows all
     date: "2026-08-07",           // ISO format — controls sort order
@@ -240,7 +242,7 @@ else needs configuring.
 
 **Clicking a card** opens the video player with that project's title,
 category, description, software, and video — see "Video Player: How It
-Works" below for exactly what happens and how to add a video URL. Each
+Works" below for exactly what happens and how to add a video. Each
 card dispatches a `kryozen:project-open` browser event with the project's
 data; the player is the only thing listening for it (see
 `PROJECT_RULES.md` → "Video Player System").
@@ -250,30 +252,39 @@ data; the player is the only thing listening for it (see
 ## 8. Video Player: How It Works
 
 Clicking any project card opens a single modal video player — no page
-navigation, no separate detail page.
+navigation, no separate detail page. Videos are unlisted YouTube uploads;
+there is no upload system, backend, or file storage involved at all.
 
-- **Adding a video:** set a project's `video` field in
-  `config/site.config.js` to a path or URL (e.g.
-  `"assets/videos/my-edit.mp4"`). Drop the file itself in
-  `assets/videos/`.
-- **Leaving it empty (`video: ""`)** shows a polished "No video has been
-  added for this project yet" state instead of an empty/broken player —
-  it's completely safe to publish a project card before its video is
-  ready.
-- **An invalid or broken video path** (file missing, wrong format, etc.)
-  shows a similar "Video unavailable" fallback rather than a broken
-  native player — you don't need to double-check every path works before
-  publishing.
+- **Adding a video:**
+  1. Upload the video to YouTube and set its visibility to **Unlisted**
+     (not Public, not Private — Unlisted means anyone with the link can
+     watch, but it won't show up in search or on your channel).
+  2. Copy the video's ID — the 11-character string in its URL after
+     `watch?v=` (e.g. for `youtube.com/watch?v=dQw4w9WgXcQ`, the ID is
+     `dQw4w9WgXcQ`).
+  3. Set that project's `youtubeId` field in `config/site.config.js` to
+     just that ID — not the full URL.
+  4. Commit and push (Termux, or any git client). GitHub Pages picks it
+     up on the next deploy.
+- **Leaving it empty (`youtubeId: ""`)** shows a polished "No video has
+  been added for this project yet" state instead of an empty/broken
+  player — it's completely safe to publish a project card before its
+  video is ready.
+- **An invalid ID** (doesn't match YouTube's 11-character ID shape) shows
+  a similar "Video unavailable" fallback rather than a broken embed — you
+  don't need to double-check every ID works before publishing.
 - **Playback:** the video never starts automatically — not on page load,
-  and not when you open a project. It loads with native controls ready,
-  and the visitor presses play themselves. Opening a different project,
-  or closing the player, always stops and fully unloads the previous
-  video; only one can ever be playing.
+  and not when you open a project. It loads with YouTube's own controls
+  ready, and the visitor presses play themselves. Opening a different
+  project, or closing the player, always removes the previous embed
+  entirely (which is what stops its playback); only one can ever exist.
 - **Closing:** the ✕ button, clicking outside the player, or pressing
   Escape all close it the same way, and restore normal page scrolling.
-- **Aspect ratio:** the player doesn't force 16:9 — vertical short-form
-  edits and widescreen trailers both display at their natural size,
-  letterboxed on black rather than cropped.
+- **Aspect ratio:** fixed to 16:9, which is how YouTube's own embedded
+  player always renders regardless of the source video's original shape
+  — vertical/Shorts-style uploads get letterboxed by YouTube itself.
+- **No Google login required:** Unlisted videos play for any visitor
+  without them needing to sign in to anything.
 
 Full technical behavior (event integration, close-path handling, etc.) is
 documented in `PROJECT_RULES.md` → "Video Player System", for anyone
@@ -380,32 +391,6 @@ static GitHub Pages site.
 
 ---
 
-## 12. Studio Manager
-
-Open `studio-manager.html` directly when you want to prepare portfolio
-updates. The manager is a **local browser tool**, not a secure online admin
-backend. It uses IndexedDB to keep draft projects and media on the current
-device/browser.
-
-It supports:
-
-- add/edit/delete projects
-- thumbnail and video storage
-- category selection from the site's real category list
-- featured-project flag
-- project preview
-- logo replacement preview
-- exporting project metadata/config snippets
-- downloading saved media for the site's `assets/` folders
-
-After exporting, copy the project data into `config/site.config.js`, put the
-media files in `assets/thumbnails/` and `assets/videos/`, then use the normal
-Termux → GitHub Pages workflow.
-
-**Important:** GitHub Pages cannot provide private server-side authentication
-or a database. The local passcode is only a convenience gate for the current
-browser and must not be treated as a security boundary.
-
 ---
 
 ## 12. How to Add Future Sections
@@ -452,9 +437,9 @@ npx serve .
 Then visit `http://localhost:8000`.
 
 
-## Phase 3 — Dedicated category pages + secure admin architecture
+## Phase 3 — Dedicated category pages
 
-The public portfolio now supports one page per category:
+The public portfolio supports one page per category:
 
 - `short-form.html`
 - `gaming.html`
@@ -465,36 +450,8 @@ The public portfolio now supports one page per category:
 The homepage remains the primary entry point. Category pages do not introduce
 project-detail or subcategory levels.
 
-### Admin backend setup
-
-The public site remains GitHub Pages compatible. The private manager uses
-Supabase Auth + Google OAuth + PostgreSQL Row Level Security.
-
-1. Create a Supabase project.
-2. In Authentication → Providers, enable Google OAuth and configure Google's
-   OAuth client/redirect settings for the deployed GitHub Pages origin.
-3. Run `supabase/schema.sql` in the Supabase SQL editor.
-4. Sign in once through `admin.html` with the intended Google account.
-5. In Supabase SQL, insert that authenticated user's UUID into
-   `public.admin_users`, for example:
-
-```sql
-insert into public.admin_users (user_id, active)
-values ('YOUR_AUTH_USER_UUID', true);
-```
-
-6. Put the Supabase project URL and browser-safe anon key in
-   `config/backend.config.js`.
-
-The anon key is safe to ship in a browser only because RLS policies enforce
-authorization. Never put a Supabase service-role key in this repository.
-
-Google passwords are never collected by Kryozen. Google handles account
-authentication and any Google-side 2-step verification. The database
-allowlist then decides whether the authenticated account is an authorized
-Kryozen admin.
-
-Until those backend values are configured, the existing static
-`studio-manager.html` remains available as the old local preparation tool;
-`admin.html` intentionally shows a setup state rather than pretending it is
-secure.
+There is no admin panel, authentication system, or backend anywhere in this
+project. Adding a project is a fully manual, static-file workflow — see
+"7. How to Add / Edit Work Projects" and "8. Video Player: How It Works"
+above. GitHub only ever stores the website's code, project metadata, and
+YouTube video IDs — never video files.

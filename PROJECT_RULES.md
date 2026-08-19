@@ -38,7 +38,9 @@ kryozen-studio/
 │                              foundation today; future pages follow the
 │                              same pattern: <name>.html at the root)
 ├── config/
-│   └── site.config.js       → ALL editable content lives here
+│   └── site.config.js       → ALL editable content lives here, including
+│                               project data (see §2a) — this is also where
+│                               the owner adds a new project's YouTube ID
 ├── css/
 │   ├── variables.css        → design tokens (colors, type, spacing, motion)
 │   ├── reset.css            → element reset, reduced-motion enforcement
@@ -54,8 +56,11 @@ kryozen-studio/
 │   └── footer.css           → footer
 ├── js/
 │   ├── content-loader.js    → injects config into the DOM (nav/hero/footer content)
-│   ├── work.js               → Work section: builds filters/cards from config, search, sort
-│   ├── player.js              → video player: listens for kryozen:project-open, plays/stops video
+│   ├── project-source.js    → resolves config.projects for the public pages
+│   ├── work.js               → homepage: latest-project bookkeeping
+│   ├── category-page.js      → category pages: builds filters/cards, search
+│   ├── player.js              → video player: listens for kryozen:project-open,
+│   │                            builds/tears down the YouTube embed
 │   ├── services.js            → Services section: builds cards from config.services
 │   ├── about.js                → About section: portrait, copy, software strip
 │   ├── contact.js             → Contact section: method links from config + config.social
@@ -67,7 +72,8 @@ kryozen-studio/
 │   │   ├── logo/            → logo.svg + replacement instructions
 │   │   ├── hero/             → optional hero background artwork
 │   │   └── profile/          → About section portrait (config.about.profileImage)
-│   ├── videos/                → project videos (config.projects[].video, played by js/player.js)
+│   ├── videos/                → not used for portfolio video hosting — see
+│   │                            §2b, videos live on YouTube, not in this repo
 │   └── thumbnails/           → project card thumbnails (config.projects[].thumbnail)
 ├── README.md
 └── PROJECT_RULES.md          → this file
@@ -89,10 +95,10 @@ instead. Don't grow an existing file to cover a new section.
 
 ## 2a. Work / Portfolio System
 
-The Work section (`css/work.css`, `js/work.js`) is fully data-driven from
-`config/site.config.js`. Nothing about an individual project is hardcoded
-in `index.html` — the filters, the search field's behavior, and every
-project card are generated at runtime.
+The Work section (`css/work.css`, `js/category-page.js`) is fully
+data-driven from `config/site.config.js`. Nothing about an individual
+project is hardcoded in HTML — the filters, the search field's behavior,
+and every project card are generated at runtime.
 
 **Project schema** (`config.projects[]`):
 
@@ -102,7 +108,9 @@ project card are generated at runtime.
   title: "Example Project",
   category: "Anime / AMV",     // must exactly match a string in config.categories
   thumbnail: "assets/thumbnails/example.jpg", // "" is valid — see fallback below
-  video: "",                  // "" is valid — js/player.js shows a fallback state instead of a broken player
+  youtubeId: "",               // the 11-char ID from the video's YouTube URL,
+                                // not the full URL. "" is valid — js/player.js
+                                // shows a fallback state instead of a broken player
   description: "Short description.", // shown in the video player, not on the card
   software: ["Node Video"],   // card shows only the first entry; the player shows all of them
   date: "2026-08-07",         // ISO date — drives sort order, nothing else
@@ -134,21 +142,20 @@ transition ends, so the grid never "pops" mid-animation.
 click doesn't navigate anywhere) that dispatches a `kryozen:project-open`
 custom event with the full project object as `event.detail`. `js/player.js`
 is the sole listener — see §2b "Video Player System" below for the full
-open/close/playback contract. `js/work.js` itself has no knowledge of the
-player; it only ever dispatches the event.
+open/close/playback contract. `js/category-page.js` itself has no knowledge
+of the player; it only ever dispatches the event.
 
-**Future upload/project-management readiness:** this project intentionally
-does *not* have a way to add projects through the website itself — GitHub
-Pages can't write back to the repository, and building a fake "upload"
-button that can't actually persist anything would be misleading. What it
-does have is a project data shape (`id`/`title`/`category`/`thumbnail`/
-`video`/`description`/`software`/`date`) that already lives in exactly one
-place (`config.projects`) and nowhere else — no project information is
-duplicated into any other file. If a future tool (a small local script, a
-CMS, a build step) is built to generate or edit entries in this array, it
-only needs to target this one array in this one file; nothing about
-`js/work.js`, `js/player.js`, or the card/filter/search rendering needs to
-change to support it.
+**Adding a project — the whole workflow:** there is deliberately no admin
+panel or upload system (see §2f, removed). Adding a project is:
+1. Upload the video to YouTube, set it to **Unlisted**.
+2. Copy the 11-character video ID from its URL.
+3. Add a new object to `config.projects[]` above with that ID as
+   `youtubeId`, commit, and push (Termux or any git client — GitHub Pages
+   picks it up on the next deploy).
+
+That's the entire pipeline. No build step, no backend, and nothing about
+`js/category-page.js` or `js/player.js` needs to change to support it —
+they're already fully driven by this one array in this one file.
 
 ---
 
@@ -159,9 +166,18 @@ lives once in `index.html` (as a direct child of `<body>`, after the
 footer) — `js/player.js` repopulates it per project rather than building a
 new dialog per card.
 
+**Video hosting:** portfolio videos are unlisted YouTube uploads, referenced
+by `project.youtubeId` — see §2a. There is no self-hosted video, no upload
+system, and no backend. `js/player.js` turns a `youtubeId` into a
+`https://www.youtube.com/embed/<id>?rel=0&playsinline=1` iframe. The
+surrounding Kryozen container (rounded corners, dark background, spacing)
+is styled by `css/player.css`; YouTube's own player chrome inside the
+iframe is cross-origin and is never styled or modified — see §9 for why
+that's a hard rule, not just a convenience.
+
 **Integration point:** `js/player.js` is the *only* listener for
-`kryozen:project-open` (dispatched by `js/work.js` — see §2a). Do not add a
-second project-opening system; if a project needs to be opened
+`kryozen:project-open` (dispatched by `js/category-page.js` — see §2a). Do
+not add a second project-opening system; if a project needs to be opened
 programmatically from new code, dispatch that same event rather than
 calling into `js/player.js` directly.
 
@@ -183,33 +199,37 @@ it finishes) calls the real `dialog.close()`:
 
 **Cleanup lives in one place too:** the dialog's native `close` event —
 which fires no matter which of the three paths triggered it — is where
-`js/player.js` pauses/unloads the video and restores
+`js/player.js` removes the iframe and restores
 `document.body.style.overflow`. Don't add cleanup logic anywhere else; add
 new cleanup steps to that one `close` listener.
 
-**Video behavior:**
-- Videos never autoplay — not on page load, and not when a project is
-  opened. Nothing is even preloaded (`preload="none"`) until a project is
-  opened, and the `<video>` element is given no `autoplay` attribute and
-  no `.play()` call. It loads with native controls visible and stays
-  paused until the user presses play themselves.
-- Only one video ever exists: `openPlayer()` unconditionally tears down
-  any previous `<video>` (pause, remove `src`, `.load()`) before building
-  the new one, and the `close` handler does the same on every close.
-- Missing video (`project.video` is `""`) and invalid video (the `error`
-  event fires on the `<video>` element) both render the same
+**Embed behavior:**
+- The embed never autoplays — not on page load, and not when a project is
+  opened. No `autoplay` param is added to the embed URL; it loads with
+  YouTube's own controls visible and stays paused until the user presses
+  play themselves inside the iframe.
+- Only one embed ever exists: `openPlayer()` unconditionally clears
+  `#player-media`'s contents (removing any previous iframe — this is what
+  actually stops playback, there's no separate pause step for a cross-origin
+  iframe) before building the new one, and the `close` handler does the
+  same on every close. The iframe is never recreated for reasons other
+  than opening a new/different project (see §9 performance rules).
+- Missing video (`project.youtubeId` is `""`) and a malformed ID (fails the
+  11-character YouTube ID pattern) both render the same
   `.player__media--fallback` state — a gradient + icon + message, not a
-  broken native player. The two cases use slightly different copy
+  broken embed. The two cases use slightly different copy
   (`config.player.noVideoText` vs `config.player.videoUnavailableText`)
   but are visually identical.
-- Aspect ratio is intentionally not fixed — projects span 16:9, 9:16
-  (vertical short-form), and wider trailer crops. The `<video>` sizes itself
-  (`max-height: 70vh`, `width: 100%`, `height: auto`) inside a
-  flex-centered black `.player__media`, so nothing gets cropped.
+- Aspect ratio is fixed to 16:9 (`.player__media--video`) — a cross-origin
+  YouTube iframe has no intrinsic size the browser can read, and YouTube's
+  own `/embed/` player always renders in a 16:9 frame regardless of the
+  source video's original aspect ratio (it letterboxes vertical/Shorts-style
+  uploads itself). The no-video fallback state has no such iframe and keeps
+  sizing itself naturally instead.
 
 **Config** (`config.player`): `closeLabel`, `noVideoText`,
 `videoUnavailableText` — copy only. Project-specific data (title,
-category, description, software, video) stays on the project object
+category, description, software, youtubeId) stays on the project object
 itself in `config.projects[]`; it is never duplicated into `config.player`.
 
 ---
@@ -294,22 +314,19 @@ URL changes, edit the Discord entry in `config.social`.
 
 ---
 
-## 2f. Studio Manager
+## 2f. Studio Manager (removed)
 
-`studio-manager.html` + `js/studio-manager.js` + `css/admin.css`.
+There is no admin panel, upload interface, or authentication system
+anywhere in this project. There never was a way for it to actually persist
+changes back to the live site (GitHub Pages can't write to its own repo),
+so a prior local-only IndexedDB "Studio Manager" tool was removed rather
+than secured or kept as a half-functional convenience.
 
-The Studio Manager is a **local preparation tool** for the owner's existing
-Termux → GitHub Pages workflow. It is intentionally not linked from the public
-navigation. It stores drafts and media in browser IndexedDB and exports data for
-manual deployment.
-
-It supports project creation, editing, deletion, thumbnail/video storage, a
-featured flag, previewing, and logo asset preparation. Public visitors never
-receive these controls through `index.html`.
-
-The local passcode is a convenience gate only. GitHub Pages is static and has
-no secure server-side authentication or database, so secrets must never be
-stored in this frontend.
+Adding a project is a manual, three-step process — see §2a "Adding a
+project — the whole workflow." If a future tool is ever built to generate
+or edit `config.projects[]` entries, it only needs to target that one
+array in that one file; nothing else in the codebase should need to
+change to support it.
 
 ---
 
@@ -495,34 +512,32 @@ For whatever *does* come next:
    config array, don't fetch anything.
 6. Before adding a new dependency of any kind, ask whether vanilla
    HTML/CSS/JS can do it. The bar for adding a library is high.
+7. Never attempt to style, hide, or otherwise reach into the YouTube
+   iframe's own contents (§2b) — it's cross-origin and off-limits by
+   design, not just by convention. Style `.player__media`/`#player`
+   around it instead.
 
 
-## LOCAL MANAGER SECURITY
-The Studio Manager is a local preparation tool only. Its browser passcode is a convenience gate, not authentication, because GitHub Pages is static. Never place GitHub tokens, API keys, passwords, or other secrets in frontend code. Do not describe this local gate as secure server-side authentication.
+## Video Hosting
 
+Portfolio videos are unlisted YouTube uploads, referenced from
+`config.projects[].youtubeId` — see §2a and §2b for the full schema and
+playback contract. There is no backend, no storage provider, no upload
+API, and no OAuth of any kind anywhere in this project; the only "system"
+is the owner manually uploading to YouTube and editing one array in
+`config/site.config.js`. Do not reintroduce a backend, a storage
+integration (Firebase/Supabase/Cloudinary/etc.), or an upload UI for video
+hosting — YouTube + a video ID is the complete, intentional solution.
 
 ---
 
-## Phase 3 amendment — Public category pages and authenticated admin
+## Public category pages
 
-The public portfolio is now intentionally:
+The public portfolio is:
 
 `Homepage → Category page`
 
 The category pages are `short-form.html`, `gaming.html`, `anime-amv.html`,
-`long-form.html`, and `thumbnail-design.html`. No project-detail hierarchy is
-introduced.
-
-The secure admin architecture is separate from the GitHub Pages frontend.
-`admin.html` uses Google OAuth through Supabase Auth. Authorization is enforced
-by the `public.admin_users` allowlist and PostgreSQL Row Level Security in
-`supabase/schema.sql`. The browser must never receive a service-role key and
-must never collect a Google password.
-
-When the Supabase backend is configured, published projects are read from the
-`projects` table by `js/project-source.js`; if the backend is unavailable, the
-site falls back to the static `config.projects` data so the public site remains
-deployable.
-
-The local `studio-manager.html` is retained as a legacy local preparation
-utility and is not a substitute for the authenticated admin system.
+`long-form.html`, and `thumbnail-design.html`. No project-detail hierarchy
+is introduced, and there is no admin/authenticated layer anywhere in the
+project — see "Studio Manager (removed)" in §2f and "Video Hosting" above.
