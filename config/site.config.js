@@ -28,10 +28,10 @@ window.SITE_CONFIG = {
   // LOGO — used in the navbar. The hero intro uses the supplied brand artwork below.
   // ---------------------------------------------------------------------
   logo: {
-    path: "assets/images/logo/logo.svg",
+    path: "assets/images/logo/kryozen-mark.webp",
     alt: "Kryozen Studio logo",
     // Set true if you swap logo.svg for a PNG/WebP/JPG file.
-    isRaster: false,
+    isRaster: true,
   },
 
   // ---------------------------------------------------------------------
@@ -115,6 +115,7 @@ window.SITE_CONFIG = {
     "Anime / AMV",
     "Long Form",
     "Thumbnail Design",
+    "Captions / Subtitles",
   ],
   categoryPages: {
     "Short Form": "short-form.html",
@@ -122,6 +123,7 @@ window.SITE_CONFIG = {
     "Anime / AMV": "anime-amv.html",
     "Long Form": "long-form.html",
     "Thumbnail Design": "thumbnail-design.html",
+    "Captions / Subtitles": "captions-subtitles.html",
   },
 
   categoryDescriptions: {
@@ -130,6 +132,7 @@ window.SITE_CONFIG = {
     "Anime / AMV": "Cinematic anime edits built around music, motion, typography, atmosphere, and emotional timing.",
     "Long Form": "Longer-form editing with clearer structure, pacing, context, and retention-focused presentation.",
     "Thumbnail Design": "High-contrast thumbnail design with clear hierarchy and a strong first-frame impression.",
+    "Captions / Subtitles": "Accurate, well-timed captions and subtitles styled to match each project's tone and pacing.",
   },
 
   // =========================================================================
@@ -219,7 +222,7 @@ window.SITE_CONFIG = {
   // =========================================================================
   // VIDEO PLAYER — read by js/player.js. Section copy for the two
   // fallback states, not project data (that stays on each project's own
-  // `youtubeId` field in `projects` below).
+  // `youtubeUrl` field in `projects` below).
   // =========================================================================
   player: {
     closeLabel: "Close video player",
@@ -240,17 +243,22 @@ window.SITE_CONFIG = {
   //
   // Add real projects here following this shape. Videos are unlisted
   // YouTube uploads (see PROJECT_RULES.md → "Video Hosting"): upload the
-  // video, set it Unlisted, and paste just the 11-character video ID
-  // from its URL (the part after "watch?v=") — not the full URL.
+  // video, set it Unlisted, then paste the full video URL as copied from
+  // the browser — either youtube.com/watch?v=... or the shorter
+  // youtu.be/... form both work, js/player.js extracts the video ID
+  // itself. Don't pre-extract or shorten it yourself.
   // {
   //   id: "example-project",
   //   title: "Example Project",
   //   category: "Anime / AMV",     // must match a string in `categories` above
   //   thumbnail: "assets/thumbnails/example.jpg",
-  //   youtubeId: "",                // "" is valid — renders the no-video fallback
+  //   youtubeUrl: "",               // "" is valid — renders the no-video fallback
   //   description: "Short description.",
   //   software: ["Node Video"],
   //   date: "2026-08-07",
+  //   // Optional, not currently rendered anywhere but safe to include —
+  //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
+  //   // set of recognized-but-unused fields (client, tags, featured).
   // },
   projects: [],
 };

@@ -204,7 +204,7 @@ projects: [
     title: "Example Project",
     category: "Anime / AMV",       // must match a string in `categories` below
     thumbnail: "assets/thumbnails/example.jpg",
-    youtubeId: "dQw4w9WgXcQ",     // from the YouTube URL, not the full URL — "" is valid, see "Video Player: How It Works"
+    youtubeUrl: "https://youtu.be/dQw4w9WgXcQ", // the full URL you copied from YouTube — "" is valid, see "Video Player: How It Works"
     description: "Short description.", // shown in the video player, not on the card
     software: ["Node Video"],     // card shows only the first entry; the player shows all
     date: "2026-08-07",           // ISO format — controls sort order
@@ -226,16 +226,35 @@ shows a styled placeholder (gradient + category label) instead of a broken
 image — so it's safe to write a project's entry before its thumbnail is
 ready.
 
-**Categories:** edit the top-level `categories` array to add, rename, or
-remove a category. The filter chips regenerate from this list — just make
-sure every project's `category` value matches one of these strings exactly:
+**Categories:** a category is registered in three places, not just one —
+`categories` (the array below, source of the filter chips and the valid
+values for a project's `category` field), `categoryPages` (which page
+file it lives on), and `categoryDescriptions` (the subtitle shown on that
+page):
 
 ```js
 categories: [
   "Short Form", "Gaming", "Anime / AMV",
-  "Long Form", "Thumbnail Design",
+  "Long Form", "Thumbnail Design", "Captions / Subtitles",
 ],
+categoryPages: {
+  "Short Form": "short-form.html",
+  // ...one entry per category, mapping its name to its page file
+},
+categoryDescriptions: {
+  "Short Form": "Fast, focused edits built for vertical viewing…",
+  // ...one entry per category
+},
 ```
+
+To add a whole new category (not just a new project in an existing one):
+add it to all three maps above, then copy any existing category `.html`
+file (e.g. `short-form.html`) to a new filename, and in the copy update
+its `<title>`, its `<meta name="description">`, and the
+`data-category="…"` attribute on its `<main>` element to the new
+category's exact name. Nothing else in that file changes — everything on
+the page (title, description, filters, project grid) renders itself from
+the config maps above and that one `data-category` attribute.
 
 **Search** matches against each project's title and category — nothing
 else needs configuring.
@@ -259,20 +278,20 @@ there is no upload system, backend, or file storage involved at all.
   1. Upload the video to YouTube and set its visibility to **Unlisted**
      (not Public, not Private — Unlisted means anyone with the link can
      watch, but it won't show up in search or on your channel).
-  2. Copy the video's ID — the 11-character string in its URL after
-     `watch?v=` (e.g. for `youtube.com/watch?v=dQw4w9WgXcQ`, the ID is
-     `dQw4w9WgXcQ`).
-  3. Set that project's `youtubeId` field in `config/site.config.js` to
-     just that ID — not the full URL.
+  2. Copy the video's URL — either the `youtube.com/watch?v=...` form or
+     the shorter `youtu.be/...` form both work.
+  3. Paste that full URL into that project's `youtubeUrl` field in
+     `config/site.config.js` — don't shorten it or extract the ID
+     yourself, the site does that automatically.
   4. Commit and push (Termux, or any git client). GitHub Pages picks it
      up on the next deploy.
-- **Leaving it empty (`youtubeId: ""`)** shows a polished "No video has
+- **Leaving it empty (`youtubeUrl: ""`)** shows a polished "No video has
   been added for this project yet" state instead of an empty/broken
   player — it's completely safe to publish a project card before its
   video is ready.
-- **An invalid ID** (doesn't match YouTube's 11-character ID shape) shows
-  a similar "Video unavailable" fallback rather than a broken embed — you
-  don't need to double-check every ID works before publishing.
+- **An unrecognized URL** (not a YouTube URL, or missing the video ID)
+  shows a similar "Video unavailable" fallback rather than a broken embed
+  — you don't need to double-check every link works before publishing.
 - **Playback:** the video never starts automatically — not on page load,
   and not when you open a project. It loads with YouTube's own controls
   ready, and the visitor presses play themselves. Opening a different
@@ -446,6 +465,7 @@ The public portfolio supports one page per category:
 - `anime-amv.html`
 - `long-form.html`
 - `thumbnail-design.html`
+- `captions-subtitles.html`
 
 The homepage remains the primary entry point. Category pages do not introduce
 project-detail or subcategory levels.

@@ -8,13 +8,16 @@
  *
  * Videos are unlisted YouTube uploads (see PROJECT_RULES.md → "Video
  * Hosting"). There is no local/self-hosted video path, no upload system,
- * and no backend — a project just carries a youtubeId string.
+ * and no backend — a project just carries a youtubeUrl string (the full
+ * URL as copied from YouTube, not a pre-extracted ID — see
+ * extractYouTubeId() below).
  *
  * Responsibilities:
  *   1. Populate the single reusable <dialog id="player"> with the
  *      clicked project's title/category/description/software/video.
- *   2. Build a YouTube /embed/ iframe for project.youtubeId. Show a
- *      polished fallback if there is no youtubeId.
+ *   2. Build a YouTube /embed/ iframe for project.youtubeUrl. Show a
+ *      polished fallback if there is no youtubeUrl, or it's not
+ *      recognized as one.
  *   3. Guarantee only one iframe ever exists: any previous one is torn
  *      down before a new one is built, and fully removed on close —
  *      removing the iframe (not just navigating it) is what actually
@@ -96,16 +99,26 @@
     mediaEl.appendChild(wrap);
   }
 
-  /** youtubeId is trusted config data (edited directly in
-   *  config/site.config.js by the site owner, not user input), but it's
-   *  still validated against YouTube's actual ID shape before being
-   *  dropped into a URL — a malformed value falls back cleanly instead
-   *  of producing a broken embed. */
-  var YOUTUBE_ID_RE = /^[a-zA-Z0-9_-]{11}$/;
+  /** Accepts the full YouTube URL as copied from the address bar or share
+   *  sheet — youtubeUrl is the one source of truth (see PROJECT_RULES.md
+   *  → "Video Hosting"); nothing pre-extracts or duplicates the ID into
+   *  config data. Recognizes the two formats YouTube actually produces
+   *  (youtube.com/watch?v=, youtu.be/), plus youtube.com/embed/ in case
+   *  someone pastes an embed URL directly — all three optionally under
+   *  www./m. subdomains and with extra query params (e.g. &t=30s), since
+   *  a pasted URL from a real browser address bar often carries some.
+   *  Returns the bare 11-character video ID, or null if the string isn't
+   *  a recognizable YouTube URL at all. */
+  function extractYouTubeId(url) {
+    if (!url || typeof url !== "string") return null;
+    var match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return match ? match[1] : null;
+  }
 
-  function renderYouTube(youtubeId) {
+  function renderYouTube(youtubeUrl) {
     if (!mediaEl) return;
-    if (!YOUTUBE_ID_RE.test(youtubeId)) {
+    var videoId = extractYouTubeId(youtubeUrl);
+    if (!videoId) {
       renderFallback();
       return;
     }
@@ -116,7 +129,7 @@
     iframe.className = "player__iframe";
     // rel=0 limits "related videos" at the end to the same channel;
     // playsinline keeps iOS from forcing native fullscreen on play.
-    iframe.src = "https://www.youtube.com/embed/" + encodeURIComponent(youtubeId) + "?rel=0&playsinline=1";
+    iframe.src = "https://www.youtube.com/embed/" + encodeURIComponent(videoId) + "?rel=0&playsinline=1";
     iframe.title = "YouTube video player";
     iframe.setAttribute("frameborder", "0");
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
@@ -154,8 +167,8 @@
       }
     }
 
-    if (project.youtubeId) {
-      renderYouTube(project.youtubeId);
+    if (project.youtubeUrl) {
+      renderYouTube(project.youtubeUrl);
     } else {
       renderFallback(playerCfg.noVideoText || "No video has been added for this project yet.");
     }

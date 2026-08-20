@@ -24,10 +24,27 @@
 
   function open(entry) {
     if (openPanel && openPanel !== entry) close(openPanel);
-    entry.answer.hidden = false;
     entry.btn.setAttribute("aria-expanded", "true");
-    entry.panel.classList.add("is-open");
+    entry.answer.hidden = false;
     openPanel = entry;
+    // Un-hiding and adding .is-open must NOT happen in the same tick.
+    // hidden=false and the class change above both landed in this one
+    // synchronous handler with no paint in between, so the browser has
+    // no rendered "closed" frame to animate the grid-template-rows
+    // transition FROM — worst case on some engines, that can leave the
+    // answer looking stuck at its old state until something else forces
+    // a style recalculation (e.g. a second tap). Splitting the class add
+    // into its own animation frame guarantees the closed (hidden=false,
+    // still 0fr) state actually gets rendered as a real frame first.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        // Guard: if this entry was closed again (or another entry was
+        // opened, closing this one) during those two frames, don't add
+        // .is-open back — openPanel !== entry means this open() call has
+        // since been superseded.
+        if (openPanel === entry) entry.panel.classList.add("is-open");
+      });
+    });
   }
 
   (Array.isArray(cfg.faq.items)?cfg.faq.items:[]).forEach(function(item,index){

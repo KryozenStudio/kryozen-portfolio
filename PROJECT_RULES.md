@@ -108,14 +108,21 @@ and every project card are generated at runtime.
   title: "Example Project",
   category: "Anime / AMV",     // must exactly match a string in config.categories
   thumbnail: "assets/thumbnails/example.jpg", // "" is valid — see fallback below
-  youtubeId: "",               // the 11-char ID from the video's YouTube URL,
-                                // not the full URL. "" is valid — js/player.js
-                                // shows a fallback state instead of a broken player
+  youtubeUrl: "",              // the full URL as copied from YouTube — either
+                                // youtube.com/watch?v=... or youtu.be/... both
+                                // work, js/player.js extracts the video ID
+                                // itself (see §2b). "" is valid — renders a
+                                // fallback state instead of a broken player
   description: "Short description.", // shown in the video player, not on the card
   software: ["Node Video"],   // card shows only the first entry; the player shows all of them
   date: "2026-08-07",         // ISO date — drives sort order, nothing else
 }
 ```
+
+Recognized but not currently rendered anywhere: `featured` (boolean),
+`client` (string), `tags` (string array). Safe to include on a project now
+— nothing reads them yet, but nothing breaks if they're present, so future
+UI that wants them doesn't require a schema migration first.
 
 **Ordering:** `js/work.js` sorts `config.projects` by `date` (newest first)
 every time it renders — the array's order in the config file is irrelevant
@@ -123,9 +130,17 @@ and never needs to be maintained by hand. `window.Kryozen.getLatestProject()`
 exposes the result for a future homepage "latest project" highlight; nothing
 currently calls it.
 
-**Categories:** `config.categories` is the single source for both the
-filter chips and the valid values for `project.category`. Adding a category
-there is enough — no other file needs to change.
+**Categories:** `config.categories` is the source for the valid values of
+`project.category` and the filter chips on each category page — but it is
+*not* the only place a category is registered. Each category also needs an
+entry in `config.categoryPages` (its page filename) and
+`config.categoryDescriptions` (the subtitle shown on that page), and the
+page itself has to exist (copy any existing category .html file, update
+its `data-category` attribute, `<title>`, and `#category-title` text — see
+§2a of README.md for the exact steps). `js/category-strip.js` and
+`js/category-page.js` are both fully config-driven off these three maps,
+so once those four things exist for a new category, no JS changes are
+needed.
 
 **Thumbnail fallback:** if `project.thumbnail` is empty, or the image fails
 to load, the card shows a gradient + category-label placeholder instead of
@@ -148,9 +163,9 @@ of the player; it only ever dispatches the event.
 **Adding a project — the whole workflow:** there is deliberately no admin
 panel or upload system (see §2f, removed). Adding a project is:
 1. Upload the video to YouTube, set it to **Unlisted**.
-2. Copy the 11-character video ID from its URL.
-3. Add a new object to `config.projects[]` above with that ID as
-   `youtubeId`, commit, and push (Termux or any git client — GitHub Pages
+2. Copy the video's full URL.
+3. Add a new object to `config.projects[]` above with that URL as
+   `youtubeUrl`, commit, and push (Termux or any git client — GitHub Pages
    picks it up on the next deploy).
 
 That's the entire pipeline. No build step, no backend, and nothing about
@@ -167,13 +182,18 @@ footer) — `js/player.js` repopulates it per project rather than building a
 new dialog per card.
 
 **Video hosting:** portfolio videos are unlisted YouTube uploads, referenced
-by `project.youtubeId` — see §2a. There is no self-hosted video, no upload
-system, and no backend. `js/player.js` turns a `youtubeId` into a
-`https://www.youtube.com/embed/<id>?rel=0&playsinline=1` iframe. The
-surrounding Kryozen container (rounded corners, dark background, spacing)
-is styled by `css/player.css`; YouTube's own player chrome inside the
-iframe is cross-origin and is never styled or modified — see §9 for why
-that's a hard rule, not just a convenience.
+by `project.youtubeUrl` — see §2a. There is no self-hosted video, no upload
+system, and no backend. The full URL (not a pre-extracted ID) is the source
+of truth — `js/player.js`'s `extractYouTubeId()` recognizes
+`youtube.com/watch?v=...`, `youtu.be/...`, and `youtube.com/embed/...`
+(each optionally under `www.`/`m.` and with extra query params like
+`&t=30s`, since a URL pasted from a real browser often carries some), pulls
+the 11-character ID out of whichever one it is, and builds a
+`https://www.youtube.com/embed/<id>?rel=0&playsinline=1` iframe from it.
+The surrounding Kryozen container (rounded corners, dark background,
+spacing) is styled by `css/player.css`; YouTube's own player chrome inside
+the iframe is cross-origin and is never styled or modified — see §9 for
+why that's a hard rule, not just a convenience.
 
 **Integration point:** `js/player.js` is the *only* listener for
 `kryozen:project-open` (dispatched by `js/category-page.js` — see §2a). Do
@@ -214,8 +234,9 @@ new cleanup steps to that one `close` listener.
   iframe) before building the new one, and the `close` handler does the
   same on every close. The iframe is never recreated for reasons other
   than opening a new/different project (see §9 performance rules).
-- Missing video (`project.youtubeId` is `""`) and a malformed ID (fails the
-  11-character YouTube ID pattern) both render the same
+- Missing video (`project.youtubeUrl` is `""`) and an unrecognized URL
+  (doesn't match any of the three known YouTube URL shapes, or the ID it
+  finds isn't 11 characters) both render the same
   `.player__media--fallback` state — a gradient + icon + message, not a
   broken embed. The two cases use slightly different copy
   (`config.player.noVideoText` vs `config.player.videoUnavailableText`)
@@ -229,7 +250,7 @@ new cleanup steps to that one `close` listener.
 
 **Config** (`config.player`): `closeLabel`, `noVideoText`,
 `videoUnavailableText` — copy only. Project-specific data (title,
-category, description, software, youtubeId) stays on the project object
+category, description, software, youtubeUrl) stays on the project object
 itself in `config.projects[]`; it is never duplicated into `config.player`.
 
 ---
@@ -521,7 +542,7 @@ For whatever *does* come next:
 ## Video Hosting
 
 Portfolio videos are unlisted YouTube uploads, referenced from
-`config.projects[].youtubeId` — see §2a and §2b for the full schema and
+`config.projects[].youtubeUrl` — see §2a and §2b for the full schema and
 playback contract. There is no backend, no storage provider, no upload
 API, and no OAuth of any kind anywhere in this project; the only "system"
 is the owner manually uploading to YouTube and editing one array in
@@ -538,6 +559,7 @@ The public portfolio is:
 `Homepage → Category page`
 
 The category pages are `short-form.html`, `gaming.html`, `anime-amv.html`,
-`long-form.html`, and `thumbnail-design.html`. No project-detail hierarchy
+`long-form.html`, `thumbnail-design.html`, and `captions-subtitles.html`.
+No project-detail hierarchy
 is introduced, and there is no admin/authenticated layer anywhere in the
 project — see "Studio Manager (removed)" in §2f and "Video Hosting" above.

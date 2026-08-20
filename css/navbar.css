@@ -27,6 +27,17 @@
     box-shadow var(--duration-base) var(--ease-out);
 }
 
+/* Root-cause fix, not a per-list patch: every nav link list in this file
+   (.navbar__links, .navbar__mobile-panel > ul, .navbar__mobile-strip > ul)
+   is built by js/content-loader.js appending raw <li> elements with no
+   list-style reset of their own — only the mobile strip's own stylesheet
+   rule happened to include one. One unconditional reset here covers all
+   three regardless of each list's own layout, instead of relying on
+   each list to remember its own. */
+.navbar li {
+  list-style: none;
+}
+
 .navbar--scrolled {
   background: var(--color-bg-glass);
   border-bottom: 1px solid var(--color-surface-border);
@@ -68,6 +79,8 @@
 .navbar__brand-mark {
   width: 30px;
   height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
   /* Note: logo.svg is always loaded via <img src="...">, never inlined —
      that's required so js/content-loader.js can swap it at runtime via
      the src attribute. currentColor can't cross into an <img>-rendered
@@ -78,8 +91,10 @@
 
 .navbar__brand-mark img,
 .navbar__brand-mark svg {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .navbar__brand-word {
