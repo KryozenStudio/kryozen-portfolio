@@ -92,6 +92,41 @@
   animation:brandMarkReveal 700ms var(--ease-out) 520ms forwards;
 }
 .hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
+
+/* LIVE RING LIGHT — a soft highlight that continuously travels around the
+   logo's own circular edge, entrance-cued right as the iris finishes
+   opening, then loops forever as a quiet ambient brand detail (not a
+   one-shot effect like the mark/sweep/wordmark above). Built as a thin
+   ring, not a filled glow disc: a conic-gradient with one bright ~50deg
+   arc (the rest transparent) is masked down from a full disc to a slim
+   band that hugs .hero__logo-mark's own edge, then just rotated — the
+   arc reads as a single point of light traveling around the rim, closer
+   to a rotating specular highlight than a spinning glow. transform is
+   the only thing that animates on the loop itself, so the continuous
+   motion never triggers layout/paint, only compositing. */
+.hero__logo-ring{
+  position:absolute;
+  inset:-5px;
+  z-index:1;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  background:conic-gradient(from 0deg,
+    transparent 0deg,
+    transparent 265deg,
+    var(--color-accent-glow-soft) 300deg,
+    var(--color-accent-bright) 328deg,
+    #ffb3c0 336deg,
+    var(--color-accent-bright) 344deg,
+    var(--color-accent-glow-soft) 372deg,
+    transparent 400deg
+  );
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  animation:
+    logoRingFadeIn 640ms var(--ease-out) 1180ms forwards,
+    logoRingTravel 6.5s linear 1180ms infinite;
+}
 .hero__logo-sweep{
   position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
   background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
@@ -162,6 +197,8 @@
   16%{opacity:.82}
   100%{width:clamp(40px,10vw,108px);opacity:.38}
 }
+@keyframes logoRingFadeIn{to{opacity:.85}}
+@keyframes logoRingTravel{to{transform:rotate(360deg)}}
 @keyframes wordmarkReveal{
   0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0)}
   72%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(1px,0,0)}
@@ -180,6 +217,7 @@
 .no-intro .hero__actions,
 .no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
 .no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
+.no-intro .hero__logo-ring{opacity:.5;animation:none}
 .no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
 
 @media(max-width:640px){
@@ -206,5 +244,6 @@
   .hero__ambient{animation:none}
   .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
   .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
+  .hero__logo-ring{animation:none;opacity:.4}
   .hero__backdrop::after{display:none}
 }

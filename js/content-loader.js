@@ -120,8 +120,19 @@
     // just skip this list.
     var stripList = document.getElementById("navbar-strip-links");
 
+    // "Current page" marking: on a category page there's no exact link
+    // match (category pages aren't in cfg.nav.links at all — they're
+    // reached from the homepage's Work section), so the one unambiguous
+    // case is marking "Work" active while on any of them. Homepage
+    // section scroll-spy (which link is active while scrolling) is
+    // deliberately not implemented here — it needs its own
+    // IntersectionObserver and isn't worth the added moving part for
+    // what's a "nice to have," not a reported bug.
+    var onCategoryPage = !!document.querySelector(".category-page");
+
     cfg.nav.links.forEach(function (link) {
       var href = normalizeNavHref(link.href);
+      var isCurrent = onCategoryPage && link.href === "#work";
 
       if (desktopList) {
         var li = document.createElement("li");
@@ -129,6 +140,7 @@
         a.className = "navbar__link";
         a.href = href;
         a.textContent = link.label;
+        if (isCurrent) a.setAttribute("aria-current", "page");
         li.appendChild(a);
         desktopList.appendChild(li);
       }
@@ -138,6 +150,7 @@
         mA.className = "navbar__mobile-link";
         mA.href = href;
         mA.textContent = link.label;
+        if (isCurrent) mA.setAttribute("aria-current", "page");
         mLi.appendChild(mA);
         mobileList.appendChild(mLi);
       }
@@ -147,6 +160,7 @@
         sA.className = "navbar__strip-link";
         sA.href = href;
         sA.textContent = link.label;
+        if (isCurrent) sA.setAttribute("aria-current", "page");
         sLi.appendChild(sA);
         stripList.appendChild(sLi);
       }

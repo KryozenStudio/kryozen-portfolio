@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
 
@@ -79,7 +79,7 @@
     <div class="container navbar__inner">
       <a class="navbar__brand" href="#top" aria-label="Kryozen Studio — home">
         <span class="navbar__brand-mark">
-          <img data-logo-img src="assets/images/logo/logo.svg" alt="Kryozen Studio logo" width="30" height="30" />
+          <img data-logo-img src="assets/images/logo/kryozen-mark.webp" alt="Kryozen Studio logo" width="30" height="30" />
         </span>
         <span class="navbar__brand-word" id="navbar-brand-word">KRYOZEN</span>
       </a>
@@ -149,11 +149,12 @@
         <div class="hero__brand-lockup" aria-hidden="true">
           <div class="hero__logo-intro">
             <span class="hero__logo-sweep"></span>
+            <span class="hero__logo-ring" aria-hidden="true"></span>
             <div class="hero__logo-mark">
               <img
                 class="hero__brand-art"
                 data-logo-img
-                src="assets/images/logo/logo.svg"
+                src="assets/images/logo/kryozen-mark.webp"
                 alt=""
                 width="112"
                 height="112"
@@ -331,12 +332,14 @@
        "Video Player System".
   ===================================================================== -->
   <dialog id="player" aria-labelledby="player-title">
-    <button class="player__close" id="player-close" type="button" aria-label="Close video player">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-        <line x1="6" y1="6" x2="18" y2="18" />
-        <line x1="18" y1="6" x2="6" y2="18" />
-      </svg>
-    </button>
+    <div class="player__header">
+      <button class="player__close" id="player-close" type="button" aria-label="Close video player">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        </svg>
+      </button>
+    </div>
 
     <div class="player__media" id="player-media">
       <!-- injected by js/player.js: either a <video> or a fallback state -->

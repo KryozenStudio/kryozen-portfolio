@@ -54,24 +54,32 @@
 }
 
 /* ---------------------------------------------------------------------
-   CLOSE BUTTON — floats over the media area regardless of its content
-   (video or gradient fallback), so it's always legible.
+   HEADER / CLOSE BUTTON
+   Deliberately its own row above the media area, not floated on top of
+   it — the previous version absolutely-positioned the close button over
+   the video itself, which sat close enough to YouTube's own top-right
+   controls (closed captions, settings/quality) to overlap them on some
+   videos. A close button that isn't part of the video's own click
+   surface at all can never compete with YouTube's controls, on any
+   video, at any viewport size — not just "positioned far enough away."
 --------------------------------------------------------------------- */
+.player__header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-2xs) var(--space-2xs) var(--space-2xs);
+}
+
 .player__close {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
+  position: relative;
   z-index: 2;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(8, 8, 10, 0.55);
-  border: 1px solid var(--color-surface-border-strong);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-surface-border);
   color: var(--color-text-primary);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
   transition:
     background-color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out),

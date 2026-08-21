@@ -1,3 +1,47 @@
+/* ---------------------------------------------------------------------
+   ENTRANCE ANIMATIONS
+   Timed against js/category-intro.js's splash overlay (fades out via its
+   own .is-complete class ~1350ms after load, or instantly for
+   prefers-reduced-motion — see that file). The head waits until the
+   overlay is mostly clear so the page doesn't animate in underneath a
+   still-visible splash; the reduced-motion override below isn't just
+   "turn the animation off" — it also drops the delay, since reduced-
+   motion users get the overlay's instant-skip and would otherwise stare
+   at a blank header for over a second waiting out a delay their splash
+   never used.
+--------------------------------------------------------------------- */
+@keyframes categoryHeadIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.category-page__head {
+  opacity: 0;
+  animation: categoryHeadIn 620ms var(--ease-out) 1300ms both;
+}
+
+/* Cards animate in fresh — no class-toggle-on-existing-element step, so
+   this doesn't need the forced-reflow/double-rAF treatment the FAQ and
+   hero needed (see js/faq.js, css/hero.css): the element is *born* with
+   this animation already assigned, not switched into it after the fact,
+   so there's no "no prior painted frame to transition from" race to
+   guard against. animation-delay is set per-card from js/category-page.js
+   (JS_STAGGER_MS below) only on the grid's first render; search/filter
+   re-renders intentionally skip the stagger — restaggering the whole
+   grid on every keystroke would feel sluggish, not premium, which is
+   exactly what "fast enough to feel responsive" rules out. */
+@keyframes categoryCardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.category-project {
+  animation: categoryCardIn 460ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-page__head { opacity: 1; animation: none; }
+  .category-project { animation: none; }
+}
+
 body:has(.category-page) {
   background: var(--color-bg);
 }

@@ -260,17 +260,5 @@ window.SITE_CONFIG = {
   //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
   //   // set of recognized-but-unused fields (client, tags, featured).
   // },
-  projects: [
-  {
-    id: "youtube-player-test",
-    title: "YouTube Player Test",
-    category: "Anime / AMV",
-    thumbnail: "",
-    youtubeUrl: "https://youtu.be/dB28k40jscA?si=xeN7hHXt_sOmA998",
-    description: "Temporary project used to test the YouTube portfolio player.",
-    software: ["Node Video"],
-    date: "2026-08-20",
-  },
-],
-
+  projects: [],
 };

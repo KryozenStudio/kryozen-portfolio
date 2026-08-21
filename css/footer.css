@@ -21,8 +21,10 @@
 }
 
 .footer__copy {
-  font-size: var(--fs-small);
-  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: var(--ls-wide);
+  color: var(--color-text-secondary);
 }
 
 .footer__note {

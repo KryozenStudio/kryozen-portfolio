@@ -142,10 +142,16 @@ its `data-category` attribute, `<title>`, and `#category-title` text — see
 so once those four things exist for a new category, no JS changes are
 needed.
 
-**Thumbnail fallback:** if `project.thumbnail` is empty, or the image fails
-to load, the card shows a gradient + category-label placeholder instead of
-a broken image — so a project can be added before its thumbnail is ready
-without ever looking broken.
+**Thumbnail priority:** `project.thumbnail`, if set, always wins. If it's
+empty but the project has a `youtubeUrl`, the card derives one from
+YouTube's own thumbnail CDN (`hqdefault` — the one size guaranteed to
+exist for any video, unlike `maxresdefault` which only exists for HD
+uploads) rather than requiring a manually uploaded thumbnail for every
+YouTube-backed project. If neither exists, or the derived/manual image
+fails to load, the card shows a gradient + category-label placeholder
+instead of a broken image — so a project can be added before its
+thumbnail is ready, or with only a YouTube link and nothing else, without
+ever looking broken.
 
 **Filtering/search:** both run entirely client-side against the in-memory
 `projects` array (see PROJECT_RULES.md §9.5) — there is no reload and no

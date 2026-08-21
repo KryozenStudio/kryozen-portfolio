@@ -1,8 +1,14 @@
 /**
  * =============================================================================
  * NAVBAR
- * Transparent over the hero, becomes a glass pill-bar once the page scrolls
- * (class .navbar--scrolled, toggled by js/navbar.js). Mobile menu is a
+ * Glass at all times — not just after scrolling. Earlier this bar was fully
+ * transparent until scrolled (background:transparent, no border, no blur),
+ * so anyone looking at the top of the page — which is most first
+ * impressions — saw a plain, glass-free bar and reasonably read that as
+ * "missing glassmorphism," even though the scrolled state genuinely had
+ * it. Now the glass treatment is always present; .navbar--scrolled (still
+ * toggled by js/navbar.js) only intensifies it once there's real page
+ * content behind the bar to add contrast against. Mobile menu is a
  * full-width glass panel that slides down below the bar.
  * =============================================================================
  */
@@ -14,8 +20,12 @@
   right: 0;
   z-index: 1000;
   padding-top: env(safe-area-inset-top, 0);
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background: rgba(10, 10, 12, 0.32);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   isolation: isolate;
   display: block;
   visibility: visible;
@@ -142,8 +152,21 @@
   color: var(--color-text-primary);
 }
 
+.navbar__link:active {
+  transform: scale(0.96);
+  transition: transform 90ms var(--ease-out);
+}
+
 .navbar__link:hover::after,
 .navbar__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.navbar__link[aria-current="page"] {
+  color: var(--color-text-primary);
+}
+
+.navbar__link[aria-current="page"]::after {
   transform: scaleX(1);
 }
 
@@ -273,6 +296,25 @@
   color: var(--color-text-primary);
   padding: 12px 0;
   line-height: 1.2;
+  transition: color var(--duration-fast) var(--ease-out), transform 90ms var(--ease-out), opacity var(--duration-fast) var(--ease-out);
+}
+
+.navbar__mobile-link:hover,
+.navbar__mobile-link:focus-visible {
+  color: var(--color-accent-bright);
+}
+
+/* translateX rather than scale: a full-width block flush against the
+   panel's edges has no visual room to shrink toward its own center the
+   way a pill-shaped button does — a horizontal nudge reads as "pressed"
+   here without looking like it's collapsing into the edge. */
+.navbar__mobile-link:active {
+  transform: translateX(4px);
+  opacity: 0.75;
+}
+
+.navbar__mobile-link[aria-current="page"] {
+  color: var(--color-accent-bright);
 }
 
 @media (min-width: 860px) {
@@ -413,6 +455,17 @@
     color: var(--color-text-primary);
     border-color: var(--color-surface-border-strong);
     background: rgba(255, 255, 255, 0.065);
+  }
+
+  .navbar__strip-link:active {
+    transform: scale(0.94);
+    transition: transform 90ms var(--ease-out);
+  }
+
+  .navbar__strip-link[aria-current="page"] {
+    color: var(--color-text-primary);
+    border-color: var(--color-accent-bright);
+    background: var(--color-accent-glow-soft);
   }
 }
 
