@@ -1,6 +1,18 @@
 (function(){
 "use strict";
 var cfg=window.SITE_CONFIG,root=document.querySelector(".category-page");
+
+var configTest = document.createElement("pre");
+configTest.style.cssText = "position:fixed;z-index:999999;top:80px;left:10px;right:10px;background:#111;color:#fff;padding:15px;font:14px monospace;white-space:pre-wrap;";
+configTest.textContent = "SITE_CONFIG at category-page start: " + String(window.SITE_CONFIG);
+document.body.appendChild(configTest);
+console.log("[KRYOZEN DEBUG] SITE_CONFIG:", cfg);
+console.log("[KRYOZEN DEBUG] projects:", cfg && cfg.projects);
+var debugBox = document.createElement("pre");
+debugBox.id = "kryozen-debug";
+debugBox.style.cssText = "position:fixed;z-index:99999;left:10px;right:10px;bottom:10px;max-height:40vh;overflow:auto;background:#111;color:#0f0;padding:12px;font:12px monospace;white-space:pre-wrap;";
+debugBox.textContent = "SITE_CONFIG exists: " + (!!cfg) + "\nProjects: " + JSON.stringify(cfg && cfg.projects, null, 2);
+document.body.appendChild(debugBox);
 if(!cfg||!root)return;
 var category=root.getAttribute("data-category"),title=document.getElementById("category-title"),desc=document.getElementById("category-description"),grid=document.getElementById("category-grid"),count=document.getElementById("category-count"),search=document.getElementById("category-search"),filters=document.getElementById("category-filters");
 var descriptions=cfg.categoryDescriptions||{};
