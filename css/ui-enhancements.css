@@ -41,28 +41,53 @@
   filter: blur(72px);
   opacity: .2;
   transform: translate3d(0,0,0);
-  /* Static by design: this layer is position:fixed and runs for the
-     entire session on every page, unlike .hero__ambient (hero.css),
-     which is scoped to the hero section and stops costing anything
-     once scrolled past. Two parallel continuously-animating heavily-
-     blurred layers was real, ongoing compositing overhead — the fixed
-     one now holds still; the hero's own richer, already-choreographed
-     version (bounded to hero-viewing time) keeps its motion. */
+  /* transform-only, GPU-composited: the blur is rasterized once and the
+     compositor just moves/scales that bitmap, so animating on top of an
+     already-blurred layer is cheap — the actual filter never
+     recalculates mid-animation. Each orb gets its own duration/path
+     (not synced, not mirrored) specifically so three orbs drifting
+     together never reads as one repeating pattern — see the brief's
+     "avoid obvious circular paths or repetitive motion." Durations are
+     long (36-52s) on purpose: at this speed the motion sits below
+     conscious notice, which is the actual goal ("atmosphere before
+     animation" per spec) — a faster version of the exact same drift
+     would read as a website background loop instead of ambient light.
+     Every keyframe's 0%/100% are identical, the standard way to avoid a
+     visible reset point without needing to hand-tune easing at the seam. */
+  animation-play-state: running;
 }
 
 .site-ambient__orb--one {
   top: 8%; left: -5%;
   background: radial-gradient(circle, rgba(195,20,50,.38), transparent 68%);
+  animation: siteOrbDriftOne 42s ease-in-out infinite;
 }
 
 .site-ambient__orb--two {
   top: 34%; right: -12%;
   background: radial-gradient(circle, rgba(115,78,180,.24), transparent 70%);
+  animation: siteOrbDriftTwo 52s ease-in-out infinite;
 }
 
 .site-ambient__orb--three {
   bottom: -12%; left: 28%;
   background: radial-gradient(circle, rgba(195,20,50,.18), transparent 70%);
+  animation: siteOrbDriftThree 36s ease-in-out infinite;
+}
+
+@keyframes siteOrbDriftOne {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(4%, 3%, 0) scale(1.05); }
+  66% { transform: translate3d(-2%, 5%, 0) scale(0.98); }
+}
+@keyframes siteOrbDriftTwo {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  40% { transform: translate3d(-6%, -4%, 0) scale(1.04); }
+  75% { transform: translate3d(-2%, 3%, 0) scale(0.97); }
+}
+@keyframes siteOrbDriftThree {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(5%, -6%, 0) scale(1.06); }
 }
 
 /* Shared glass vocabulary */

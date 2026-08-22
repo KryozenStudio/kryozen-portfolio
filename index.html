@@ -18,6 +18,15 @@
     rel="stylesheet"
   />
 
+  <!-- The hero logo is the single largest, most visually prominent asset
+       on first paint, and its own reveal animation (css/hero.css) starts
+       on a fixed delay regardless of whether the image itself has
+       finished loading — without a head start, a slow connection could
+       have the iris-reveal play out on a still-empty circle. Preloading
+       gets the fetch started immediately instead of only once the
+       browser reaches this <img> tag during body parsing. -->
+  <link rel="preload" as="image" href="assets/images/logo/kryozen-mark.webp" fetchpriority="high" />
+
   <!-- CSS load order matters: tokens → reset → base → shared components →
        section files in page order -->
   <link rel="stylesheet" href="css/variables.css" />
@@ -158,6 +167,7 @@
                 alt=""
                 width="112"
                 height="112"
+                fetchpriority="high"
               />
             </div>
           </div>

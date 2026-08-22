@@ -239,14 +239,18 @@
      under the 64px bar plus the 44px link strip. The <=859px override
      just below supplies that second case. */
   padding: calc(var(--navbar-h-desktop) + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
-  /* Deliberately NOT --color-bg-glass (55% opaque) — that value is tuned
-     for the thin persistent top bar, where a little of the page showing
-     through on scroll is the intended "atmospheric glass" look. This
-     panel covers most of the screen, directly over the hero's large,
-     high-contrast logo circle — at 55% opacity + strong blur it let
-     that logo bleed through as a distracting faded ghost. Near-opaque
-     here keeps the panel reading as its own solid surface. */
-  background: rgba(8, 8, 10, 0.97);
+  /* Fully opaque, not just "near-opaque": at 0.97 (the previous value)
+     the panel still let a faint blurred "ghost" of whatever bright,
+     saturated content sat behind it (the hero's white wordmark, the red
+     CTA button) show through — backdrop-filter's blur smears that
+     content spatially but doesn't reduce its contribution the way
+     lowering opacity further would, so even 3% see-through stayed
+     visible as a haze. Went unnoticed while this panel only ever
+     covered a narrow mobile viewport; restoring it on desktop (this
+     file's 860px block) means it now sits over a much wider slice of
+     the hero, including the brightest elements, where that haze reads
+     as rough rather than "atmospheric." */
+  background: rgb(8, 8, 10);
   -webkit-backdrop-filter: blur(var(--blur-glass-strong));
   backdrop-filter: blur(var(--blur-glass-strong));
   border-bottom: 1px solid var(--color-surface-border);
@@ -255,6 +259,8 @@
   gap: 0;
   max-height: 100vh;
   max-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow-y: auto;
 
   transform: translateY(-8px);
@@ -321,17 +327,11 @@
   .navbar__links {
     display: flex;
   }
-
-  /* The hamburger/mobile panel was previously kept visible on desktop
-     too, since it was the only route to the (now-removed) Admin/Studio
-     Manager pages — see PROJECT_RULES.md → "Video Hosting" for the
-     current YouTube-Video-ID workflow, which needs no admin route at
-     all. With that gone, the panel would only ever show the same six
-     links already visible in .navbar__links above, so the toggle is
-     mobile/tablet-only again, matching what it actually does. */
-  .navbar__toggle {
-    display: none;
-  }
+  /* The hamburger stays visible here too — a consistent menu affordance
+     across every breakpoint rather than one that disappears once the
+     inline links row has room to show. It opens the exact same panel as
+     mobile; nothing about the panel's own logic is breakpoint-specific,
+     so there's no separate desktop code path to keep in sync. */
 }
 
 

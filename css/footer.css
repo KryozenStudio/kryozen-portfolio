@@ -74,6 +74,11 @@
   transform: translateY(-2px);
 }
 
+.footer__social-link:active {
+  transform: scale(0.9);
+  transition-duration: 90ms;
+}
+
 @media (min-width: 640px) {
   .footer__inner {
     flex-direction: row;
