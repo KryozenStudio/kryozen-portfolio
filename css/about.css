@@ -19,7 +19,17 @@
 }
 
 @media (min-width: 760px) {
-  .about__layout { max-width: 900px; }
+  .about__layout {
+    max-width: 900px;
+    /* Portrait gets a fixed comfortable column (matches .about__portrait's
+       own max-width:260px below); copy takes the rest. This rule was
+       missing entirely despite this file's own header comment promising
+       "two columns on wider viewports" — with only grid-template-columns:
+       1fr ever defined, a configured portrait would have stacked above
+       the copy instead of sitting beside it the first time anyone
+       actually set config.about.profileImage. */
+    grid-template-columns: minmax(200px, 260px) 1fr;
+  }
   .about__media[hidden] + .about__content { grid-column: 1 / -1; }
 }
 
