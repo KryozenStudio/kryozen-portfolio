@@ -260,5 +260,15 @@ window.SITE_CONFIG = {
   //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
   //   // set of recognized-but-unused fields (client, tags, featured).
   // },
-  projects: [],
-};
+  projects: [
+    {
+      id: "amv-player-test",
+      title: "AMV Player Test",
+      category: "Anime / AMV",
+      thumbnail: "",
+      youtubeUrl: "https://youtu.be/TdrL3QxjyVw?si=i3oTChn5MoZZie2L",
+      description: "Test project for the YouTube video player.",
+      software: ["Node Video"],
+      date: "2026-08-23",
+    },
+  ],
