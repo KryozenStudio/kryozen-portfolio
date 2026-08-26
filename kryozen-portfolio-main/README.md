@@ -235,7 +235,7 @@ page):
 ```js
 categories: [
   "Short Form", "Gaming", "Anime / AMV",
-  "Long Form", "Thumbnail Design", "Captions / Subtitles",
+  "Long Form", "Thumbnail Design",
 ],
 categoryPages: {
   "Short Form": "short-form.html",
@@ -465,7 +465,6 @@ The public portfolio supports one page per category:
 - `anime-amv.html`
 - `long-form.html`
 - `thumbnail-design.html`
-- `captions-subtitles.html`
 
 The homepage remains the primary entry point. Category pages do not introduce
 project-detail or subcategory levels.

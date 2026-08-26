@@ -125,49 +125,52 @@
 }
 
 .navbar__link {
+  /* Matches .navbar__strip-link's pill treatment below almost exactly —
+     same border/background/radius pattern, same aria-current colors —
+     rather than the plain-text-plus-underline treatment this used to
+     have. Mobile's nav items were always individual glass pills;
+     desktop's were just colored text with a hover underline, which is
+     why the glassmorphism looked like it "disappeared" on desktop even
+     though the navbar's own background blur was working correctly the
+     whole time — it was never about the bar, it was about each link
+     never having its own glass shape to begin with. No backdrop-filter
+     here on purpose, matching the mobile pill (which doesn't have one
+     either): the blur comes once from .navbar itself; six more blur
+     regions layered on top would be both inconsistent with mobile and
+     needlessly expensive. */
   position: relative;
+  display: inline-flex;
+  align-items: center;
   font-size: var(--fs-small);
   font-weight: 500;
   letter-spacing: var(--ls-normal);
   color: var(--color-text-secondary);
-  padding: var(--space-2xs) 0;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.navbar__link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  background: var(--color-accent-bright);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--duration-base) var(--ease-out);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    transform 90ms var(--ease-out);
 }
 
 .navbar__link:hover,
 .navbar__link:focus-visible {
   color: var(--color-text-primary);
+  border-color: var(--color-surface-border-strong);
+  background: rgba(255, 255, 255, 0.065);
 }
 
 .navbar__link:active {
   transform: scale(0.96);
-  transition: transform 90ms var(--ease-out);
-}
-
-.navbar__link:hover::after,
-.navbar__link:focus-visible::after {
-  transform: scaleX(1);
 }
 
 .navbar__link[aria-current="page"] {
   color: var(--color-text-primary);
-}
-
-.navbar__link[aria-current="page"]::after {
-  transform: scaleX(1);
+  border-color: var(--color-accent-bright);
+  background: var(--color-accent-glow-soft);
 }
 
 .navbar__actions {

@@ -115,7 +115,6 @@ window.SITE_CONFIG = {
     "Anime / AMV",
     "Long Form",
     "Thumbnail Design",
-    "Captions / Subtitles",
   ],
   categoryPages: {
     "Short Form": "short-form.html",
@@ -123,7 +122,6 @@ window.SITE_CONFIG = {
     "Anime / AMV": "anime-amv.html",
     "Long Form": "long-form.html",
     "Thumbnail Design": "thumbnail-design.html",
-    "Captions / Subtitles": "captions-subtitles.html",
   },
 
   categoryDescriptions: {
@@ -132,7 +130,6 @@ window.SITE_CONFIG = {
     "Anime / AMV": "Cinematic anime edits built around music, motion, typography, atmosphere, and emotional timing.",
     "Long Form": "Longer-form editing with clearer structure, pacing, context, and retention-focused presentation.",
     "Thumbnail Design": "High-contrast thumbnail design with clear hierarchy and a strong first-frame impression.",
-    "Captions / Subtitles": "Accurate, well-timed captions and subtitles styled to match each project's tone and pacing.",
   },
 
   // =========================================================================
@@ -147,7 +144,7 @@ window.SITE_CONFIG = {
     role: "Video Editor",
     profileImage: "",
     intro: "The person behind the cuts.",
-    bio: "Kryozen is an independent video editor focused on short-form, gaming, and anime/AMV work. Each edit starts with close attention to the reference, rhythm, and visual intent, then is shaped into a clean, purposeful final piece. The work focuses on pacing, beat sync, typography, captions, compositing, and thumbnail design — with an ongoing focus on improving the craft.",
+    bio: "Kryozen edits video with an emphasis on rhythm, motion, and story — shaping raw footage into something that feels intentional from the first frame. The work spans short-form content, gaming highlights, and anime/AMV edits, with an eye for pacing, beat sync, and visual texture that supports the story rather than distracting from it. Every project starts with the reference: understanding the tone, the audience, and the feeling the footage should leave behind. From there it's a process of shaping clips into rhythm — cutting to the beat, layering typography and captions with intent, and finishing with compositing and thumbnail design that carries the same energy as the edit itself. The goal stays the same on every project: a clean, purposeful final piece that feels crafted, not assembled.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name
@@ -194,11 +191,7 @@ window.SITE_CONFIG = {
       { question: "What do you provide?", answer: "Short-form editing, gaming edits, anime / AMV editing, captions and subtitles, typography, and thumbnail design." },
       { question: "How many revisions are included?", answer: "Three revisions are included with every project. If you need more than three, a payment of 30% of the total project cost is required upfront before work resumes — this isn't an extra or additional fee, just an advance payment to continue." },
       { question: "How long does an edit take?", answer: "Most edits take around 4–7 days, depending on the style and scope. Larger projects may take longer." },
-      { question: "How do I send my footage?", answer: "Google Drive is the preferred way to send footage, references, and other project files." },
       { question: "Can I send a reference?", answer: "Yes. References are welcome and help me understand the exact style you’re looking for." },
-      { question: "Do you work with clients worldwide?", answer: "Yes. Projects are handled remotely and asynchronously, so you can work with me from anywhere." },
-      { question: "Is long-form editing available?", answer: "Long-form editing is planned for the future and isn’t currently available." },
-      { question: "What software do you use?", answer: "Node Video is my current editing software." },
       { question: "How is pricing decided?", answer: "Pricing depends on the style, scope, and amount of work involved. Contact me with the project details for a quote." },
       { question: "How do we get started?", answer: "Send the project details, deadline, and any reference through Discord or email. We’ll discuss the scope before you commit." },
     ],

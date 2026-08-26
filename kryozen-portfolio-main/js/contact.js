@@ -47,19 +47,13 @@
 
   /* -----------------------------------------------------------------
      BUILD METHOD LIST — only direct contact methods belong here.
-     Social discovery stays in the footer.
+     Social discovery stays in the footer. Discord is pushed before
+     Email deliberately: this array's order is the render order (each
+     entry becomes the next appended <a>, see the forEach near the
+     bottom of this file), so which push happens first is the only
+     thing that decides which method appears first on the page.
   ----------------------------------------------------------------- */
   var methods = [];
-
-  if (contactCfg.email) {
-    methods.push({
-      name: "Email",
-      value: contactCfg.email,
-      href: "mailto:" + contactCfg.email,
-      icon: "email",
-      external: false,
-    });
-  }
 
   if (Array.isArray(cfg.social)) {
     cfg.social.forEach(function (item) {
@@ -71,6 +65,16 @@
         icon: "discord",
         external: true,
       });
+    });
+  }
+
+  if (contactCfg.email) {
+    methods.push({
+      name: "Email",
+      value: contactCfg.email,
+      href: "mailto:" + contactCfg.email,
+      icon: "email",
+      external: false,
     });
   }
 
