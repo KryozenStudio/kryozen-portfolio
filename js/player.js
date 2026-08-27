@@ -111,7 +111,14 @@
    *  a recognizable YouTube URL at all. */
   function extractYouTubeId(url) {
     if (!url || typeof url !== "string") return null;
-    var match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    // Covers watch/embed/youtu.be links (original), plus Shorts
+    // (youtube.com/shorts/ID) and Live (youtube.com/live/ID) links, which
+    // were previously unrecognized — a Shorts link is exactly what's most
+    // likely to get pasted in for Short Form / Gaming / Anime-AMV
+    // projects, so a project using one would silently fall back to
+    // "video unavailable" even though the link itself was completely
+    // valid.
+    var match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     return match ? match[1] : null;
   }
 

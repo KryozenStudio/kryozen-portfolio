@@ -13,9 +13,11 @@ function setSource(list){projects=list.filter(function(p){return p&&p.category==
  *  rather than shared because this file and player.js are loaded in
  *  script-order-dependent positions on different pages and this project
  *  has no shared-utility script or build step (see PROJECT_RULES.md §6).
- *  If the YouTube URL matching logic ever needs to change, update both
- *  copies together. */
-function extractYouTubeId(url){if(!url||typeof url!=="string")return null;var m=url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null}
+ *  IMPORTANT: if the YouTube URL matching logic ever needs to change,
+ *  update both copies together — otherwise a project's thumbnail (this
+ *  file) and its player (js/player.js) will disagree about whether a
+ *  given youtubeUrl is valid. */
+function extractYouTubeId(url){if(!url||typeof url!=="string")return null;var m=url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null}
 function card(p){
  var b=document.createElement("button");b.type="button";b.className="category-project";
  var media=document.createElement("span");media.className="category-project__media";

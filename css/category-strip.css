@@ -15,6 +15,17 @@
 .category-strip__item { min-height:120px; padding:var(--space-md); border:1px solid var(--color-surface-border); border-radius:var(--radius-md); background:rgba(255,255,255,.025); display:flex; flex-direction:column; justify-content:space-between; flex:1 1 320px; max-width:380px; transition:transform 240ms var(--ease-out),border-color var(--duration-base) var(--ease-out),background var(--duration-base) var(--ease-out); }
 .category-strip__item:hover,.category-strip__item:focus-visible { transform:translateY(-3px); border-color:var(--color-surface-border-strong); background:rgba(255,255,255,.045); }
 .category-strip__num { font:500 .65rem var(--font-mono); letter-spacing:.12em; color:var(--color-accent-bright); }
-.category-strip__name { font-weight:700; letter-spacing:-.02em; }
+/* Centered regardless of label length: with the container stretched to a
+   fixed flex-basis (up to 380px wide), a short one-word label like
+   "Gaming" and a longer two-word label like "Thumbnail Design" or
+   "Anime / AMV" both sat flush against the browser's default left edge
+   before this rule — barely visible on short labels, but obviously
+   off-center the moment a name is long enough to visually read as
+   off-balance in the middle of the card (reported specifically for
+   "Thumbnail Design", the longest label in the set). text-align:center
+   here fixes every category uniformly rather than special-casing one,
+   and leaves .category-strip__num (top-left index) and
+   .category-strip__arrow (bottom-right, via align-self) untouched. */
+.category-strip__name { font-weight:700; letter-spacing:-.02em; text-align:center; }
 .category-strip__arrow { color:var(--color-text-tertiary); align-self:flex-end; }
 @media(max-width:640px){.category-strip__head{display:block}.category-strip__head h2{margin-top:.4rem}.category-strip__item{min-height:105px;padding:var(--space-sm);flex-basis:calc(50% - var(--space-xs) / 2);max-width:none}}

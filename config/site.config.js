@@ -144,7 +144,7 @@ window.SITE_CONFIG = {
     role: "Video Editor",
     profileImage: "",
     intro: "The person behind the cuts.",
-    bio: "Kryozen edits video with an emphasis on rhythm, motion, and story — shaping raw footage into something that feels intentional from the first frame. The work spans short-form content, gaming highlights, and anime/AMV edits, with an eye for pacing, beat sync, and visual texture that supports the story rather than distracting from it. Every project starts with the reference: understanding the tone, the audience, and the feeling the footage should leave behind. From there it's a process of shaping clips into rhythm — cutting to the beat, layering typography and captions with intent, and finishing with compositing and thumbnail design that carries the same energy as the edit itself. The goal stays the same on every project: a clean, purposeful final piece that feels crafted, not assembled.",
+    bio: "I'm a video editor who enjoys experimenting with everything from AMVs and gaming edits to short-form content and motion design. I put emotion and creativity into every edit, always trying to make each piece feel as good as it possibly can. For me, editing isn't just about effects—it's about making something people can actually feel.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name
@@ -237,9 +237,11 @@ window.SITE_CONFIG = {
   // Add real projects here following this shape. Videos are unlisted
   // YouTube uploads (see PROJECT_RULES.md → "Video Hosting"): upload the
   // video, set it Unlisted, then paste the full video URL as copied from
-  // the browser — either youtube.com/watch?v=... or the shorter
-  // youtu.be/... form both work, js/player.js extracts the video ID
-  // itself. Don't pre-extract or shorten it yourself.
+  // the browser or the YouTube app's Share button — any of these forms
+  // work: youtube.com/watch?v=..., the shorter youtu.be/... form,
+  // youtube.com/shorts/... , or youtube.com/live/... . js/player.js (and
+  // js/category-page.js, which derives the grid thumbnail) extract the
+  // video ID themselves. Don't pre-extract or shorten it yourself.
   // {
   //   id: "example-project",
   //   title: "Example Project",
@@ -253,23 +255,5 @@ window.SITE_CONFIG = {
   //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
   //   // set of recognized-but-unused fields (client, tags, featured).
   // },
-  projects: [
-  {
-    id: "amv-kamin",
-    title: "Kamin",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/Fhilb_xTCc8",
-    description: "Oshi no Ko AMV edit.",
-    software: ["Node Video"],
-    date: "2026-08-26"
-  },
-  {
-    id: "frieren-where-have-you-been",
-    title: "Where Have You Been?",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/gORcP7BurOc",
-    description: "Frieren AMV edit.",
-    software: ["Node Video"],
-    date: "2026-08-26"
-  },
-],
+  projects: [],
+};
