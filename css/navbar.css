@@ -23,9 +23,9 @@
   background: rgba(10, 10, 12, 0.32);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 0 0 20px 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  backdrop-filter: blur(10px) saturate(1.15);
   isolation: isolate;
   display: block;
   visibility: visible;
@@ -35,6 +35,27 @@
     border-color var(--duration-base) var(--ease-out),
     backdrop-filter var(--duration-base) var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Signature red edge-glow — a very faint line just beneath the navbar's
+   own hairline border, using the site's one accent hue rather than a
+   second color. Present but barely-there while unscrolled, intensifies
+   once there's real page content behind the bar to read against —
+   same "always present, deepens on scroll" logic as the glass itself. */
+.navbar::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-glow) 25%, var(--color-accent-glow) 75%, transparent);
+  opacity: .3;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+.navbar--scrolled::after {
+  opacity: .6;
 }
 
 /* Root-cause fix, not a per-list patch: every nav link list in this file
@@ -51,9 +72,9 @@
 .navbar--scrolled {
   background: var(--color-bg-glass);
   border-bottom: 1px solid var(--color-surface-border);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
-  box-shadow: var(--shadow-sm);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow-sm);
 }
 
 .navbar__inner {
@@ -295,6 +316,30 @@
   margin: 0;
   padding: 0;
 }
+
+/* Staggered cascade rather than every link appearing the instant the
+   panel does — the glass panel itself still materializes in one
+   --duration-base beat (see .navbar__mobile-panel.is-open above), then
+   each link fades/lifts in slightly after the last, top to bottom. The
+   stagger lives on the <li> wrapper rather than .navbar__mobile-link
+   itself so it never fights with that element's own hover/press
+   transform. Six delay steps are defined; a seventh nav item would
+   simply inherit no delay (falls back to 0ms) rather than error. */
+.navbar__mobile-panel > ul > li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+.navbar__mobile-panel.is-open > ul > li {
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbar__mobile-panel > ul > li:nth-child(1) { transition-delay: 50ms; }
+.navbar__mobile-panel > ul > li:nth-child(2) { transition-delay: 85ms; }
+.navbar__mobile-panel > ul > li:nth-child(3) { transition-delay: 120ms; }
+.navbar__mobile-panel > ul > li:nth-child(4) { transition-delay: 155ms; }
+.navbar__mobile-panel > ul > li:nth-child(5) { transition-delay: 190ms; }
+.navbar__mobile-panel > ul > li:nth-child(6) { transition-delay: 225ms; }
 
 .navbar__mobile-link {
   display: block;

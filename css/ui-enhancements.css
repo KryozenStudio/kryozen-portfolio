@@ -48,46 +48,60 @@
      (not synced, not mirrored) specifically so three orbs drifting
      together never reads as one repeating pattern — see the brief's
      "avoid obvious circular paths or repetitive motion." Durations are
-     long (36-52s) on purpose: at this speed the motion sits below
-     conscious notice, which is the actual goal ("atmosphere before
-     animation" per spec) — a faster version of the exact same drift
-     would read as a website background loop instead of ambient light.
-     Every keyframe's 0%/100% are identical, the standard way to avoid a
-     visible reset point without needing to hand-tune easing at the seam. */
+     long (39-57s) and mutually irregular on purpose: at this speed the
+     motion sits below conscious notice, and the combined three-shape
+     pattern doesn't even repeat together on any timescale a visitor
+     would sit through. Each path also runs through several unequal
+     intermediate stops (position, scale, rotation, opacity) rather than
+     a single there-and-back tween, so no two moments in one shape's own
+     cycle look alike either — only the seam does. */
   animation-play-state: running;
 }
 
+/* One accent hue only (PROJECT_RULES.md §3) — all three orbs are red,
+   differentiated by position/size/opacity rather than hue. A second
+   orb used to be a desaturated purple; that was a leftover
+   inconsistency from before this rule was written down, not a
+   deliberate second signal color, so it's corrected here rather than
+   preserved. */
 .site-ambient__orb--one {
   top: 8%; left: -5%;
   background: radial-gradient(circle, rgba(195,20,50,.38), transparent 68%);
-  animation: siteOrbDriftOne 42s ease-in-out infinite;
+  animation: siteOrbDriftOne 44s ease-in-out infinite;
 }
 
 .site-ambient__orb--two {
   top: 34%; right: -12%;
-  background: radial-gradient(circle, rgba(115,78,180,.24), transparent 70%);
-  animation: siteOrbDriftTwo 52s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(226,33,63,.22), transparent 70%);
+  animation: siteOrbDriftTwo 57s ease-in-out infinite;
 }
 
 .site-ambient__orb--three {
   bottom: -12%; left: 28%;
   background: radial-gradient(circle, rgba(195,20,50,.18), transparent 70%);
-  animation: siteOrbDriftThree 36s ease-in-out infinite;
+  animation: siteOrbDriftThree 39s ease-in-out infinite;
 }
 
 @keyframes siteOrbDriftOne {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  33% { transform: translate3d(4%, 3%, 0) scale(1.05); }
-  66% { transform: translate3d(-2%, 5%, 0) scale(0.98); }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .2; }
+  24%  { transform: translate3d(5%, 3%, 0) scale(1.06) rotate(6deg); opacity: .26; }
+  51%  { transform: translate3d(1%, 7%, 0) scale(0.97) rotate(-4deg); opacity: .22; }
+  78%  { transform: translate3d(-3%, 2%, 0) scale(1.04) rotate(3deg); opacity: .25; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .2; }
 }
 @keyframes siteOrbDriftTwo {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  40% { transform: translate3d(-6%, -4%, 0) scale(1.04); }
-  75% { transform: translate3d(-2%, 3%, 0) scale(0.97); }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .14; }
+  28%  { transform: translate3d(-6%, -4%, 0) scale(1.05) rotate(-5deg); opacity: .18; }
+  60%  { transform: translate3d(-2%, -8%, 0) scale(0.98) rotate(4deg); opacity: .15; }
+  84%  { transform: translate3d(3%, -3%, 0) scale(1.03) rotate(-3deg); opacity: .17; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .14; }
 }
 @keyframes siteOrbDriftThree {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(5%, -6%, 0) scale(1.06); }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .1; }
+  32%  { transform: translate3d(4%, -5%, 0) scale(1.05) rotate(5deg); opacity: .13; }
+  63%  { transform: translate3d(7%, -1%, 0) scale(0.97) rotate(-3deg); opacity: .11; }
+  88%  { transform: translate3d(2%, -6%, 0) scale(1.03) rotate(2deg); opacity: .12; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .1; }
 }
 
 /* Shared glass vocabulary */

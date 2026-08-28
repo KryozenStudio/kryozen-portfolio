@@ -36,9 +36,9 @@
   filter:blur(64px); opacity:.62; will-change:transform;
   mix-blend-mode:screen;
 }
-.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 34s ease-in-out infinite}
-.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 40s ease-in-out infinite}
-.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 46s ease-in-out infinite}
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 37s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 49s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 58s ease-in-out infinite}
 
 /* Pointer-reactive ambient light — desktop only (js/hero-pointer.js sets
    --pointer-x/--pointer-y and toggles .has-pointer-light; the class only
@@ -56,6 +56,62 @@
 @media (hover:hover) and (pointer:fine){
   .hero.has-pointer-light .hero__backdrop::after{opacity:1}
 }
+
+/* ---------------------------------------------------------------------
+   TIMELINE READOUT — fills the gap between the navbar and the brand
+   lockup with something on-brand rather than leaving it empty: a
+   miniature video-editing timeline (ruler, scrubbing playhead, REC
+   indicator, live running timecode). Purpose: brand moment + ambient
+   motion the hero has even before anyone scrolls (PROJECT_RULES.md §5
+   allows one orchestrated moment — this rides alongside the existing
+   logo reveal as a quiet, continuous detail, not a second choreographed
+   sequence). Decorative/aria-hidden; the live time is cosmetic, not
+   informational. js/hero-intro.js drives the digits.
+--------------------------------------------------------------------- */
+.hero__ticker{
+  position:absolute;z-index:1;top:calc(var(--navbar-h-desktop) + 20px);left:50%;
+  transform:translateX(-50%);
+  width:min(380px,70%);
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  opacity:0;pointer-events:none;
+  animation:heroTickerFadeUp 640ms var(--ease-out) 1460ms forwards;
+}
+@media(max-width:859px){
+  .hero__ticker{top:calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + 14px)}
+}
+@media(max-width:640px){
+  .hero__ticker{width:min(300px,74%);gap:7px}
+}
+.hero__ticker-rule{
+  position:relative;width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 12%,rgba(255,255,255,.18) 88%,transparent);
+}
+.hero__ticker-rule::before{
+  content:"";position:absolute;inset:-1px 0 0;height:2px;
+  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 12.5%);
+  opacity:.55;
+}
+.hero__ticker-head{
+  position:absolute;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
+  background:var(--color-accent-bright);
+  box-shadow:0 0 9px 3px var(--color-accent-glow);
+  animation:tickerScrub 15s var(--ease-in-out) infinite;
+}
+.hero__ticker-readout{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--font-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--color-text-tertiary);
+}
+.hero__ticker-rec{display:inline-flex;align-items:center;gap:5px;color:var(--color-accent-bright)}
+.hero__ticker-rec-dot{
+  width:5px;height:5px;border-radius:50%;background:currentColor;
+  box-shadow:0 0 8px 2px var(--color-accent-glow);
+  animation:tickerPulse 2.3s ease-in-out infinite;
+}
+.hero__ticker-time{font-variant-numeric:tabular-nums;color:var(--color-text-secondary)}
+
+@keyframes tickerScrub{0%,100%{left:0%}50%{left:100%}}
+@keyframes tickerPulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 .hero__content{
   position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
@@ -205,10 +261,49 @@
   100%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(0,0,0)}
 }
 @keyframes heroFadeUp{to{opacity:1;transform:none}}
+/* .hero__ticker can't reuse heroFadeUp above: that keyframe's end state
+   sets transform:none, which is correct for the other hero elements
+   (they have no base transform to preserve) but would silently cancel
+   the ticker's own translateX(-50%) centering the instant the entrance
+   animation finishes (animation forwards fill-mode locks in that final
+   computed transform, overriding the element's stylesheet transform
+   value from then on) — confirmed this was actually happening: the
+   ticker rendered flush against its left:50% anchor with no
+   compensating shift, pushing roughly half its width off the right
+   edge of the viewport on narrow screens. */
+@keyframes heroTickerFadeUp{to{opacity:1;transform:translateX(-50%)}}
 @keyframes heroScrollIn{to{opacity:1}}
-@keyframes ambientDriftOne{0%,100%{transform:translate3d(-2%,0,0) scale(.98)}50%{transform:translate3d(8%,5%,0) scale(1.04)}}
-@keyframes ambientDriftTwo{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-7%,-5%,0) scale(1.06)}}
-@keyframes ambientDriftThree{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4%,-6%,0) scale(1.03)}}
+/* Ambient drift — asymmetric, multi-stop paths rather than a single
+   there-and-back tween. A 0%/50%/100% keyframe is still technically
+   periodic, but it *reads* as a loop because the eye sees the shape
+   retrace the same two points; passing through several unequal
+   intermediate positions (with its own opacity/rotation drifting too)
+   means no two moments in the cycle look alike, only the seam itself
+   does — and each of the three shapes here uses a different, mutually
+   irregular duration (37s/49s/58s) so their combined pattern doesn't
+   even repeat together on any timescale a visitor would sit through.
+   Transform + opacity only, so this stays compositor-only work. */
+@keyframes ambientDriftOne{
+  0%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.56}
+  21%{transform:translate3d(5%,4%,0) scale(1.04) rotate(7deg);opacity:.68}
+  49%{transform:translate3d(1%,8%,0) scale(1.01) rotate(-5deg);opacity:.6}
+  76%{transform:translate3d(-6%,2%,0) scale(1.05) rotate(4deg);opacity:.7}
+  100%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.56}
+}
+@keyframes ambientDriftTwo{
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+  30%{transform:translate3d(-6%,-4%,0) scale(1.05) rotate(-6deg);opacity:.42}
+  58%{transform:translate3d(-2%,-9%,0) scale(.98) rotate(5deg);opacity:.36}
+  82%{transform:translate3d(4%,-3%,0) scale(1.03) rotate(-3deg);opacity:.4}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+}
+@keyframes ambientDriftThree{
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.22}
+  27%{transform:translate3d(4%,-5%,0) scale(1.04) rotate(5deg);opacity:.28}
+  55%{transform:translate3d(8%,-1%,0) scale(.99) rotate(-4deg);opacity:.24}
+  80%{transform:translate3d(2%,-7%,0) scale(1.03) rotate(3deg);opacity:.27}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.22}
+}
 
 .no-intro .hero__eyebrow,
 .no-intro .hero__logo-mark,
@@ -216,6 +311,10 @@
 .no-intro .hero__intro,
 .no-intro .hero__actions,
 .no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
+/* .hero__ticker keeps its base translateX(-50%) centering (it's
+   absolutely positioned, unlike the normal-flow elements above) — only
+   opacity/animation reset here, never transform:none. */
+.no-intro .hero__ticker{opacity:1;animation:none}
 .no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
 .no-intro .hero__logo-ring{opacity:.5;animation:none}
 .no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
@@ -246,4 +345,7 @@
   .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
   .hero__logo-ring{animation:none;opacity:.4}
   .hero__backdrop::after{display:none}
+  .hero__ticker{animation:none;opacity:1}
+  .hero__ticker-head{animation:none;left:0%}
+  .hero__ticker-rec-dot{animation:none;opacity:.8}
 }

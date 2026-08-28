@@ -255,15 +255,5 @@ window.SITE_CONFIG = {
   //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
   //   // set of recognized-but-unused fields (client, tags, featured).
   // },
-    projects: [
-    {
-      id: "amv-kamin",
-      title: "Kamin",
-      category: "Anime / AMV",
-      youtubeUrl: "https://youtu.be/Fhilb_xTCc8",
-      description: "Oshi no Ko AMV edit.",
-      software: ["Node Video"],
-      date: "2026-08-26"
-    }
-  ],
+  projects: [],
 };

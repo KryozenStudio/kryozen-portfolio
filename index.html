@@ -149,6 +149,20 @@
     <section class="hero" id="top">
       <div class="hero__backdrop" aria-hidden="true"><span class="hero__ambient hero__ambient--one"></span><span class="hero__ambient hero__ambient--two"></span><span class="hero__ambient hero__ambient--three"></span></div>
 
+      <!-- Timeline readout: fills the gap between the navbar and the
+           brand lockup with an on-brand detail instead of empty space —
+           a miniature editing timeline (ruler, scrubbing playhead, REC
+           indicator, running timecode). Purely decorative/ambient; the
+           time isn't real elapsed time, just a live-feeling readout.
+           See css/hero.css and js/hero-intro.js. -->
+      <div class="hero__ticker" aria-hidden="true">
+        <div class="hero__ticker-rule"><span class="hero__ticker-head"></span></div>
+        <div class="hero__ticker-readout">
+          <span class="hero__ticker-rec"><span class="hero__ticker-rec-dot"></span>REC</span>
+          <span class="hero__ticker-time" id="hero-ticker-time">00:00:00:00</span>
+        </div>
+      </div>
+
       <div class="container hero__content">
         <p class="hero__eyebrow">
           <span class="hero__eyebrow-dot" aria-hidden="true"></span>

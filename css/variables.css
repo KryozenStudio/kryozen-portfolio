@@ -116,10 +116,18 @@
      (buttons, cards, chips) — the "press" half stays a plain, fast
      --ease-out so the down-stroke feels decisive rather than springy. */
   --ease-spring: cubic-bezier(0.34, 1.14, 0.64, 1);
+  /* Filmic ease — a touch slower off the mark than --ease-out, used for
+     the FLIP-style project-open transition (js/player.js) so a card
+     visibly "expanding" into the player reads as weighted/cinematic
+     rather than a generic UI snap. Not used for anything else — this is
+     a scoped addition, same pattern as --ease-spring being reserved for
+     press/release (see PROJECT_RULES.md §5). */
+  --ease-expand: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 180ms;
   --duration-base: 320ms;
   --duration-slow: 600ms;
   --duration-intro: 2200ms;
+  --duration-expand: 520ms;
 
   /* ---------------------------------------------------------------------
      LAYOUT — fixed navbar heights. Referenced by the hero's top padding,

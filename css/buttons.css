@@ -38,9 +38,31 @@
 /* Primary — solid deep red, the site's single loudest element besides the
    hero title itself. Used sparingly (one per view). */
 .btn--primary {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(155deg, var(--color-accent-bright), var(--color-accent-dim));
   color: var(--color-text-on-accent);
   box-shadow: var(--shadow-accent);
+}
+
+/* A single light sheen crossing the button on hover — one clean sweep,
+   not a repeating shimmer loop (this is feedback for a specific hover,
+   not ambient motion, so it plays once and stops; see
+   PROJECT_RULES.md §5 on motion needing a reason). Pure CSS pseudo-
+   element, no extra markup. */
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.32) 48%, transparent 66%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.btn--primary:hover::after,
+.btn--primary:focus-visible::after {
+  transform: translateX(120%);
+  transition: transform 620ms var(--ease-out);
 }
 
 .btn--primary:hover,
