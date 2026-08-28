@@ -77,7 +77,7 @@
     <div class="site-ambient" aria-hidden="true">
       <span class="site-ambient__orb site-ambient__orb--one"></span>
       <span class="site-ambient__orb site-ambient__orb--two"></span>
-      <span class="site-ambient__orb site-ambient__orb--three"></span>
+      <span class="site-ambient__orb site-ambient__orb--three"></span><span class="site-ambient__orb site-ambient__orb--four"></span>
     </div>  <a class="skip-link" href="#main">Skip to content</a>
   <div class="grain-overlay" aria-hidden="true"></div>
 
@@ -96,6 +96,20 @@
       <nav class="navbar__links js-only" id="navbar-links" aria-label="Primary">
         <!-- injected by js/content-loader.js from config.nav.links -->
       </nav>
+
+      <!-- Mobile-only: fills the gap left by .navbar__brand-word and
+           .navbar__links both being hidden below 860px. See
+           css/navbar.css → "BRAND BANNER" for the full explanation. -->
+      <div class="navbar__banner" aria-hidden="true">
+        <span class="navbar__banner-pill">
+          <span class="navbar__banner-glow"></span>
+          <span class="navbar__banner-figure">
+            <span class="navbar__banner-ring"></span>
+            <img class="navbar__banner-char" src="assets/images/logo/kryozen-mark.webp" alt="" width="28" height="28" loading="lazy" />
+          </span>
+          <span class="navbar__banner-label">Kryozen</span>
+        </span>
+      </div>
 
       <div class="navbar__actions">
 

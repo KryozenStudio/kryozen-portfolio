@@ -26,13 +26,24 @@
    itself carries a bit more of the site's "film wipe" signature than a
    plain fade would. */
 @keyframes categoryTitleWipe {
-  0% { clip-path: inset(0 100% 0 0); }
-  75% { clip-path: inset(0 -2% 0 0); }
-  100% { clip-path: inset(0 -2% 0 0); }
+  0% { clip-path: inset(-0.2em 100% -0.2em 0); }
+  75% { clip-path: inset(-0.2em -2% -0.2em 0); }
+  100% { clip-path: inset(-0.2em -2% -0.2em 0); }
 }
 .category-page__title {
   display: inline-block;
-  clip-path: inset(0 100% 0 0);
+  /* Vertical inset is -0.2em, not 0: this heading's line-height (.92,
+     just below) is intentionally tighter than the font's own metrics
+     for a denser display-type look, which means descenders like the
+     "g" in "Design" normally render a little outside the tightened
+     line box — harmless under the usual overflow:visible, but
+     clip-path clips there regardless of overflow, so a 0 vertical
+     inset was silently guillotining any descender that landed on the
+     clipped (pre-reveal) or, worse, the fully-revealed edge. Confirmed
+     by screenshot: "Thumbnail Design" on mobile had a truncated g.
+     -0.2em gives descenders (and any accent marks above) room without
+     the wipe reading any differently. */
+  clip-path: inset(-0.2em 100% -0.2em 0);
   animation: categoryTitleWipe 640ms var(--ease-out) 1460ms both;
 }
 
@@ -69,36 +80,39 @@ body:has(.category-page) {
   position:fixed;
   z-index:-1;
   pointer-events:none;
-  width:48vw;
-  height:38vw;
-  min-width:300px;
-  min-height:240px;
+  width:50vw;
+  height:40vw;
+  min-width:320px;
+  min-height:260px;
   border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
-  background:radial-gradient(circle at 35% 35%, rgba(226,33,63,.16), rgba(195,20,50,.055) 42%, transparent 72%);
-  filter:blur(58px);
-  opacity:.58;
+  background:radial-gradient(circle at 35% 35%, rgba(226,33,63,.32), rgba(195,20,50,.1) 42%, transparent 72%);
+  filter:blur(56px);
+  opacity:.8;
   will-change:transform;
-  animation:categoryAmbientA 41s ease-in-out infinite;
+  animation:categoryAmbientA 22s ease-in-out infinite;
 }
 .category-page::before { top:4%; left:3%; }
-.category-page::after { right:-8%; bottom:4%; width:44vw; height:34vw; opacity:.34; animation:categoryAmbientB 53s ease-in-out infinite; }
+.category-page::after { right:-8%; bottom:4%; width:46vw; height:36vw; opacity:.56; animation:categoryAmbientB 26s ease-in-out infinite; }
 /* Same asymmetric-path technique as the hero/site-wide orbs (see
    css/hero.css, css/ui-enhancements.css) — multiple unequal
    intermediate stops plus a slow rotation, rather than one there-and-
    back tween, so the loop point is never the only thing that looks
-   different from the rest of the cycle. */
+   different from the rest of the cycle. Durations (22s/26s) match the
+   site-wide orbs' pace, not the earlier 41s/53s — that pace read as
+   background dressing so subtle it was effectively static; this is
+   fast enough to actually notice drifting during a normal page visit. */
 @keyframes categoryAmbientA {
   0%   { transform: translate3d(-2%,-1%,0) scale(.97) rotate(0deg); }
-  26%  { transform: translate3d(6%,2%,0) scale(1.04) rotate(5deg); }
-  54%  { transform: translate3d(3%,7%,0) scale(1.01) rotate(-4deg); }
-  81%  { transform: translate3d(-5%,1%,0) scale(1.05) rotate(3deg); }
+  26%  { transform: translate3d(7%,3%,0) scale(1.07) rotate(6deg); }
+  54%  { transform: translate3d(3%,9%,0) scale(1.01) rotate(-5deg); }
+  81%  { transform: translate3d(-6%,2%,0) scale(1.06) rotate(4deg); }
   100% { transform: translate3d(-2%,-1%,0) scale(.97) rotate(0deg); }
 }
 @keyframes categoryAmbientB {
   0%   { transform: translate3d(2%,3%,0) scale(1) rotate(0deg); }
-  30%  { transform: translate3d(-6%,-3%,0) scale(1.05) rotate(-5deg); }
-  62%  { transform: translate3d(-2%,-8%,0) scale(.98) rotate(4deg); }
-  85%  { transform: translate3d(4%,-2%,0) scale(1.04) rotate(-3deg); }
+  30%  { transform: translate3d(-7%,-4%,0) scale(1.07) rotate(-6deg); }
+  62%  { transform: translate3d(-3%,-10%,0) scale(.97) rotate(5deg); }
+  85%  { transform: translate3d(5%,-3%,0) scale(1.05) rotate(-4deg); }
   100% { transform: translate3d(2%,3%,0) scale(1) rotate(0deg); }
 }
 @media(prefers-reduced-motion:reduce){.category-page::before,.category-page::after{animation:none}}

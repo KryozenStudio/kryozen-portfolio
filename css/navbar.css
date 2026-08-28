@@ -200,6 +200,106 @@
   gap: var(--space-sm);
 }
 
+/* ---------------------------------------------------------------------
+   BRAND BANNER — the empty gap in the mobile bar
+   On mobile, .navbar__brand-word and .navbar__links are both hidden
+   (see the 859px block below), leaving just the small logo mark on the
+   left and the hamburger on the right — a wide, genuinely empty strip
+   of navbar between them. This fills it: the mascot artwork already
+   used for the logo, given its own small looping idle animation (bob +
+   glow + a slow rotating ring, echoing .hero__logo-ring's language) so
+   it reads as a living character rather than a static repeated icon.
+   Desktop keeps that space occupied by .navbar__links instead, so this
+   stays mobile-only — display:none is the base state, flipped on at
+   the same 859px cutoff every other mobile-nav rule in this file uses.
+--------------------------------------------------------------------- */
+.navbar__banner {
+  display: none;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__banner-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px 5px 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--color-surface-border);
+  overflow: hidden;
+}
+
+.navbar__banner-glow {
+  position: absolute;
+  inset: -60%;
+  background: radial-gradient(circle at 28% 50%, var(--color-accent-glow), transparent 68%);
+  filter: blur(9px);
+  animation: navBannerGlow 4.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.navbar__banner-figure {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  flex: none;
+}
+
+.navbar__banner-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent-glow);
+  border-top-color: transparent;
+  border-left-color: transparent;
+  animation: navBannerSpin 5.5s linear infinite;
+}
+
+.navbar__banner-char {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: navBannerBob 3.1s ease-in-out infinite;
+  filter: drop-shadow(0 0 5px var(--color-accent-glow));
+}
+
+.navbar__banner-label {
+  position: relative;
+  z-index: 1;
+  font: 600 0.58rem var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+@keyframes navBannerBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(-4deg); }
+}
+@keyframes navBannerGlow {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.18); }
+}
+@keyframes navBannerSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__banner-glow,
+  .navbar__banner-char,
+  .navbar__banner-ring {
+    animation: none;
+  }
+}
 
 /* ---------------------------------------------------------------------
    MOBILE MENU TOGGLE (hamburger)
@@ -429,6 +529,10 @@
 
   .navbar__links {
     display: none;
+  }
+
+  .navbar__banner {
+    display: flex;
   }
 
   /* The hamburger panel opens under a taller bar here (top row + link

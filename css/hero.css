@@ -32,13 +32,13 @@
 .hero__ambient {
   position:absolute; width:46vw; height:34vw; min-width:300px; min-height:240px;
   border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
-  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.16),rgba(195,20,50,.055) 44%,transparent 72%);
-  filter:blur(64px); opacity:.62; will-change:transform;
+  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.34),rgba(195,20,50,.1) 44%,transparent 72%);
+  filter:blur(60px); opacity:.78; will-change:transform;
   mix-blend-mode:screen;
 }
-.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 37s ease-in-out infinite}
-.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 49s ease-in-out infinite}
-.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 58s ease-in-out infinite}
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 21s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.5;animation:ambientDriftTwo 26s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.36;filter:blur(72px);animation:ambientDriftThree 30s ease-in-out infinite}
 
 /* Pointer-reactive ambient light — desktop only (js/hero-pointer.js sets
    --pointer-x/--pointer-y and toggles .has-pointer-light; the class only
@@ -284,25 +284,25 @@
    even repeat together on any timescale a visitor would sit through.
    Transform + opacity only, so this stays compositor-only work. */
 @keyframes ambientDriftOne{
-  0%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.56}
-  21%{transform:translate3d(5%,4%,0) scale(1.04) rotate(7deg);opacity:.68}
-  49%{transform:translate3d(1%,8%,0) scale(1.01) rotate(-5deg);opacity:.6}
-  76%{transform:translate3d(-6%,2%,0) scale(1.05) rotate(4deg);opacity:.7}
-  100%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.56}
+  0%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
+  21%{transform:translate3d(5%,4%,0) scale(1.04) rotate(7deg);opacity:.84}
+  49%{transform:translate3d(1%,8%,0) scale(1.01) rotate(-5deg);opacity:.75}
+  76%{transform:translate3d(-6%,2%,0) scale(1.05) rotate(4deg);opacity:.86}
+  100%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
 }
 @keyframes ambientDriftTwo{
-  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
-  30%{transform:translate3d(-6%,-4%,0) scale(1.05) rotate(-6deg);opacity:.42}
-  58%{transform:translate3d(-2%,-9%,0) scale(.98) rotate(5deg);opacity:.36}
-  82%{transform:translate3d(4%,-3%,0) scale(1.03) rotate(-3deg);opacity:.4}
-  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
+  30%{transform:translate3d(-6%,-4%,0) scale(1.05) rotate(-6deg);opacity:.58}
+  58%{transform:translate3d(-2%,-9%,0) scale(.98) rotate(5deg);opacity:.5}
+  82%{transform:translate3d(4%,-3%,0) scale(1.03) rotate(-3deg);opacity:.55}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
 }
 @keyframes ambientDriftThree{
-  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.22}
-  27%{transform:translate3d(4%,-5%,0) scale(1.04) rotate(5deg);opacity:.28}
-  55%{transform:translate3d(8%,-1%,0) scale(.99) rotate(-4deg);opacity:.24}
-  80%{transform:translate3d(2%,-7%,0) scale(1.03) rotate(3deg);opacity:.27}
-  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.22}
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+  27%{transform:translate3d(4%,-5%,0) scale(1.04) rotate(5deg);opacity:.42}
+  55%{transform:translate3d(8%,-1%,0) scale(.99) rotate(-4deg);opacity:.36}
+  80%{transform:translate3d(2%,-7%,0) scale(1.03) rotate(3deg);opacity:.4}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
 }
 
 .no-intro .hero__eyebrow,

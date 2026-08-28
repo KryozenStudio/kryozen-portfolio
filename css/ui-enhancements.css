@@ -21,8 +21,18 @@
   pointer-events: none;
   isolation: isolate;
   background:
-    radial-gradient(circle at 50% 16%, rgba(255,255,255,.028), transparent 28%),
-    radial-gradient(circle at 50% 90%, rgba(195,20,50,.022), transparent 32%);
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.038), transparent 30%),
+    radial-gradient(circle at 50% 90%, rgba(195,20,50,.05), transparent 34%);
+  /* Set by js/main.js's scroll listener (rAF-throttled) to a small
+     px value — the whole ambient layer drifts opposite the scroll
+     direction at a fraction of scroll speed, the classic parallax
+     depth cue. This is what makes the background read as reactive
+     rather than just autonomously looping — the two together (self-
+     directed drift + a response to what the visitor is actually doing)
+     is what "alive" means here, not just "more motion." Falls back to
+     0px (no parallax, orbs still drift on their own) if JS hasn't run
+     yet or reduced-motion is on. */
+  transform: translate3d(0, var(--ambient-parallax, 0px), 0);
 }
 
 .site-ambient::after {
@@ -30,78 +40,93 @@
   position: absolute;
   inset: 0;
   z-index: 4;
-  background: linear-gradient(180deg, rgba(8,8,10,.04), rgba(8,8,10,.18));
+  background: linear-gradient(180deg, rgba(8,8,10,.04), rgba(8,8,10,.16));
 }
 
 .site-ambient__orb {
   position: absolute;
-  width: clamp(240px, 34vw, 520px);
+  width: clamp(260px, 36vw, 560px);
   aspect-ratio: 1;
   border-radius: 50%;
-  filter: blur(72px);
-  opacity: .2;
+  filter: blur(68px);
+  opacity: .5;
   transform: translate3d(0,0,0);
   /* transform-only, GPU-composited: the blur is rasterized once and the
      compositor just moves/scales that bitmap, so animating on top of an
      already-blurred layer is cheap — the actual filter never
      recalculates mid-animation. Each orb gets its own duration/path
-     (not synced, not mirrored) specifically so three orbs drifting
-     together never reads as one repeating pattern — see the brief's
-     "avoid obvious circular paths or repetitive motion." Durations are
-     long (39-57s) and mutually irregular on purpose: at this speed the
-     motion sits below conscious notice, and the combined three-shape
-     pattern doesn't even repeat together on any timescale a visitor
-     would sit through. Each path also runs through several unequal
-     intermediate stops (position, scale, rotation, opacity) rather than
-     a single there-and-back tween, so no two moments in one shape's own
-     cycle look alike either — only the seam does. */
+     (not synced, not mirrored) specifically so several orbs drifting
+     together never reads as one repeating pattern. Durations are
+     mutually irregular (17-27s) — fast enough to actually notice within
+     a normal page visit (the previous 39-57s pass was, by design
+     restrained to the point of reading as static/"dead" — this is the
+     direct fix for that), while each path still runs through several
+     unequal intermediate stops (position, scale, rotation, opacity)
+     rather than a single there-and-back tween, so it reads as drifting
+     rather than mechanically oscillating. */
   animation-play-state: running;
 }
 
-/* One accent hue only (PROJECT_RULES.md §3) — all three orbs are red,
-   differentiated by position/size/opacity rather than hue. A second
-   orb used to be a desaturated purple; that was a leftover
-   inconsistency from before this rule was written down, not a
-   deliberate second signal color, so it's corrected here rather than
-   preserved. */
+/* One accent hue only (PROJECT_RULES.md §3) — every orb is red,
+   differentiated by position/size/opacity/timing rather than hue. */
 .site-ambient__orb--one {
-  top: 8%; left: -5%;
-  background: radial-gradient(circle, rgba(195,20,50,.38), transparent 68%);
-  animation: siteOrbDriftOne 44s ease-in-out infinite;
+  top: 6%; left: -6%;
+  background: radial-gradient(circle, rgba(226,33,63,.6), rgba(195,20,50,.22) 45%, transparent 70%);
+  animation: siteOrbDriftOne 23s ease-in-out infinite;
 }
 
 .site-ambient__orb--two {
-  top: 34%; right: -12%;
-  background: radial-gradient(circle, rgba(226,33,63,.22), transparent 70%);
-  animation: siteOrbDriftTwo 57s ease-in-out infinite;
+  top: 32%; right: -14%;
+  background: radial-gradient(circle, rgba(226,33,63,.42), rgba(195,20,50,.14) 48%, transparent 72%);
+  animation: siteOrbDriftTwo 27s ease-in-out infinite;
 }
 
 .site-ambient__orb--three {
-  bottom: -12%; left: 28%;
-  background: radial-gradient(circle, rgba(195,20,50,.18), transparent 70%);
-  animation: siteOrbDriftThree 39s ease-in-out infinite;
+  bottom: -14%; left: 26%;
+  background: radial-gradient(circle, rgba(226,33,63,.34), rgba(195,20,50,.1) 48%, transparent 72%);
+  animation: siteOrbDriftThree 19s ease-in-out infinite;
+}
+
+/* Fourth orb — smaller and brighter, drifting through the upper-middle
+   of the viewport where the other three rarely reach, so the layer
+   doesn't read as "three lights orbiting the edges" but as a genuinely
+   occupied, uneven field of light the way a real bounced/practical
+   light source would look. */
+.site-ambient__orb--four {
+  top: 58%; left: 46%;
+  width: clamp(160px, 20vw, 320px);
+  filter: blur(54px);
+  background: radial-gradient(circle, rgba(226,33,63,.5), rgba(195,20,50,.16) 46%, transparent 70%);
+  animation: siteOrbDriftFour 17s ease-in-out infinite;
 }
 
 @keyframes siteOrbDriftOne {
-  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .2; }
-  24%  { transform: translate3d(5%, 3%, 0) scale(1.06) rotate(6deg); opacity: .26; }
-  51%  { transform: translate3d(1%, 7%, 0) scale(0.97) rotate(-4deg); opacity: .22; }
-  78%  { transform: translate3d(-3%, 2%, 0) scale(1.04) rotate(3deg); opacity: .25; }
-  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .2; }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .48; }
+  24%  { transform: translate3d(7%, 4%, 0) scale(1.08) rotate(7deg); opacity: .62; }
+  51%  { transform: translate3d(2%, 9%, 0) scale(0.96) rotate(-5deg); opacity: .52; }
+  78%  { transform: translate3d(-4%, 3%, 0) scale(1.05) rotate(4deg); opacity: .58; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .48; }
 }
 @keyframes siteOrbDriftTwo {
-  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .14; }
-  28%  { transform: translate3d(-6%, -4%, 0) scale(1.05) rotate(-5deg); opacity: .18; }
-  60%  { transform: translate3d(-2%, -8%, 0) scale(0.98) rotate(4deg); opacity: .15; }
-  84%  { transform: translate3d(3%, -3%, 0) scale(1.03) rotate(-3deg); opacity: .17; }
-  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .14; }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .34; }
+  28%  { transform: translate3d(-8%, -5%, 0) scale(1.07) rotate(-6deg); opacity: .44; }
+  60%  { transform: translate3d(-3%, -10%, 0) scale(0.97) rotate(5deg); opacity: .37; }
+  84%  { transform: translate3d(4%, -4%, 0) scale(1.04) rotate(-4deg); opacity: .41; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .34; }
 }
 @keyframes siteOrbDriftThree {
-  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .1; }
-  32%  { transform: translate3d(4%, -5%, 0) scale(1.05) rotate(5deg); opacity: .13; }
-  63%  { transform: translate3d(7%, -1%, 0) scale(0.97) rotate(-3deg); opacity: .11; }
-  88%  { transform: translate3d(2%, -6%, 0) scale(1.03) rotate(2deg); opacity: .12; }
-  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .1; }
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .28; }
+  32%  { transform: translate3d(5%, -6%, 0) scale(1.07) rotate(6deg); opacity: .35; }
+  63%  { transform: translate3d(9%, -1%, 0) scale(0.96) rotate(-4deg); opacity: .3; }
+  88%  { transform: translate3d(3%, -8%, 0) scale(1.04) rotate(3deg); opacity: .33; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .28; }
+}
+@keyframes siteOrbDriftFour {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .38; }
+  30%  { transform: translate3d(-6%, 7%, 0) scale(1.1) rotate(-8deg); opacity: .52; }
+  58%  { transform: translate3d(-10%, 2%, 0) scale(0.94) rotate(6deg); opacity: .4; }
+  82%  { transform: translate3d(-3%, 9%, 0) scale(1.06) rotate(-4deg); opacity: .46; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .38; }
 }
 
 /* Shared glass vocabulary */
@@ -248,13 +273,14 @@
 }
 
 @media (max-width: 859px) {
-  .site-ambient__orb { filter: blur(76px); opacity: .16; }
+  .site-ambient__orb { filter: blur(64px); }
   .hero__content::before { inset: 8% -2% -10%; border-radius: 28px; }
 }
 
 @media (max-width: 560px) {
-  .site-ambient__orb { width: 290px; }
-  .site-ambient__orb--three { display: none; }
+  .site-ambient__orb { width: 260px; }
+  .site-ambient__orb--three,
+  .site-ambient__orb--four { display: none; }
   .hero__content::before { opacity: .55; }
 }
 
