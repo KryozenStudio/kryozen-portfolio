@@ -259,25 +259,25 @@ window.SITE_CONFIG = {
   {
     id: "amv-test-01",
     title: "AMV Test — 01",
-    category: "anime-amv",
+    category: "Anime / AMV",
     youtubeUrl: "https://youtu.be/gORcP7BurOc?si=w4QNO9uog_HhroaO"
   },
   {
     id: "amv-test-02",
     title: "AMV Test — 02",
-    category: "anime-amv",
+    category: "Anime / AMV",
     youtubeUrl: "https://youtu.be/okGTVW5fPgg?si=SaFyHnAkBr3snHJS"
   },
   {
     id: "amv-test-03",
     title: "AMV Test — 03",
-    category: "anime-amv",
+    category: "Anime / AMV",
     youtubeUrl: "https://youtu.be/Fhilb_xTCc8?si=_xK4JiWrMLgQoq5E"
   },
   {
     id: "amv-test-04",
     title: "AMV Test — 04",
-    category: "anime-amv",
+    category: "Anime / AMV",
     youtubeUrl: "https://youtu.be/wUvbL8lBtf0?si=HG6aJqTuekVR94Ar"
   }
 ],
