@@ -130,8 +130,18 @@ body:has(.category-page) {
 .category-page__head { max-width:760px; margin-bottom:var(--space-xl); }
 .category-page__back { display:inline-flex; gap:.45rem; align-items:center; color:var(--color-text-tertiary); font:500 .72rem var(--font-mono); letter-spacing:.14em; text-transform:uppercase; margin-bottom:var(--space-lg); }
 .category-page__back:hover{color:var(--color-text-primary)}
+/* display:flex (block-level), not inline-flex: .category-page__title right
+   below is display:inline-block (needed for its own clip-path text-reveal
+   wipe — see that rule). Two adjacent inline-level siblings share the same
+   line box, so with an inline-flex eyebrow the title rendered beside it
+   instead of below it — invisible on narrow viewports only because there
+   was no room left on the line and the title wrapped down by accident, but
+   on desktop widths the huge title text sat directly on top of/beside the
+   eyebrow. A block-level flex container still lays the dot+text out in a
+   row internally, it just forces the line break the title needs. */
 .category-page__eyebrow{
-  display:inline-flex;align-items:center;gap:var(--space-2xs);
+  display:flex;align-items:center;gap:var(--space-2xs);
+  width:fit-content;
   font:500 var(--fs-label) var(--font-mono); letter-spacing:var(--ls-widest); color:var(--color-accent-bright); text-transform:uppercase;
 }
 /* Matches .hero__eyebrow-dot / .services__eyebrow-dot / etc. exactly —
@@ -144,6 +154,7 @@ body:has(.category-page) {
   width:5px;height:5px;border-radius:50%;
   background:var(--color-accent-bright);
   box-shadow:0 0 9px 2px var(--color-accent-glow);
+  animation:indicatorPulse 1.8s ease-in-out infinite;
 }
 .category-page__title{font-size:clamp(3rem,8vw,7rem); line-height:.92; letter-spacing:-.055em; margin:.35rem 0 1rem;}
 .category-page__description{max-width:60ch;color:var(--color-text-secondary);font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);}
@@ -207,7 +218,7 @@ body:has(.category-page) {
 .category-page__search::placeholder{color:var(--color-text-tertiary)}
 .category-page__search:focus{border-color:var(--color-surface-border-strong);box-shadow:0 0 0 3px rgba(195,20,50,.08)}
 .category-page__filters{display:flex;gap:.45rem;flex-wrap:wrap}
-.category-page__filter{min-height:36px;padding:0 .8rem;border-radius:var(--radius-pill);border:1px solid var(--color-surface-border);background:rgba(255,255,255,.025);color:var(--color-text-secondary);font:600 .68rem var(--font-display);letter-spacing:.04em;transition:transform 150ms var(--ease-out),background 180ms var(--ease-out),border-color 180ms var(--ease-out),color 180ms var(--ease-out)}
+.category-page__filter{min-height:36px;padding:0 .8rem;border-radius:var(--radius-pill);border:1px solid var(--color-surface-border);background:rgba(255,255,255,.025);color:var(--color-text-secondary);font:600 .68rem var(--font-display);letter-spacing:.04em;white-space:nowrap;transition:transform 150ms var(--ease-out),background 180ms var(--ease-out),border-color 180ms var(--ease-out),color 180ms var(--ease-out)}
 .category-page__filter:hover,.category-page__filter:focus-visible{border-color:var(--color-surface-border-strong);color:var(--color-text-primary)}
 .category-page__filter:active{transform:scale(.97)}
 .category-page__filter[aria-pressed="true"]{background:rgba(195,20,50,.12);border-color:rgba(226,33,63,.38);color:var(--color-text-primary)}

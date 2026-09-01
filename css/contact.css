@@ -39,6 +39,7 @@
   border-radius: 50%;
   background: var(--color-accent-bright);
   box-shadow: 0 0 10px 2px var(--color-accent-glow);
+  animation: indicatorPulse 1.8s ease-in-out infinite;
 }
 
 .contact__title {

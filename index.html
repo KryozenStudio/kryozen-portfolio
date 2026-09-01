@@ -97,20 +97,6 @@
         <!-- injected by js/content-loader.js from config.nav.links -->
       </nav>
 
-      <!-- Mobile-only: fills the gap left by .navbar__brand-word and
-           .navbar__links both being hidden below 860px. See
-           css/navbar.css → "BRAND BANNER" for the full explanation. -->
-      <div class="navbar__banner" aria-hidden="true">
-        <span class="navbar__banner-pill">
-          <span class="navbar__banner-glow"></span>
-          <span class="navbar__banner-figure">
-            <span class="navbar__banner-ring"></span>
-            <img class="navbar__banner-char" src="assets/images/logo/kryozen-mark.webp" alt="" width="28" height="28" loading="lazy" />
-          </span>
-          <span class="navbar__banner-label">Kryozen</span>
-        </span>
-      </div>
-
       <div class="navbar__actions">
 
         <button
@@ -163,20 +149,6 @@
     <section class="hero" id="top">
       <div class="hero__backdrop" aria-hidden="true"><span class="hero__ambient hero__ambient--one"></span><span class="hero__ambient hero__ambient--two"></span><span class="hero__ambient hero__ambient--three"></span></div>
 
-      <!-- Timeline readout: fills the gap between the navbar and the
-           brand lockup with an on-brand detail instead of empty space —
-           a miniature editing timeline (ruler, scrubbing playhead, REC
-           indicator, running timecode). Purely decorative/ambient; the
-           time isn't real elapsed time, just a live-feeling readout.
-           See css/hero.css and js/hero-intro.js. -->
-      <div class="hero__ticker" aria-hidden="true">
-        <div class="hero__ticker-rule"><span class="hero__ticker-head"></span></div>
-        <div class="hero__ticker-readout">
-          <span class="hero__ticker-rec"><span class="hero__ticker-rec-dot"></span>REC</span>
-          <span class="hero__ticker-time" id="hero-ticker-time">00:00:00:00</span>
-        </div>
-      </div>
-
       <div class="container hero__content">
         <p class="hero__eyebrow">
           <span class="hero__eyebrow-dot" aria-hidden="true"></span>
@@ -186,7 +158,6 @@
         <div class="hero__brand-lockup" aria-hidden="true">
           <div class="hero__logo-intro">
             <span class="hero__logo-sweep"></span>
-            <span class="hero__logo-ring" aria-hidden="true"></span>
             <div class="hero__logo-mark">
               <img
                 class="hero__brand-art"
@@ -281,25 +252,30 @@
         </div>
 
         <div class="about__content">
-          <p class="about__eyebrow">
-            <span class="about__eyebrow-dot" aria-hidden="true"></span>
-            <span id="about-eyebrow-text">ABOUT</span>
-          </p>
-          <h2 class="about__title" id="about-title">About</h2>
-          <p class="about__role" id="about-role">KRYOZEN — Video Editor</p>
-          <p class="about__intro" id="about-intro">The person behind the cuts.</p>
-          <p class="about__bio" id="about-bio">
-            I'm a video editor who enjoys experimenting with everything from AMVs and gaming
-            edits to short-form content and motion design. I put emotion and creativity into
-            every edit, always trying to make each piece feel as good as it possibly can. For
-            me, editing isn't just about effects—it's about making something people can
-            actually feel.
-          </p>
+          <div class="about__header">
+            <p class="about__eyebrow">
+              <span class="about__eyebrow-dot" aria-hidden="true"></span>
+              <span id="about-eyebrow-text">ABOUT</span>
+            </p>
+            <h2 class="about__title" id="about-title">About</h2>
+          </div>
 
-          <div class="about__software" id="about-software" hidden>
-            <p class="about__software-label">Tools</p>
-            <div class="about__software-list" id="about-software-list">
-              <!-- injected by js/about.js from config.software -->
+          <div class="about__panel">
+            <p class="about__role" id="about-role">KRYOZEN — Video Editor</p>
+            <p class="about__intro" id="about-intro">The person behind the cuts.</p>
+            <p class="about__bio" id="about-bio">
+              I'm a video editor who enjoys experimenting with everything from AMVs and gaming
+              edits to short-form content and motion design. I put emotion and creativity into
+              every edit, always trying to make each piece feel as good as it possibly can. For
+              me, editing isn't just about effects—it's about making something people can
+              actually feel.
+            </p>
+
+            <div class="about__software" id="about-software" hidden>
+              <p class="about__software-label">Tools</p>
+              <div class="about__software-list" id="about-software-list">
+                <!-- injected by js/about.js from config.software -->
+              </div>
             </div>
           </div>
         </div>
@@ -398,7 +374,7 @@
   <!-- =====================================================================
        SCRIPTS
        Load order: config → content-loader → work → player → services →
-       about → contact → reveal → navbar → hero-intro → hero-pointer → main.
+       about → contact → reveal → navbar → hero-pointer → main.
        All deferred, so
        they execute in this order after the HTML is parsed, without
        blocking rendering. player.js listens for the event work.js
@@ -417,7 +393,6 @@
   <script src="js/contact.js" defer></script>
   <script src="js/reveal.js" defer></script>
   <script src="js/navbar.js" defer></script>
-  <script src="js/hero-intro.js" defer></script>
   <script src="js/hero-pointer.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>

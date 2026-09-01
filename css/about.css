@@ -107,6 +107,7 @@
   border-radius: 50%;
   background: var(--color-accent-bright);
   box-shadow: 0 0 10px 2px var(--color-accent-glow);
+  animation: indicatorPulse 1.8s ease-in-out infinite;
 }
 
 .about__title {
@@ -166,8 +167,28 @@
   color: var(--color-text-secondary);
 }
 
-/* Premium glass treatment — visual only. */
+/* .about__content is a plain wrapper now — no shape, no glass. It just
+   stacks the header and the panel below it. The eyebrow+title used to
+   be rendered *inside* the glass panel below, alongside the bio copy —
+   every other section on the site (Services, Contact, FAQ, the category
+   strip) keeps its heading outside any glass shape, so "About" reading
+   as glued to the bio card, instead of functioning as its own section
+   divider, was the odd one out. Fixed by splitting the heading into its
+   own header block above, and moving the glass treatment onto
+   .about__panel below so only the bio copy sits inside the shape. */
 .about__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.about__header {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Premium glass treatment — visual only. */
+.about__panel {
   padding: clamp(1.35rem, 3vw, 2.2rem);
   border: 1px solid var(--color-surface-border);
   border-radius: var(--radius-lg);
@@ -175,4 +196,8 @@
   -webkit-backdrop-filter: blur(var(--blur-glass));
   backdrop-filter: blur(var(--blur-glass));
   box-shadow: inset 0 1px 0 rgba(255,255,255,.04), var(--shadow-md);
+}
+
+.about__panel .about__role {
+  margin-top: 0;
 }

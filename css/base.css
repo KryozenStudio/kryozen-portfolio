@@ -204,6 +204,29 @@ p {
 }
 
 /* ---------------------------------------------------------------------
+   INDICATOR DOT PULSE — shared beeping/pulsing animation for the small
+   red "eyebrow" dots that sit in front of section labels (Services,
+   About, Contact, FAQ, the hero, and the category-page eyebrow). One
+   keyframe here rather than duplicated per-component, since every dot
+   uses the same look and motion.
+--------------------------------------------------------------------- */
+@keyframes indicatorPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 9px 2px var(--color-accent-glow); }
+  50% { opacity: .45; box-shadow: 0 0 4px 1px var(--color-accent-glow); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow-dot,
+  .services__eyebrow-dot,
+  .about__eyebrow-dot,
+  .contact__eyebrow-dot,
+  .faq__eyebrow-dot,
+  .category-page__eyebrow::before {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
    SECTION REVEALS — restrained secondary motion
 --------------------------------------------------------------------- */
 .section-reveal {

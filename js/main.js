@@ -18,7 +18,6 @@
  *   config/site.config.js   → window.SITE_CONFIG (data)
  *   js/content-loader.js    → injects SITE_CONFIG into the DOM
  *   js/navbar.js            → scroll + mobile menu behavior
- *   js/hero-intro.js        → once-per-session intro bookkeeping
  *   js/main.js              → this file, runs last
  *
  * Kept deliberately tiny — this project intentionally avoids a bundler

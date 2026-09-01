@@ -57,62 +57,6 @@
   .hero.has-pointer-light .hero__backdrop::after{opacity:1}
 }
 
-/* ---------------------------------------------------------------------
-   TIMELINE READOUT — fills the gap between the navbar and the brand
-   lockup with something on-brand rather than leaving it empty: a
-   miniature video-editing timeline (ruler, scrubbing playhead, REC
-   indicator, live running timecode). Purpose: brand moment + ambient
-   motion the hero has even before anyone scrolls (PROJECT_RULES.md §5
-   allows one orchestrated moment — this rides alongside the existing
-   logo reveal as a quiet, continuous detail, not a second choreographed
-   sequence). Decorative/aria-hidden; the live time is cosmetic, not
-   informational. js/hero-intro.js drives the digits.
---------------------------------------------------------------------- */
-.hero__ticker{
-  position:absolute;z-index:1;top:calc(var(--navbar-h-desktop) + 20px);left:50%;
-  transform:translateX(-50%);
-  width:min(380px,70%);
-  display:flex;flex-direction:column;align-items:center;gap:9px;
-  opacity:0;pointer-events:none;
-  animation:heroTickerFadeUp 640ms var(--ease-out) 1460ms forwards;
-}
-@media(max-width:859px){
-  .hero__ticker{top:calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + 14px)}
-}
-@media(max-width:640px){
-  .hero__ticker{width:min(300px,74%);gap:7px}
-}
-.hero__ticker-rule{
-  position:relative;width:100%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 12%,rgba(255,255,255,.18) 88%,transparent);
-}
-.hero__ticker-rule::before{
-  content:"";position:absolute;inset:-1px 0 0;height:2px;
-  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 12.5%);
-  opacity:.55;
-}
-.hero__ticker-head{
-  position:absolute;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
-  background:var(--color-accent-bright);
-  box-shadow:0 0 9px 3px var(--color-accent-glow);
-  animation:tickerScrub 15s var(--ease-in-out) infinite;
-}
-.hero__ticker-readout{
-  display:flex;align-items:center;gap:12px;
-  font-family:var(--font-mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--color-text-tertiary);
-}
-.hero__ticker-rec{display:inline-flex;align-items:center;gap:5px;color:var(--color-accent-bright)}
-.hero__ticker-rec-dot{
-  width:5px;height:5px;border-radius:50%;background:currentColor;
-  box-shadow:0 0 8px 2px var(--color-accent-glow);
-  animation:tickerPulse 2.3s ease-in-out infinite;
-}
-.hero__ticker-time{font-variant-numeric:tabular-nums;color:var(--color-text-secondary)}
-
-@keyframes tickerScrub{0%,100%{left:0%}50%{left:100%}}
-@keyframes tickerPulse{0%,100%{opacity:1}50%{opacity:.3}}
-
 .hero__content{
   position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
   gap:var(--space-md);
@@ -121,9 +65,9 @@
   display:inline-flex;align-items:center;gap:var(--space-2xs);
   font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
   color:var(--color-text-tertiary);opacity:0;transform:translateY(8px);
-  animation:heroFadeUp 520ms var(--ease-out) 1680ms forwards;
+  animation:heroFadeUp 520ms var(--ease-out) 840ms forwards;
 }
-.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow)}
+.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow);animation:indicatorPulse 1.8s ease-in-out infinite}
 
 .hero__brand-lockup{
   display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.4vw,32px);
@@ -145,50 +89,16 @@
      lockup is meant to be (see PROJECT_RULES.md §5) and the wipe/iris
      film-reveal metaphor used elsewhere on the site. */
   opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82);
-  animation:brandMarkReveal 700ms var(--ease-out) 520ms forwards;
+  animation:brandMarkReveal 700ms var(--ease-out) 260ms forwards;
 }
 .hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
 
-/* LIVE RING LIGHT — a soft highlight that continuously travels around the
-   logo's own circular edge, entrance-cued right as the iris finishes
-   opening, then loops forever as a quiet ambient brand detail (not a
-   one-shot effect like the mark/sweep/wordmark above). Built as a thin
-   ring, not a filled glow disc: a conic-gradient with one bright ~50deg
-   arc (the rest transparent) is masked down from a full disc to a slim
-   band that hugs .hero__logo-mark's own edge, then just rotated — the
-   arc reads as a single point of light traveling around the rim, closer
-   to a rotating specular highlight than a spinning glow. transform is
-   the only thing that animates on the loop itself, so the continuous
-   motion never triggers layout/paint, only compositing. */
-.hero__logo-ring{
-  position:absolute;
-  inset:-5px;
-  z-index:1;
-  border-radius:50%;
-  pointer-events:none;
-  opacity:0;
-  background:conic-gradient(from 0deg,
-    transparent 0deg,
-    transparent 265deg,
-    var(--color-accent-glow-soft) 300deg,
-    var(--color-accent-bright) 328deg,
-    #ffb3c0 336deg,
-    var(--color-accent-bright) 344deg,
-    var(--color-accent-glow-soft) 372deg,
-    transparent 400deg
-  );
-  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
-          mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
-  animation:
-    logoRingFadeIn 640ms var(--ease-out) 1180ms forwards,
-    logoRingTravel 6.5s linear 1180ms infinite;
-}
 .hero__logo-sweep{
   position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
   background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
   box-shadow:0 0 16px rgba(226,33,63,.18);
   transform:translateY(-50%);opacity:0;
-  animation:brandSweep 720ms var(--ease-out) 1030ms forwards;
+  animation:brandSweep 720ms var(--ease-out) 520ms forwards;
 }
 .hero__logo-intro::after{
   content:"";position:absolute;z-index:0;right:-1px;top:50%;
@@ -196,7 +106,7 @@
   border:1px solid rgba(226,33,63,.26);
   transform:translate(50%,-50%) scale(.55);
   opacity:0;
-  animation:brandConnector 520ms var(--ease-out) 980ms forwards;
+  animation:brandConnector 520ms var(--ease-out) 490ms forwards;
 }
 .hero__wordmark{
   position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
@@ -215,26 +125,26 @@
 .hero__wordmark-line--main{
   font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
   line-height:.9;font-weight:800;letter-spacing:-.055em;color:var(--color-text-primary);
-  animation:wordmarkReveal 780ms var(--ease-out) 1110ms forwards;
+  animation:wordmarkReveal 780ms var(--ease-out) 560ms forwards;
 }
 .hero__wordmark-line--sub{
   margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
   line-height:1;font-weight:600;letter-spacing:.48em;color:var(--color-text-secondary);
-  animation:wordmarkReveal 620ms var(--ease-out) 1250ms forwards;
+  animation:wordmarkReveal 620ms var(--ease-out) 620ms forwards;
 }
 .hero__intro{
   max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1710ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 860ms forwards;
 }
 .hero__actions{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1900ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 950ms forwards;
 }
 .hero__scroll{
   position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
   color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
-  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 2360ms forwards;
+  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 1180ms forwards;
 }
 .hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
 
@@ -253,25 +163,12 @@
   16%{opacity:.82}
   100%{width:clamp(40px,10vw,108px);opacity:.38}
 }
-@keyframes logoRingFadeIn{to{opacity:.85}}
-@keyframes logoRingTravel{to{transform:rotate(360deg)}}
 @keyframes wordmarkReveal{
   0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0)}
   72%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(1px,0,0)}
   100%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(0,0,0)}
 }
 @keyframes heroFadeUp{to{opacity:1;transform:none}}
-/* .hero__ticker can't reuse heroFadeUp above: that keyframe's end state
-   sets transform:none, which is correct for the other hero elements
-   (they have no base transform to preserve) but would silently cancel
-   the ticker's own translateX(-50%) centering the instant the entrance
-   animation finishes (animation forwards fill-mode locks in that final
-   computed transform, overriding the element's stylesheet transform
-   value from then on) — confirmed this was actually happening: the
-   ticker rendered flush against its left:50% anchor with no
-   compensating shift, pushing roughly half its width off the right
-   edge of the viewport on narrow screens. */
-@keyframes heroTickerFadeUp{to{opacity:1;transform:translateX(-50%)}}
 @keyframes heroScrollIn{to{opacity:1}}
 /* Ambient drift — asymmetric, multi-stop paths rather than a single
    there-and-back tween. A 0%/50%/100% keyframe is still technically
@@ -311,12 +208,7 @@
 .no-intro .hero__intro,
 .no-intro .hero__actions,
 .no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
-/* .hero__ticker keeps its base translateX(-50%) centering (it's
-   absolutely positioned, unlike the normal-flow elements above) — only
-   opacity/animation reset here, never transform:none. */
-.no-intro .hero__ticker{opacity:1;animation:none}
 .no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
-.no-intro .hero__logo-ring{opacity:.5;animation:none}
 .no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
 
 @media(max-width:640px){
@@ -343,9 +235,5 @@
   .hero__ambient{animation:none}
   .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
   .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
-  .hero__logo-ring{animation:none;opacity:.4}
   .hero__backdrop::after{display:none}
-  .hero__ticker{animation:none;opacity:1}
-  .hero__ticker-head{animation:none;left:0%}
-  .hero__ticker-rec-dot{animation:none;opacity:.8}
 }

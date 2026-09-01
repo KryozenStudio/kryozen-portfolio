@@ -44,7 +44,6 @@ kryozen-studio/
 │   ├── about.js          About section: portrait, copy, tools strip
 │   ├── contact.js        Contact section: methods from config + config.social
 │   ├── navbar.js         Scroll-to-glass state + mobile menu
-│   ├── hero-intro.js     Once-per-session intro bookkeeping
 │   └── main.js
 ├── assets/
 │   ├── images/

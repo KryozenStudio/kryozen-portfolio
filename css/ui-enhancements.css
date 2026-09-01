@@ -199,7 +199,7 @@
 /* Refine existing cards without changing their DOM or JS */
 .category-strip__item,
 .service-card,
-.about__content,
+.about__panel,
 .faq__item,
 .contact__method,
 .category-project,
@@ -262,7 +262,7 @@
   .glass-card,
   .category-strip__item,
   .service-card,
-  .about__content,
+  .about__panel,
   .faq__item,
   .contact__method,
   .category-project,
