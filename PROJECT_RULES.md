@@ -65,6 +65,7 @@ kryozen-studio/
 │   ├── about.js                → About section: portrait, copy, software strip
 │   ├── contact.js             → Contact section: method links from config + config.social
 │   ├── navbar.js             → navbar scroll state + mobile menu behavior
+│   ├── hero-intro.js         → once-per-session intro bookkeeping
 │   └── main.js                → bootstrap, loaded last
 ├── assets/
 │   ├── images/
@@ -564,7 +565,7 @@ The public portfolio is:
 `Homepage → Category page`
 
 The category pages are `short-form.html`, `gaming.html`, `anime-amv.html`,
-`long-form.html`, and `thumbnail-design.html`.
+`long-form.html`, `thumbnail-design.html`, and `captions-subtitles.html`.
 No project-detail hierarchy
 is introduced, and there is no admin/authenticated layer anywhere in the
 project — see "Studio Manager (removed)" in §2f and "Video Hosting" above.

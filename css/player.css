@@ -44,25 +44,7 @@
 
 #player.is-closing {
   opacity: 0;
-  /* Falls back to the plain small fade whenever js/player.js hasn't set
-     --flip-close-transform (i.e. this close isn't traveling back to a
-     card — see requestClose()'s computeFlip() check). When it has, that
-     custom property carries the exact translate/scale back to the
-     card's current on-screen position, computed fresh at close time. */
-  transform: var(--flip-close-transform, scale(0.98) translateY(6px));
-}
-
-/* FLIP open/close — a deliberately longer, more weighted timing than the
-   plain fade above (see --duration-expand/--ease-expand in
-   css/variables.css) because a card visibly traveling and resizing into
-   the player needs more time to read as one continuous transformation
-   than a same-spot opacity change does. js/player.js sets the *starting*
-   transform for the open direction inline (see openPlayer()) — this rule
-   only needs to own the duration/easing, the base .is-open/.is-closing
-   rules above still own the actual target values. */
-#player.is-flip.is-open,
-#player.is-flip.is-closing {
-  transition: opacity var(--duration-expand) var(--ease-expand), transform var(--duration-expand) var(--ease-expand);
+  transform: scale(0.98) translateY(6px);
 }
 
 #player::backdrop {

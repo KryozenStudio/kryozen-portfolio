@@ -13,78 +13,11 @@ function setSource(list){projects=list.filter(function(p){return p&&p.category==
  *  rather than shared because this file and player.js are loaded in
  *  script-order-dependent positions on different pages and this project
  *  has no shared-utility script or build step (see PROJECT_RULES.md §6).
- *  IMPORTANT: if the YouTube URL matching logic ever needs to change,
- *  update both copies together — otherwise a project's thumbnail (this
- *  file) and its player (js/player.js) will disagree about whether a
- *  given youtubeUrl is valid. */
-function extractYouTubeId(url){if(!url||typeof url!=="string")return null;var m=url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null}
-/** Fine pointer + no reduced-motion gate, checked once rather than per
- *  card — touch/coarse-pointer devices (and reduced-motion users) get
- *  zero tilt-related JS at all, not just a disabled effect; the CSS
- *  hover/active fallback already defined in css/category-page.css
- *  covers them completely on its own. */
-var TILT_ENABLED =
-  window.matchMedia &&
-  window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
-  !(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-var TILT_MAX_DEG = 7; // brief calls for restraint ("avoid extreme rotation") — kept well short of a gimmicky spin
-var TILT_LIFT = "-6px";
-var TILT_SCALE = 1.015;
-
-/** Attaches the pointer-tracked 3D tilt + glare sweep to one card.
- *  Kept entirely separate from card()'s own DOM-building responsibility
- *  so TILT_ENABLED only needs checking once, not threaded through every
- *  card() call. */
-function attachTilt(b, glare) {
-  var raf = null;
-  var resetTimer = null;
-
-  function apply(clientX, clientY) {
-    var rect = b.getBoundingClientRect();
-    var px = (clientX - rect.left) / rect.width;
-    var py = (clientY - rect.top) / rect.height;
-    px = Math.min(1, Math.max(0, px));
-    py = Math.min(1, Math.max(0, py));
-    var rotateY = (px - 0.5) * (TILT_MAX_DEG * 2);
-    var rotateX = (0.5 - py) * (TILT_MAX_DEG * 2);
-    b.style.transition = "none";
-    b.style.transform =
-      "perspective(900px) rotateX(" + rotateX.toFixed(2) + "deg) rotateY(" + rotateY.toFixed(2) + "deg) " +
-      "translateY(" + TILT_LIFT + ") scale(" + TILT_SCALE + ")";
-    glare.style.background =
-      "radial-gradient(circle at " + (px * 100).toFixed(1) + "% " + (py * 100).toFixed(1) + "%, rgba(255,255,255,.14), transparent 62%)";
-  }
-
-  b.addEventListener("pointerenter", function (e) {
-    if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
-    window.clearTimeout(resetTimer);
-    glare.classList.add("is-active");
-  });
-
-  b.addEventListener("pointermove", function (e) {
-    if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
-    if (raf) window.cancelAnimationFrame(raf);
-    raf = window.requestAnimationFrame(function () { apply(e.clientX, e.clientY); });
-  });
-
-  b.addEventListener("pointerleave", function (e) {
-    if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
-    if (raf) window.cancelAnimationFrame(raf);
-    glare.classList.remove("is-active");
-    // Spring back to neutral, then hand control back to the CSS
-    // transition (280ms ease-out) that governs the plain hover/active
-    // states — a lingering long inline transition would otherwise make
-    // the *next* hover's first movement feel sluggish.
-    b.style.transition = "transform 500ms var(--ease-spring)";
-    b.style.transform = "";
-    window.clearTimeout(resetTimer);
-    resetTimer = window.setTimeout(function () { b.style.transition = ""; }, 520);
-  });
-}
-
-function card(p,i){
+ *  If the YouTube URL matching logic ever needs to change, update both
+ *  copies together. */
+function extractYouTubeId(url){if(!url||typeof url!=="string")return null;var m=url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null}
+function card(p){
  var b=document.createElement("button");b.type="button";b.className="category-project";
- if(typeof i==="number")b.setAttribute("data-index",String(i+1).padStart(2,"0"));
  var media=document.createElement("span");media.className="category-project__media";
  // Thumbnail priority: a manually supplied project.thumbnail always wins;
  // otherwise, a valid youtubeUrl derives one from YouTube's own thumbnail
@@ -105,20 +38,7 @@ function card(p,i){
  var t=document.createElement("span");t.className="category-project__title";t.textContent=p.title||"Untitled";body.appendChild(t);
  if(p.description){var dd=document.createElement("span");dd.className="category-project__desc";dd.textContent=p.description;body.appendChild(dd)}
  if(Array.isArray(p.software)&&p.software.length){var tags=document.createElement("span");tags.className="category-project__tags";tags.textContent=p.software.join(" · ");body.appendChild(tags)}
- b.appendChild(media);b.appendChild(body);
- if(TILT_ENABLED){
-   var glare=document.createElement("span");glare.className="category-project__glare";glare.setAttribute("aria-hidden","true");
-   b.appendChild(glare);
-   attachTilt(b,glare);
- }
- // detail carries the origin element alongside the project data — see
- // js/player.js's openPlayer(), which uses this element's on-screen
- // position/size to animate the player expanding out of the clicked
- // card rather than just fading in centered. The event's own shape
- // ({project, originEl}) is a contract shared with player.js, the only
- // listener (see its file-top comment) — both are updated together.
- b.addEventListener("click",function(){b.dispatchEvent(new CustomEvent("kryozen:project-open",{bubbles:true,detail:{project:p,originEl:b}}))});
- return b;
+ b.appendChild(media);b.appendChild(body);b.addEventListener("click",function(){b.dispatchEvent(new CustomEvent("kryozen:project-open",{bubbles:true,detail:p}))});return b;
 }
 var activeFilter="All";
 var hasRenderedOnce=false;
@@ -130,7 +50,7 @@ function render(){if(!grid)return;var q=(search?search.value:"").trim().toLowerC
  // immediate rather than waiting through a restagger on every keystroke.
  // Capped rather than index*delay unbounded, so a large catalog doesn't
  // stretch the entrance out to something that reads as slow.
- list.forEach(function(p,i){var c=card(p,i);if(!hasRenderedOnce)c.style.animationDelay=(Math.min(i,10)*35)+"ms";grid.appendChild(c)});
+ list.forEach(function(p,i){var c=card(p);if(!hasRenderedOnce)c.style.animationDelay=(Math.min(i,10)*35)+"ms";grid.appendChild(c)});
  hasRenderedOnce=true;
 }
 if(search)search.addEventListener("input",render);

@@ -32,13 +32,13 @@
 .hero__ambient {
   position:absolute; width:46vw; height:34vw; min-width:300px; min-height:240px;
   border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
-  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.34),rgba(195,20,50,.1) 44%,transparent 72%);
-  filter:blur(60px); opacity:.78; will-change:transform;
+  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.16),rgba(195,20,50,.055) 44%,transparent 72%);
+  filter:blur(64px); opacity:.62; will-change:transform;
   mix-blend-mode:screen;
 }
-.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 21s ease-in-out infinite}
-.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.5;animation:ambientDriftTwo 26s ease-in-out infinite}
-.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.36;filter:blur(72px);animation:ambientDriftThree 30s ease-in-out infinite}
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 34s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.38;animation:ambientDriftTwo 40s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.25;filter:blur(78px);animation:ambientDriftThree 46s ease-in-out infinite}
 
 /* Pointer-reactive ambient light — desktop only (js/hero-pointer.js sets
    --pointer-x/--pointer-y and toggles .has-pointer-light; the class only
@@ -65,9 +65,9 @@
   display:inline-flex;align-items:center;gap:var(--space-2xs);
   font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
   color:var(--color-text-tertiary);opacity:0;transform:translateY(8px);
-  animation:heroFadeUp 520ms var(--ease-out) 840ms forwards;
+  animation:heroFadeUp 520ms var(--ease-out) 1680ms forwards;
 }
-.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow);animation:indicatorPulse 1.8s ease-in-out infinite}
+.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow)}
 
 .hero__brand-lockup{
   display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.4vw,32px);
@@ -89,16 +89,50 @@
      lockup is meant to be (see PROJECT_RULES.md §5) and the wipe/iris
      film-reveal metaphor used elsewhere on the site. */
   opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82);
-  animation:brandMarkReveal 700ms var(--ease-out) 260ms forwards;
+  animation:brandMarkReveal 700ms var(--ease-out) 520ms forwards;
 }
 .hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
 
+/* LIVE RING LIGHT — a soft highlight that continuously travels around the
+   logo's own circular edge, entrance-cued right as the iris finishes
+   opening, then loops forever as a quiet ambient brand detail (not a
+   one-shot effect like the mark/sweep/wordmark above). Built as a thin
+   ring, not a filled glow disc: a conic-gradient with one bright ~50deg
+   arc (the rest transparent) is masked down from a full disc to a slim
+   band that hugs .hero__logo-mark's own edge, then just rotated — the
+   arc reads as a single point of light traveling around the rim, closer
+   to a rotating specular highlight than a spinning glow. transform is
+   the only thing that animates on the loop itself, so the continuous
+   motion never triggers layout/paint, only compositing. */
+.hero__logo-ring{
+  position:absolute;
+  inset:-5px;
+  z-index:1;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  background:conic-gradient(from 0deg,
+    transparent 0deg,
+    transparent 265deg,
+    var(--color-accent-glow-soft) 300deg,
+    var(--color-accent-bright) 328deg,
+    #ffb3c0 336deg,
+    var(--color-accent-bright) 344deg,
+    var(--color-accent-glow-soft) 372deg,
+    transparent 400deg
+  );
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+          mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  animation:
+    logoRingFadeIn 640ms var(--ease-out) 1180ms forwards,
+    logoRingTravel 6.5s linear 1180ms infinite;
+}
 .hero__logo-sweep{
   position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
   background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
   box-shadow:0 0 16px rgba(226,33,63,.18);
   transform:translateY(-50%);opacity:0;
-  animation:brandSweep 720ms var(--ease-out) 520ms forwards;
+  animation:brandSweep 720ms var(--ease-out) 1030ms forwards;
 }
 .hero__logo-intro::after{
   content:"";position:absolute;z-index:0;right:-1px;top:50%;
@@ -106,7 +140,7 @@
   border:1px solid rgba(226,33,63,.26);
   transform:translate(50%,-50%) scale(.55);
   opacity:0;
-  animation:brandConnector 520ms var(--ease-out) 490ms forwards;
+  animation:brandConnector 520ms var(--ease-out) 980ms forwards;
 }
 .hero__wordmark{
   position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
@@ -125,26 +159,26 @@
 .hero__wordmark-line--main{
   font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
   line-height:.9;font-weight:800;letter-spacing:-.055em;color:var(--color-text-primary);
-  animation:wordmarkReveal 780ms var(--ease-out) 560ms forwards;
+  animation:wordmarkReveal 780ms var(--ease-out) 1110ms forwards;
 }
 .hero__wordmark-line--sub{
   margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
   line-height:1;font-weight:600;letter-spacing:.48em;color:var(--color-text-secondary);
-  animation:wordmarkReveal 620ms var(--ease-out) 620ms forwards;
+  animation:wordmarkReveal 620ms var(--ease-out) 1250ms forwards;
 }
 .hero__intro{
   max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 860ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1710ms forwards;
 }
 .hero__actions{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 950ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 1900ms forwards;
 }
 .hero__scroll{
   position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
   color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
-  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 1180ms forwards;
+  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 2360ms forwards;
 }
 .hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
 
@@ -163,6 +197,8 @@
   16%{opacity:.82}
   100%{width:clamp(40px,10vw,108px);opacity:.38}
 }
+@keyframes logoRingFadeIn{to{opacity:.85}}
+@keyframes logoRingTravel{to{transform:rotate(360deg)}}
 @keyframes wordmarkReveal{
   0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0)}
   72%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(1px,0,0)}
@@ -170,37 +206,9 @@
 }
 @keyframes heroFadeUp{to{opacity:1;transform:none}}
 @keyframes heroScrollIn{to{opacity:1}}
-/* Ambient drift — asymmetric, multi-stop paths rather than a single
-   there-and-back tween. A 0%/50%/100% keyframe is still technically
-   periodic, but it *reads* as a loop because the eye sees the shape
-   retrace the same two points; passing through several unequal
-   intermediate positions (with its own opacity/rotation drifting too)
-   means no two moments in the cycle look alike, only the seam itself
-   does — and each of the three shapes here uses a different, mutually
-   irregular duration (37s/49s/58s) so their combined pattern doesn't
-   even repeat together on any timescale a visitor would sit through.
-   Transform + opacity only, so this stays compositor-only work. */
-@keyframes ambientDriftOne{
-  0%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
-  21%{transform:translate3d(5%,4%,0) scale(1.04) rotate(7deg);opacity:.84}
-  49%{transform:translate3d(1%,8%,0) scale(1.01) rotate(-5deg);opacity:.75}
-  76%{transform:translate3d(-6%,2%,0) scale(1.05) rotate(4deg);opacity:.86}
-  100%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
-}
-@keyframes ambientDriftTwo{
-  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
-  30%{transform:translate3d(-6%,-4%,0) scale(1.05) rotate(-6deg);opacity:.58}
-  58%{transform:translate3d(-2%,-9%,0) scale(.98) rotate(5deg);opacity:.5}
-  82%{transform:translate3d(4%,-3%,0) scale(1.03) rotate(-3deg);opacity:.55}
-  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
-}
-@keyframes ambientDriftThree{
-  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
-  27%{transform:translate3d(4%,-5%,0) scale(1.04) rotate(5deg);opacity:.42}
-  55%{transform:translate3d(8%,-1%,0) scale(.99) rotate(-4deg);opacity:.36}
-  80%{transform:translate3d(2%,-7%,0) scale(1.03) rotate(3deg);opacity:.4}
-  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
-}
+@keyframes ambientDriftOne{0%,100%{transform:translate3d(-2%,0,0) scale(.98)}50%{transform:translate3d(8%,5%,0) scale(1.04)}}
+@keyframes ambientDriftTwo{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-7%,-5%,0) scale(1.06)}}
+@keyframes ambientDriftThree{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(4%,-6%,0) scale(1.03)}}
 
 .no-intro .hero__eyebrow,
 .no-intro .hero__logo-mark,
@@ -209,6 +217,7 @@
 .no-intro .hero__actions,
 .no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
 .no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
+.no-intro .hero__logo-ring{opacity:.5;animation:none}
 .no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
 
 @media(max-width:640px){
@@ -235,5 +244,6 @@
   .hero__ambient{animation:none}
   .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
   .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
+  .hero__logo-ring{animation:none;opacity:.4}
   .hero__backdrop::after{display:none}
 }

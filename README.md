@@ -44,6 +44,7 @@ kryozen-studio/
 │   ├── about.js          About section: portrait, copy, tools strip
 │   ├── contact.js        Contact section: methods from config + config.social
 │   ├── navbar.js         Scroll-to-glass state + mobile menu
+│   ├── hero-intro.js     Once-per-session intro bookkeeping
 │   └── main.js
 ├── assets/
 │   ├── images/
@@ -234,7 +235,7 @@ page):
 ```js
 categories: [
   "Short Form", "Gaming", "Anime / AMV",
-  "Long Form", "Thumbnail Design",
+  "Long Form", "Thumbnail Design", "Captions / Subtitles",
 ],
 categoryPages: {
   "Short Form": "short-form.html",
@@ -464,6 +465,7 @@ The public portfolio supports one page per category:
 - `anime-amv.html`
 - `long-form.html`
 - `thumbnail-design.html`
+- `captions-subtitles.html`
 
 The homepage remains the primary entry point. Category pages do not introduce
 project-detail or subcategory levels.
@@ -473,128 +475,3 @@ project. Adding a project is a fully manual, static-file workflow — see
 "7. How to Add / Edit Work Projects" and "8. Video Player: How It Works"
 above. GitHub only ever stores the website's code, project metadata, and
 YouTube video IDs — never video files.
-
----
-
-## 14. Termux → GitHub: If an Uploaded File Still Won't Load
-
-This project ships two files whose entire job is to prevent the specific bug
-where a file shows up fine in the GitHub repo, but the live site never loads
-it: **`.gitattributes`** and **`scripts/verify-assets.sh`**. Read this
-section once, then run the script before every push — it takes under a
-second and catches all three real causes below before they ever leave your
-phone.
-
-### A fourth cause, specific to YouTube links
-
-Everything below this point is about actual uploaded binary files. If
-what you're really adding is a **YouTube link** in `config/site.config.js`
-(the normal workflow for this project — see "Video Hosting" in
-PROJECT_RULES.md), there's a separate, more likely explanation: the link
-format itself. `js/player.js` and `js/category-page.js` recognize
-`youtube.com/watch?v=...`, `youtu.be/...`, `youtube.com/embed/...`,
-`youtube.com/shorts/...`, and `youtube.com/live/...` — any link copied
-from the browser address bar or the YouTube app's Share button will match
-one of these. If a project's video isn't showing up in the player even
-though the link looks completely valid, it's worth double-checking the
-URL was pasted in full and unmodified rather than assuming it's a
-git/deploy issue at all.
-
-### The three real causes, in order of likelihood
-
-**1. Case mismatch between the reference and the actual filename.**
-GitHub Pages is served by a case-sensitive Linux filesystem: `Logo.PNG` and
-`logo.png` are two different files as far as it's concerned. If a file ever
-passed through Android's shared storage (the general "Internal Storage" /
-SD card area you'd reach via a file manager or `~/storage/shared` in
-Termux) before landing in this repo's working copy, it went through a
-FAT/exFAT-formatted, case-**insensitive** filesystem on the way — which can
-leave the file's on-disk name and the name typed into
-`config/site.config.js` (or an `<img src="...">`) differing only in case,
-completely invisibly, since case-insensitive storage will happily resolve
-either one back to the same file *locally*. The bug only appears once
-GitHub Pages — which doesn't do that — tries to serve the exact string you
-referenced and finds nothing at that exact path.
-**Fix:** run `bash scripts/verify-assets.sh` — it does a byte-for-byte
-case-sensitive check of every referenced path against what's actually on
-disk in Termux's own filesystem (not shared storage), which is the same
-rule GitHub Pages enforces, and tells you exactly which file and which
-reference disagree.
-
-**2. Git normalizing (and silently corrupting) binary files.**
-Without an explicit rule, Git guesses whether a file is text or binary, and
-can run line-ending normalization (CRLF ↔ LF) against it depending on the
-committing machine's `core.autocrlf` setting. That's correct for
-`.html`/`.css`/`.js` and actively destructive for an image, font, or video —
-running text normalization on binary bytes doesn't produce a "close enough"
-file, it corrupts it. The corrupted file still has the right name, still
-shows up in the GitHub file browser, and may even still be roughly the
-right size — but the bytes no longer decode as a valid image, so the
-browser fails to render it with no error message anywhere obvious.
-**Fix:** already applied. `.gitattributes` now explicitly marks every
-binary extension this project uses (`.png .jpg .jpeg .gif .webp .avif .ico
-.mp4 .webm .mov .mp3 .wav .woff .woff2 .ttf .otf .eot .pdf .zip`) as
-`binary`, which tells Git to never run text normalization, diff, or merge
-against them — regardless of any `core.autocrlf` setting on whichever
-device commits or checks them out. If you start using a binary file type
-not in that list, add its extension to `.gitattributes` **before**
-committing the first file of that type.
-
-**3. The file was never actually staged, committed, or pushed.**
-The most mundane cause, but still worth ruling out explicitly: a file that
-exists locally and even shows up correctly at `http://localhost:8000` isn't
-automatically part of the next commit. `git add .` from the wrong directory,
-a `.gitignore` rule that's broader than intended (this project's own
-`.gitignore` is deliberately narrow for exactly this reason — see the
-comment at its top), or a `git push` that reported "Everything up-to-date"
-because the local commit never actually happened, can all leave a file
-sitting locally forever while the deployed site never sees it.
-**Fix:** `scripts/verify-assets.sh` checks this too — for every referenced
-asset it confirms the file is tracked by git (`git ls-files`) and has no
-uncommitted changes, and as a bonus check (skipped gracefully if there's no
-network) warns if your branch has local commits that haven't reached the
-remote yet.
-
-### How to use it
-
-From the repo root, in Termux, before every push:
-
-```bash
-bash scripts/verify-assets.sh
-```
-
-It exits with a non-zero status if anything's wrong, and tells you exactly
-which file, which problem, and how to fix it. To make it run automatically
-on every `git push` instead of remembering to run it by hand, install it as
-a pre-push hook once:
-
-```bash
-cp scripts/verify-assets.sh .git/hooks/pre-push
-chmod +x .git/hooks/pre-push
-```
-
-### Renaming a file to fix its case
-
-If the script reports a case mismatch, `git mv` is the reliable fix — a
-plain filesystem rename can silently no-op on a case-insensitive filesystem
-(nothing "changes" as far as it's concerned), so go through git explicitly
-and, on a case-insensitive filesystem, via a two-step rename so git actually
-records the change:
-
-```bash
-git mv assets/thumbnails/MyThumb.JPG assets/thumbnails/tmp-rename
-git mv assets/thumbnails/tmp-rename assets/thumbnails/mythumb.jpg
-git commit -m "fix: correct case of mythumb.jpg"
-```
-
-### After pushing: confirming the deployed site actually has it
-
-GitHub Pages' CDN can take a minute or two to pick up a new deploy, and your
-phone's browser may cache the old version of a page after that. If a file
-still looks missing right after pushing:
-
-1. Check the **Actions** tab (or **Settings → Pages**) in the GitHub repo
-   for the deployment to show as complete.
-2. Hard-refresh, or open the page in a private/incognito tab, before
-   concluding anything is actually broken — browser cache produces the
-   exact same symptom as a real missing file.

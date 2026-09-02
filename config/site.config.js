@@ -115,6 +115,7 @@ window.SITE_CONFIG = {
     "Anime / AMV",
     "Long Form",
     "Thumbnail Design",
+    "Captions / Subtitles",
   ],
   categoryPages: {
     "Short Form": "short-form.html",
@@ -122,6 +123,7 @@ window.SITE_CONFIG = {
     "Anime / AMV": "anime-amv.html",
     "Long Form": "long-form.html",
     "Thumbnail Design": "thumbnail-design.html",
+    "Captions / Subtitles": "captions-subtitles.html",
   },
 
   categoryDescriptions: {
@@ -130,6 +132,7 @@ window.SITE_CONFIG = {
     "Anime / AMV": "Cinematic anime edits built around music, motion, typography, atmosphere, and emotional timing.",
     "Long Form": "Longer-form editing with clearer structure, pacing, context, and retention-focused presentation.",
     "Thumbnail Design": "High-contrast thumbnail design with clear hierarchy and a strong first-frame impression.",
+    "Captions / Subtitles": "Accurate, well-timed captions and subtitles styled to match each project's tone and pacing.",
   },
 
   // =========================================================================
@@ -144,7 +147,7 @@ window.SITE_CONFIG = {
     role: "Video Editor",
     profileImage: "",
     intro: "The person behind the cuts.",
-    bio: "I'm a video editor who enjoys experimenting with everything from AMVs and gaming edits to short-form content and motion design. I put emotion and creativity into every edit, always trying to make each piece feel as good as it possibly can. For me, editing isn't just about effects—it's about making something people can actually feel.",
+    bio: "Kryozen is an independent video editor focused on short-form, gaming, and anime/AMV work. Each edit starts with close attention to the reference, rhythm, and visual intent, then is shaped into a clean, purposeful final piece. The work focuses on pacing, beat sync, typography, captions, compositing, and thumbnail design — with an ongoing focus on improving the craft.",
   },
 
   // Software / tools strip shown in the About section. Only the tool name
@@ -191,7 +194,11 @@ window.SITE_CONFIG = {
       { question: "What do you provide?", answer: "Short-form editing, gaming edits, anime / AMV editing, captions and subtitles, typography, and thumbnail design." },
       { question: "How many revisions are included?", answer: "Three revisions are included with every project. If you need more than three, a payment of 30% of the total project cost is required upfront before work resumes — this isn't an extra or additional fee, just an advance payment to continue." },
       { question: "How long does an edit take?", answer: "Most edits take around 4–7 days, depending on the style and scope. Larger projects may take longer." },
+      { question: "How do I send my footage?", answer: "Google Drive is the preferred way to send footage, references, and other project files." },
       { question: "Can I send a reference?", answer: "Yes. References are welcome and help me understand the exact style you’re looking for." },
+      { question: "Do you work with clients worldwide?", answer: "Yes. Projects are handled remotely and asynchronously, so you can work with me from anywhere." },
+      { question: "Is long-form editing available?", answer: "Long-form editing is planned for the future and isn’t currently available." },
+      { question: "What software do you use?", answer: "Node Video is my current editing software." },
       { question: "How is pricing decided?", answer: "Pricing depends on the style, scope, and amount of work involved. Contact me with the project details for a quote." },
       { question: "How do we get started?", answer: "Send the project details, deadline, and any reference through Discord or email. We’ll discuss the scope before you commit." },
     ],
@@ -237,11 +244,9 @@ window.SITE_CONFIG = {
   // Add real projects here following this shape. Videos are unlisted
   // YouTube uploads (see PROJECT_RULES.md → "Video Hosting"): upload the
   // video, set it Unlisted, then paste the full video URL as copied from
-  // the browser or the YouTube app's Share button — any of these forms
-  // work: youtube.com/watch?v=..., the shorter youtu.be/... form,
-  // youtube.com/shorts/... , or youtube.com/live/... . js/player.js (and
-  // js/category-page.js, which derives the grid thumbnail) extract the
-  // video ID themselves. Don't pre-extract or shorten it yourself.
+  // the browser — either youtube.com/watch?v=... or the shorter
+  // youtu.be/... form both work, js/player.js extracts the video ID
+  // itself. Don't pre-extract or shorten it yourself.
   // {
   //   id: "example-project",
   //   title: "Example Project",
@@ -255,30 +260,5 @@ window.SITE_CONFIG = {
   //   // see PROJECT_RULES.md → "Work / Portfolio System" for the full
   //   // set of recognized-but-unused fields (client, tags, featured).
   // },
-  projects: [
-  {
-    id: "amv-test-01",
-    title: "AMV Test — 01",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/gORcP7BurOc?si=w4QNO9uog_HhroaO"
-  },
-  {
-    id: "amv-test-02",
-    title: "AMV Test — 02",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/okGTVW5fPgg?si=SaFyHnAkBr3snHJS"
-  },
-  {
-    id: "amv-test-03",
-    title: "AMV Test — 03",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/Fhilb_xTCc8?si=_xK4JiWrMLgQoq5E"
-  },
-  {
-    id: "amv-test-04",
-    title: "AMV Test — 04",
-    category: "Anime / AMV",
-    youtubeUrl: "https://youtu.be/wUvbL8lBtf0?si=HG6aJqTuekVR94Ar"
-  }
-],
+  projects: [],
 };
