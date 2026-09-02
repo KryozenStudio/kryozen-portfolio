@@ -9,7 +9,7 @@
  */
 
 .services {
-  padding: var(--space-2xl) 0;
+  padding: var(--section-padding-y) 0;
 }
 
 .services__head {
@@ -39,6 +39,7 @@
   border-radius: 50%;
   background: var(--color-accent-bright);
   box-shadow: 0 0 10px 2px var(--color-accent-glow);
+  animation: indicatorPulse 1.8s ease-in-out infinite;
 }
 
 .services__title {
@@ -61,14 +62,31 @@
 }
 
 .services__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* flex-wrap, not CSS grid: this list is config-driven (config.services)
+     and its count can change — a grid's columns are shared across every
+     row, so any count that doesn't divide evenly into the column count
+     leaves the last row's leftover cards stranded against the left edge
+     with a bare gap beside them (this was visibly happening at the
+     current count of 6 cards in a 4-column grid: 4, then 2 orphaned).
+     A wrapped flex row lays out each row independently, so
+     justify-content:center naturally centers whatever's left on an
+     incomplete last row — correct for 5 cards, 6, 7, or any future
+     count, without ever needing to revisit this rule again. */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-md);
 }
 
+.service-card {
+  flex: 1 1 240px;
+  max-width: 280px;
+}
+
 @media (max-width: 480px) {
-  .services__grid {
-    grid-template-columns: 1fr;
+  .service-card {
+    flex-basis: 100%;
+    max-width: none;
   }
 }
 

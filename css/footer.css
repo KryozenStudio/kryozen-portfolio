@@ -21,9 +21,16 @@
 }
 
 .footer__copy {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: var(--ls-wide);
+  /* Inter (--font-body) rather than the system monospace stack this
+     used before — that was a deliberate choice, not literally the
+     browser default, but a bare system monospace still reads as
+     generic since nothing about it is actually loaded/branded for this
+     site the way Manrope and Inter are. This is the same font the rest
+     of the site's body text uses, just set small and quiet. */
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: var(--ls-normal);
   color: var(--color-text-secondary);
 }
 
@@ -72,6 +79,11 @@
   border-color: var(--color-accent-bright);
   background: var(--color-accent-glow-soft);
   transform: translateY(-2px);
+}
+
+.footer__social-link:active {
+  transform: scale(0.9);
+  transition-duration: 90ms;
 }
 
 @media (min-width: 640px) {

@@ -23,9 +23,9 @@
   background: rgba(10, 10, 12, 0.32);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 0 0 20px 20px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  backdrop-filter: blur(10px) saturate(1.15);
   isolation: isolate;
   display: block;
   visibility: visible;
@@ -35,6 +35,27 @@
     border-color var(--duration-base) var(--ease-out),
     backdrop-filter var(--duration-base) var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Signature red edge-glow — a very faint line just beneath the navbar's
+   own hairline border, using the site's one accent hue rather than a
+   second color. Present but barely-there while unscrolled, intensifies
+   once there's real page content behind the bar to read against —
+   same "always present, deepens on scroll" logic as the glass itself. */
+.navbar::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-glow) 25%, var(--color-accent-glow) 75%, transparent);
+  opacity: .3;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+.navbar--scrolled::after {
+  opacity: .6;
 }
 
 /* Root-cause fix, not a per-list patch: every nav link list in this file
@@ -51,9 +72,9 @@
 .navbar--scrolled {
   background: var(--color-bg-glass);
   border-bottom: 1px solid var(--color-surface-border);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
-  box-shadow: var(--shadow-sm);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow-sm);
 }
 
 .navbar__inner {
@@ -125,49 +146,52 @@
 }
 
 .navbar__link {
+  /* Matches .navbar__strip-link's pill treatment below almost exactly —
+     same border/background/radius pattern, same aria-current colors —
+     rather than the plain-text-plus-underline treatment this used to
+     have. Mobile's nav items were always individual glass pills;
+     desktop's were just colored text with a hover underline, which is
+     why the glassmorphism looked like it "disappeared" on desktop even
+     though the navbar's own background blur was working correctly the
+     whole time — it was never about the bar, it was about each link
+     never having its own glass shape to begin with. No backdrop-filter
+     here on purpose, matching the mobile pill (which doesn't have one
+     either): the blur comes once from .navbar itself; six more blur
+     regions layered on top would be both inconsistent with mobile and
+     needlessly expensive. */
   position: relative;
+  display: inline-flex;
+  align-items: center;
   font-size: var(--fs-small);
   font-weight: 500;
   letter-spacing: var(--ls-normal);
   color: var(--color-text-secondary);
-  padding: var(--space-2xs) 0;
-  transition: color var(--duration-fast) var(--ease-out);
-}
-
-.navbar__link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  background: var(--color-accent-bright);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--duration-base) var(--ease-out);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    transform 90ms var(--ease-out);
 }
 
 .navbar__link:hover,
 .navbar__link:focus-visible {
   color: var(--color-text-primary);
+  border-color: var(--color-surface-border-strong);
+  background: rgba(255, 255, 255, 0.065);
 }
 
 .navbar__link:active {
   transform: scale(0.96);
-  transition: transform 90ms var(--ease-out);
-}
-
-.navbar__link:hover::after,
-.navbar__link:focus-visible::after {
-  transform: scaleX(1);
 }
 
 .navbar__link[aria-current="page"] {
   color: var(--color-text-primary);
-}
-
-.navbar__link[aria-current="page"]::after {
-  transform: scaleX(1);
+  border-color: var(--color-accent-bright);
+  background: var(--color-accent-glow-soft);
 }
 
 .navbar__actions {
@@ -175,7 +199,6 @@
   align-items: center;
   gap: var(--space-sm);
 }
-
 
 /* ---------------------------------------------------------------------
    MOBILE MENU TOGGLE (hamburger)
@@ -239,14 +262,18 @@
      under the 64px bar plus the 44px link strip. The <=859px override
      just below supplies that second case. */
   padding: calc(var(--navbar-h-desktop) + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
-  /* Deliberately NOT --color-bg-glass (55% opaque) — that value is tuned
-     for the thin persistent top bar, where a little of the page showing
-     through on scroll is the intended "atmospheric glass" look. This
-     panel covers most of the screen, directly over the hero's large,
-     high-contrast logo circle — at 55% opacity + strong blur it let
-     that logo bleed through as a distracting faded ghost. Near-opaque
-     here keeps the panel reading as its own solid surface. */
-  background: rgba(8, 8, 10, 0.97);
+  /* Fully opaque, not just "near-opaque": at 0.97 (the previous value)
+     the panel still let a faint blurred "ghost" of whatever bright,
+     saturated content sat behind it (the hero's white wordmark, the red
+     CTA button) show through — backdrop-filter's blur smears that
+     content spatially but doesn't reduce its contribution the way
+     lowering opacity further would, so even 3% see-through stayed
+     visible as a haze. Went unnoticed while this panel only ever
+     covered a narrow mobile viewport; restoring it on desktop (this
+     file's 860px block) means it now sits over a much wider slice of
+     the hero, including the brightest elements, where that haze reads
+     as rough rather than "atmospheric." */
+  background: rgb(8, 8, 10);
   -webkit-backdrop-filter: blur(var(--blur-glass-strong));
   backdrop-filter: blur(var(--blur-glass-strong));
   border-bottom: 1px solid var(--color-surface-border);
@@ -255,6 +282,8 @@
   gap: 0;
   max-height: 100vh;
   max-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow-y: auto;
 
   transform: translateY(-8px);
@@ -286,6 +315,30 @@
   margin: 0;
   padding: 0;
 }
+
+/* Staggered cascade rather than every link appearing the instant the
+   panel does — the glass panel itself still materializes in one
+   --duration-base beat (see .navbar__mobile-panel.is-open above), then
+   each link fades/lifts in slightly after the last, top to bottom. The
+   stagger lives on the <li> wrapper rather than .navbar__mobile-link
+   itself so it never fights with that element's own hover/press
+   transform. Six delay steps are defined; a seventh nav item would
+   simply inherit no delay (falls back to 0ms) rather than error. */
+.navbar__mobile-panel > ul > li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+.navbar__mobile-panel.is-open > ul > li {
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbar__mobile-panel > ul > li:nth-child(1) { transition-delay: 50ms; }
+.navbar__mobile-panel > ul > li:nth-child(2) { transition-delay: 85ms; }
+.navbar__mobile-panel > ul > li:nth-child(3) { transition-delay: 120ms; }
+.navbar__mobile-panel > ul > li:nth-child(4) { transition-delay: 155ms; }
+.navbar__mobile-panel > ul > li:nth-child(5) { transition-delay: 190ms; }
+.navbar__mobile-panel > ul > li:nth-child(6) { transition-delay: 225ms; }
 
 .navbar__mobile-link {
   display: block;
@@ -321,17 +374,11 @@
   .navbar__links {
     display: flex;
   }
-
-  /* The hamburger/mobile panel was previously kept visible on desktop
-     too, since it was the only route to the (now-removed) Admin/Studio
-     Manager pages — see PROJECT_RULES.md → "Video Hosting" for the
-     current YouTube-Video-ID workflow, which needs no admin route at
-     all. With that gone, the panel would only ever show the same six
-     links already visible in .navbar__links above, so the toggle is
-     mobile/tablet-only again, matching what it actually does. */
-  .navbar__toggle {
-    display: none;
-  }
+  /* The hamburger stays visible here too — a consistent menu affordance
+     across every breakpoint rather than one that disappears once the
+     inline links row has room to show. It opens the exact same panel as
+     mobile; nothing about the panel's own logic is breakpoint-specific,
+     so there's no separate desktop code path to keep in sync. */
 }
 
 

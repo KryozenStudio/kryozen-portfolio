@@ -174,10 +174,56 @@ p {
   inset: 0;
   z-index: var(--z-overlay);
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.05;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: 180px 180px;
+  /* Real film grain flickers frame to frame rather than sitting still —
+     a static noise texture, however fine, reads as a flat printed
+     pattern instead. steps(1) jumps between background-position values
+     rather than tweening smoothly between them, so this repaints only 8
+     times/cycle (~6fps) instead of every frame — cheap, and also more
+     grain-like: real grain doesn't ease between positions either. */
+  animation: grainFlicker 1.2s steps(1) infinite;
+}
+
+@keyframes grainFlicker {
+  0%    { background-position: 0 0; }
+  12.5% { background-position: -37px 21px; }
+  25%   { background-position: 29px -33px; }
+  37.5% { background-position: -21px 42px; }
+  50%   { background-position: 48px 11px; }
+  62.5% { background-position: -33px -19px; }
+  75%   { background-position: 19px 31px; }
+  87.5% { background-position: -48px -37px; }
+  100%  { background-position: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay { animation: none; }
+}
+
+/* ---------------------------------------------------------------------
+   INDICATOR DOT PULSE — shared beeping/pulsing animation for the small
+   red "eyebrow" dots that sit in front of section labels (Services,
+   About, Contact, FAQ, the hero, and the category-page eyebrow). One
+   keyframe here rather than duplicated per-component, since every dot
+   uses the same look and motion.
+--------------------------------------------------------------------- */
+@keyframes indicatorPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 9px 2px var(--color-accent-glow); }
+  50% { opacity: .45; box-shadow: 0 0 4px 1px var(--color-accent-glow); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow-dot,
+  .services__eyebrow-dot,
+  .about__eyebrow-dot,
+  .contact__eyebrow-dot,
+  .faq__eyebrow-dot,
+  .category-page__eyebrow::before {
+    animation: none;
+  }
 }
 
 /* ---------------------------------------------------------------------
@@ -205,8 +251,35 @@ p {
   }
 }
 
+/* Section headings' own reveal — a left-to-right clip-path wipe rather
+   than another fade, so a heading reads distinctly from the block
+   fading in around it instead of just being "the same motion, smaller."
+   Same technique as the hero wordmark (css/hero.css) and category-page
+   title (css/category-page.css); js/reveal.js applies this class
+   alongside — not instead of — .section-reveal on the containing block.
+   Vertical inset is -0.2em rather than 0 so a descender (the "g" in
+   "category", "Frequently", etc.) never gets clipped at the edge of the
+   line box — see the identical, worse-case fix and its full explanation
+   in css/category-page.css's .category-page__title. */
+.text-reveal {
+  display: inline-block;
+  clip-path: inset(-0.2em 100% -0.2em 0);
+  transition: clip-path 640ms var(--ease-out);
+}
+
+.text-reveal.is-visible {
+  clip-path: inset(-0.2em -2% -0.2em 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-reveal,
+  .text-reveal.is-visible {
+    clip-path: none;
+    transition: none;
+  }
+}
+
 body{background:var(--color-bg)}
-.grain-overlay{opacity:.035;pointer-events:none}
 
 /* ---------------------------------------------------------------------
    INTERACTION SAFETY — keep long labels and media from creating a
