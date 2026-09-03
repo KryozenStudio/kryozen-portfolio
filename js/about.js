@@ -36,6 +36,7 @@
 
   setText("about-eyebrow-text", aboutCfg.eyebrow);
   setText("about-title", aboutCfg.heading);
+  setText("about-subtitle", aboutCfg.subtitle);
   setText("about-intro", aboutCfg.intro);
   setText("about-bio", aboutCfg.bio);
 

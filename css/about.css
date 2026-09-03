@@ -115,6 +115,13 @@
   font-size: var(--fs-h2);
 }
 
+.about__subtitle {
+  margin-top: var(--space-xs);
+  max-width: 42ch;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-body-lg);
+}
+
 .about__role {
   margin-top: var(--space-3xs);
   font-family: var(--font-mono);

@@ -36,33 +36,50 @@
   window.Kryozen = window.Kryozen || {};
 
   /** -------------------------------------------------------------------
-   * AMBIENT PARALLAX
+   * AMBIENT PARALLAX + SCROLL PROGRESS
    * The .site-ambient layer (css/ui-enhancements.css) already drifts on
    * its own via CSS keyframes — this adds a second, independent axis of
    * motion driven by actual scroll position, so the background responds
    * to what the visitor is doing rather than only ever running its own
    * autonomous loop. Sets --ambient-parallax, a small px offset (capped,
    * eased toward but never fully reaching the cap) that .site-ambient
-   * reads in its own transform. rAF-throttled like every other scroll
-   * listener in this codebase (see js/navbar.js).
+   * reads in its own transform. The same rAF tick also sets
+   * --scroll-progress on #navbar (0-1), which css/navbar.css's
+   * .navbar__progress bar reads — piggybacking on this existing listener
+   * rather than adding a second one. rAF-throttled like every other
+   * scroll listener in this codebase (see js/navbar.js).
    * ---------------------------------------------------------------- */
   var ambient = document.querySelector(".site-ambient");
+  var navbar = document.getElementById("navbar");
   var reduceMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (ambient && !reduceMotion) {
+  if ((ambient || navbar) && !reduceMotion) {
     var ticking = false;
     var MAX_OFFSET = 46; // px — kept small; this is a depth cue, not a second scroll
 
     function applyParallax() {
       ticking = false;
       var y = window.scrollY || 0;
-      // Diminishing return past a few hundred px of scroll, so a very
-      // long page doesn't drag the layer indefinitely off-screen —
-      // asymptotically approaches MAX_OFFSET instead of scaling linearly
-      // forever.
-      var offset = MAX_OFFSET * (1 - Math.exp(-y / 900));
-      ambient.style.setProperty("--ambient-parallax", offset.toFixed(1) + "px");
+
+      if (ambient) {
+        // Diminishing return past a few hundred px of scroll, so a very
+        // long page doesn't drag the layer indefinitely off-screen —
+        // asymptotically approaches MAX_OFFSET instead of scaling linearly
+        // forever.
+        var offset = MAX_OFFSET * (1 - Math.exp(-y / 900));
+        ambient.style.setProperty("--ambient-parallax", offset.toFixed(1) + "px");
+      }
+
+      if (navbar) {
+        // Scroll-progress bar (css/navbar.css .navbar__progress) — 0 at
+        // the top of the page, 1 once scrolled to the bottom. Piggybacks
+        // on this same rAF tick rather than its own listener.
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var progress = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+        navbar.style.setProperty("--scroll-progress", progress.toFixed(4));
+      }
     }
 
     window.addEventListener(

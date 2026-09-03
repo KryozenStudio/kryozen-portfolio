@@ -58,6 +58,34 @@
   opacity: .6;
 }
 
+/* Scroll-progress bar — reflects how far down the page the visitor is.
+   transform:scaleX (not width) so it's a compositor-only property, no
+   layout/paint cost on every scroll frame; --scroll-progress (0-1) is
+   set by js/main.js's existing rAF-throttled scroll listener (the same
+   one already driving --ambient-parallax), so this adds zero new
+   listeners. Sits just past .navbar::after's edge-glow line rather than
+   on top of it. */
+.navbar__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  transition: transform 100ms linear;
+  background: linear-gradient(90deg, var(--color-accent-dim), var(--color-accent-bright));
+  box-shadow: 0 0 10px 1px var(--color-accent-glow);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__progress {
+    box-shadow: none;
+  }
+}
+
 /* Root-cause fix, not a per-list patch: every nav link list in this file
    (.navbar__links, .navbar__mobile-panel > ul, .navbar__mobile-strip > ul)
    is built by js/content-loader.js appending raw <li> elements with no

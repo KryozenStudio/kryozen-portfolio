@@ -47,10 +47,23 @@
     ".contact__title"
   ];
 
+  // Grid/list children that should cascade in one-after-another rather
+  // than all reveal simultaneously the moment their shared row crosses
+  // the IntersectionObserver threshold (see --stagger-i in
+  // css/base.css's .section-reveal). Capped, same reasoning as the
+  // project-card stagger in js/category-page.js: a long list shouldn't
+  // stretch the entrance out to something that reads as slow.
+  var staggerSelectors = { ".service-card": true, ".faq__item": true };
+
   var elements = [];
   selectors.forEach(function (selector) {
+    var i = 0;
     document.querySelectorAll(selector).forEach(function (el) {
       el.classList.add("section-reveal");
+      if (staggerSelectors[selector]) {
+        el.style.setProperty("--stagger-i", Math.min(i, 8));
+        i++;
+      }
       elements.push(el);
     });
   });

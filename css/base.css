@@ -13,13 +13,40 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Page-load transition — every navigation on this static multi-page
+     site is a full page load (no SPA router), so a declarative,
+     JS-free entrance here is what actually plays on every "page
+     transition" a visitor experiences, rather than something that
+     could be skipped by a slow script load. Opacity only, deliberately
+     — animating `filter` here (even one that ends at "none") risks the
+     browser's live animated value staying a resolved non-none filter
+     for the animation's duration, and ANY non-none filter on an
+     ancestor promotes it to a new containing block for every
+     position:fixed/absolute descendant on the page, which would silently
+     break the navbar's fixed positioning. Opacity carries no such risk. */
+  animation: pageEnter 420ms var(--ease-out) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--fw-black);
   line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-heading);
+}
+
+h3, h4 {
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-heading-sm);
+  line-height: var(--lh-snug);
 }
 
 p {
@@ -231,15 +258,24 @@ p {
 --------------------------------------------------------------------- */
 .section-reveal {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(28px) scale(0.97);
+  filter: blur(6px);
   transition:
-    opacity 700ms var(--ease-out),
-    transform 700ms var(--ease-out);
+    opacity 760ms var(--ease-out),
+    transform 760ms var(--ease-out),
+    filter 760ms var(--ease-out);
+  /* Set per-element by js/reveal.js for repeated grid/list children
+     (service cards, FAQ items) so a row cascades in left-to-right
+     instead of every sibling appearing simultaneously — the classic
+     staggerChildren effect. Absent (0) on singular blocks like section
+     heads, which should just reveal as one piece. */
+  transition-delay: calc(var(--stagger-i, 0) * 70ms);
 }
 
 .section-reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -247,6 +283,7 @@ p {
   .section-reveal.is-visible {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
 }

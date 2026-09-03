@@ -141,6 +141,7 @@ window.SITE_CONFIG = {
   about: {
     eyebrow: "ABOUT",
     heading: "About",
+    subtitle: "A closer look at the editor behind the edits.",
     role: "Video Editor",
     profileImage: "",
     intro: "The person behind the cuts.",

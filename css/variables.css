@@ -60,13 +60,25 @@
   --fs-label: 0.75rem;
 
   --lh-tight: 1.05;
+  --lh-snug: 1.2;
   --lh-normal: 1.5;
   --lh-relaxed: 1.7;
 
   --ls-tight: -0.02em;
+  --ls-heading: -0.03em;
+  --ls-heading-sm: -0.015em;
   --ls-normal: 0;
   --ls-wide: 0.08em;
   --ls-widest: 0.24em;
+
+  /* Weight tokens — headings lean noticeably heavier than body copy so
+     scale isn't the only thing doing the hierarchy work (see h1-h4 in
+     base.css). */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 800;
 
   /* ---------------------------------------------------------------------
      SPACING SCALE
@@ -110,6 +122,10 @@
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.55);
   --shadow-accent: 0 8px 30px var(--color-accent-glow-soft);
+
+  /* Cursor-tracked card spotlight (css/ui-enhancements.css, js/spotlight.js) */
+  --spotlight-size: 380px;
+  --spotlight-color: rgba(226, 33, 63, 0.16);
 
   /* ---------------------------------------------------------------------
      GLASSMORPHISM

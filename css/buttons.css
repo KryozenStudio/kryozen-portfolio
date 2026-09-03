@@ -19,6 +19,11 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   white-space: nowrap;
+  /* Magnetic pull toward the cursor (js/spotlight.js), composed with
+     whatever the button's own hover transform below adds — defaults to
+     0px so buttons sit still on touch/coarse-pointer/reduced-motion,
+     where the JS never sets these. */
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
   /* Release transition — slightly longer, spring-eased, so the button
      settles back with a small overshoot. The :active rule below
      overrides this for the press itself, which stays fast and decisive
@@ -32,7 +37,7 @@
 
 .btn:active {
   transition: transform 90ms var(--ease-out);
-  transform: scale(0.97);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) scale(0.97);
 }
 
 /* Primary — solid deep red, the site's single loudest element besides the
@@ -68,7 +73,7 @@
 .btn--primary:hover,
 .btn--primary:focus-visible {
   box-shadow: 0 10px 34px var(--color-accent-glow);
-  transform: translateY(-1px) scale(1.01);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
 }
 
 /* Secondary — glass outline, quieter, sits next to primary. */
@@ -84,7 +89,7 @@
 .btn--secondary:focus-visible {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--color-accent-bright);
-  transform: translateY(-1px) scale(1.01);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
 }
 
 /* Small pill variant for compact controls. */

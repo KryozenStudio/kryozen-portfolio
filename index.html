@@ -85,6 +85,7 @@
        NAVBAR
   ===================================================================== -->
   <header class="navbar" id="navbar">
+    <span class="navbar__progress" aria-hidden="true"></span>
     <div class="container navbar__inner">
       <a class="navbar__brand" href="#top" aria-label="Kryozen Studio — home">
         <span class="navbar__brand-mark">
@@ -258,6 +259,7 @@
               <span id="about-eyebrow-text">ABOUT</span>
             </p>
             <h2 class="about__title" id="about-title">About</h2>
+            <p class="about__subtitle" id="about-subtitle">A closer look at the editor behind the edits.</p>
           </div>
 
           <div class="about__panel">
@@ -374,8 +376,8 @@
   <!-- =====================================================================
        SCRIPTS
        Load order: config → content-loader → work → player → services →
-       about → contact → reveal → navbar → hero-pointer → main.
-       All deferred, so
+       about → contact → reveal → navbar → hero-pointer → spotlight →
+       main. All deferred, so
        they execute in this order after the HTML is parsed, without
        blocking rendering. player.js listens for the event work.js
        dispatches; every other section loader is independent of the
@@ -394,6 +396,7 @@
   <script src="js/reveal.js" defer></script>
   <script src="js/navbar.js" defer></script>
   <script src="js/hero-pointer.js" defer></script>
+  <script src="js/spotlight.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>
