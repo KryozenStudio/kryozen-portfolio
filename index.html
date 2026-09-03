@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Unbounded:wght@600;700;800;900&display=swap"
     rel="stylesheet"
   />
 
@@ -87,12 +87,29 @@
   <header class="navbar" id="navbar">
     <span class="navbar__progress" aria-hidden="true"></span>
     <div class="container navbar__inner">
-      <a class="navbar__brand" href="#top" aria-label="Kryozen Studio — home">
-        <span class="navbar__brand-mark">
-          <img data-logo-img src="assets/images/logo/kryozen-mark.webp" alt="Kryozen Studio logo" width="30" height="30" />
-        </span>
-        <span class="navbar__brand-word" id="navbar-brand-word">KRYOZEN</span>
-      </a>
+      <div class="navbar__leading">
+        <a class="navbar__brand" href="#top" aria-label="Kryozen Studio — home">
+          <span class="navbar__brand-mark">
+            <img data-logo-img src="assets/images/logo/kryozen-mark.webp" alt="Kryozen Studio logo" width="30" height="30" />
+          </span>
+          <span class="navbar__brand-word" id="navbar-brand-word">KRYOZEN</span>
+        </a>
+
+        <!-- Ambient banner — audio-waveform motif (fitting for a
+             video/audio editing studio), fills the space beside the logo
+             on both mobile (where brand-word/links are hidden) and
+             desktop (sits between the logo and the nav links). Purely
+             decorative; each bar runs its own independent duration/phase
+             (css/navbar.css) so the pattern never visibly "resets" in
+             sync. -->
+        <div class="navbar__banner" aria-hidden="true">
+          <span class="navbar__banner-bar"></span>
+          <span class="navbar__banner-bar"></span>
+          <span class="navbar__banner-bar"></span>
+          <span class="navbar__banner-bar"></span>
+          <span class="navbar__banner-bar"></span>
+        </div>
+      </div>
 
       <nav class="navbar__links js-only" id="navbar-links" aria-label="Primary">
         <!-- injected by js/content-loader.js from config.nav.links -->
