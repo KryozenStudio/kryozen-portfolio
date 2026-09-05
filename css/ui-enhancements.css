@@ -337,6 +337,15 @@
   .category-page__filter {
     background: rgba(16,16,19,.94);
   }
+
+  /* Same fallback for the fixed header: without backdrop-filter support,
+     its rgba background alone (.32/.55 alpha) has nothing to blur and
+     reads as "losing the glass effect" once busy page content scrolls
+     underneath it. Solid tone keeps it legible at every scroll depth. */
+  .navbar,
+  .navbar--scrolled {
+    background: rgba(16,16,19,.94);
+  }
 }
 
 @media (max-width: 859px) {

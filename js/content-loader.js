@@ -94,7 +94,7 @@
     if (metaDesc && cfg.brand.tagline) {
       metaDesc.setAttribute("content", cfg.brand.tagline + ". " + (cfg.hero && cfg.hero.intro ? cfg.hero.intro : ""));
     }
-    setText("navbar-brand-word", cfg.brand.shortName || cfg.brand.name);
+    setText("navbar-brand-word", cfg.brand.name || cfg.brand.shortName);
   }
 
   /* -----------------------------------------------------------------

@@ -10,16 +10,23 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: calc(var(--navbar-h-desktop) + var(--space-2xl)) 0 var(--space-2xl);
+  /* Top clearance only needs enough room to clear the fixed navbar, not
+     a full --space-2xl (96px) on top of it — that was stacking with the
+     flex-centered content's own natural whitespace to leave ~200px of
+     dead air between the bar and the "KRYOZEN / STUDIO" eyebrow. Matches
+     the same "+16px breathing room" pattern base.css already uses for
+     [id] scroll-margin-top, kept in its own token here since this is a
+     visual gap, not a scroll offset. */
+  padding: calc(var(--navbar-h-desktop) + var(--space-sm)) 0 var(--space-2xl);
 }
 
 /* Matches the navbar's own <=859px cutoff (see navbar.css) rather than
    the old 640px break — below 860px the bar is shorter (--navbar-h-mobile)
    but gains the mobile link strip (--navbar-strip-h), so the hero has to
-   clear both, not just the bar. */
+   clear both, not just the bar. Same tightened clearance as desktop. */
 @media (max-width: 859px) {
   .hero {
-    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + var(--space-xl));
+    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + var(--space-sm));
   }
 }
 
@@ -124,7 +131,7 @@
 }
 .hero__wordmark-line--main{
   font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
-  line-height:.9;font-weight:800;letter-spacing:-.055em;color:var(--color-text-primary);
+  line-height:.9;font-weight:var(--fw-bold);letter-spacing:-.055em;color:var(--color-text-primary);
   animation:wordmarkReveal 780ms var(--ease-out) 560ms forwards;
 }
 
@@ -160,7 +167,7 @@
 }
 .hero__wordmark-line--sub{
   margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
-  line-height:1;font-weight:600;letter-spacing:.48em;color:var(--color-text-secondary);
+  line-height:1;font-weight:var(--fw-medium);letter-spacing:.48em;color:var(--color-text-secondary);
   animation:wordmarkReveal 620ms var(--ease-out) 620ms forwards;
 }
 .hero__intro{
