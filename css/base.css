@@ -259,17 +259,17 @@ p {
 .section-reveal {
   opacity: 0;
   transform: translateY(28px) scale(0.97);
-  filter: blur(6px);
+  filter: blur(2px);
   transition:
-    opacity 760ms var(--ease-out),
-    transform 760ms var(--ease-out),
-    filter 760ms var(--ease-out);
+    opacity 460ms var(--ease-out),
+    transform 460ms var(--ease-out),
+    filter 460ms var(--ease-out);
   /* Set per-element by js/reveal.js for repeated grid/list children
      (service cards, FAQ items) so a row cascades in left-to-right
      instead of every sibling appearing simultaneously — the classic
      staggerChildren effect. Absent (0) on singular blocks like section
      heads, which should just reveal as one piece. */
-  transition-delay: calc(var(--stagger-i, 0) * 70ms);
+  transition-delay: calc(var(--stagger-i, 0) * 40ms);
 }
 
 .section-reveal.is-visible {

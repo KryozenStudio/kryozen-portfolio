@@ -89,7 +89,7 @@
      BRAND / DOCUMENT META
   ----------------------------------------------------------------- */
   if (cfg.brand) {
-    document.title = cfg.brand.name + (cfg.brand.tagline ? " — " + cfg.brand.tagline : "");
+    document.title = (cfg.brand.shortName || cfg.brand.name) + (cfg.brand.tagline ? " — " + cfg.brand.tagline : "");
     var metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc && cfg.brand.tagline) {
       metaDesc.setAttribute("content", cfg.brand.tagline + ". " + (cfg.hero && cfg.hero.intro ? cfg.hero.intro : ""));

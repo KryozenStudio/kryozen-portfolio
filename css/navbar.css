@@ -30,6 +30,11 @@
   display: block;
   visibility: visible;
   opacity: 1;
+  /* Own compositor layer so mobile GPUs (Android Chrome/WebView in
+     particular) resample the blur every frame instead of reusing a
+     stale backdrop snapshot while the page scrolls underneath it. */
+  transform: translateZ(0);
+  will-change: backdrop-filter, transform;
   transition:
     background-color var(--duration-base) var(--ease-out),
     border-color var(--duration-base) var(--ease-out),

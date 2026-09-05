@@ -132,7 +132,7 @@
 .hero__wordmark-line--main{
   font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
   line-height:.9;font-weight:var(--fw-bold);letter-spacing:-.055em;color:var(--color-text-primary);
-  animation:wordmarkReveal 780ms var(--ease-out) 560ms forwards;
+  animation:wordmarkReveal 620ms var(--ease-out) 400ms forwards;
 }
 
 /* Signature shimmer — a single bright band sweeps across the wordmark
@@ -155,8 +155,8 @@
     background-clip: text;
     color: transparent;
     animation:
-      wordmarkReveal 780ms var(--ease-out) 560ms forwards,
-      wordmarkShimmer 7s var(--ease-in-out) 2200ms infinite;
+      wordmarkReveal 620ms var(--ease-out) 400ms forwards,
+      wordmarkShimmer 7s var(--ease-in-out) 1900ms infinite;
   }
 }
 
@@ -168,21 +168,21 @@
 .hero__wordmark-line--sub{
   margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
   line-height:1;font-weight:var(--fw-medium);letter-spacing:.48em;color:var(--color-text-secondary);
-  animation:wordmarkReveal 620ms var(--ease-out) 620ms forwards;
+  animation:wordmarkReveal 500ms var(--ease-out) 460ms forwards;
 }
 .hero__intro{
   max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 860ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 480ms var(--ease-out) 620ms forwards;
 }
 .hero__actions{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
-  opacity:0;transform:translateY(12px);animation:heroFadeUp 560ms var(--ease-out) 950ms forwards;
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 480ms var(--ease-out) 700ms forwards;
 }
 .hero__scroll{
   position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
   color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
-  opacity:0;animation:heroScrollIn 500ms var(--ease-out) 1180ms forwards;
+  opacity:0;animation:heroScrollIn 440ms var(--ease-out) 860ms forwards;
 }
 .hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
 
