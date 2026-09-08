@@ -161,7 +161,21 @@ body:has(.category-page) {
 .category-page__meta{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:var(--space-md);}
 .category-page__pill{padding:.5rem .75rem;border:1px solid var(--color-surface-border);border-radius:var(--radius-pill);color:var(--color-text-tertiary);font:500 .68rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;}
 .category-page__grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-md);}
-.category-project{position:relative;grid-column:span 6;display:flex;flex-direction:column;text-align:left;background:rgba(255,255,255,.025);border:1px solid var(--color-surface-border);border-radius:var(--radius-lg);overflow:hidden;transform-style:preserve-3d;will-change:transform;transition:transform 280ms var(--ease-out),border-color var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out);}
+/* content-visibility:auto — same fix as css/ui-enhancements.css applies
+   to the homepage's repeating cards, applied here too: a category page
+   can have any number of project cards (see PROJECT_RULES.md §2a), and
+   each one runs backdrop-filter (below) permanently once rendered.
+   Without this, scrolling through a long grid keeps every prior card's
+   blur "live" and composited, which is what was silently breaking the
+   fixed navbar's own blur further down the page. Off-screen cards now
+   stop being rendered/composited entirely until scrolled back near.
+   will-change:transform was also removed from the base rule — it was
+   applied unconditionally to every card (not just while hovering),
+   permanently forcing its own GPU layer for every single project on
+   the page for a hover effect only a fraction of them are ever
+   experiencing at once. */
+.category-project{position:relative;grid-column:span 6;display:flex;flex-direction:column;text-align:left;background:rgba(255,255,255,.025);border:1px solid var(--color-surface-border);border-radius:var(--radius-lg);overflow:hidden;transform-style:preserve-3d;transition:transform 280ms var(--ease-out),border-color var(--duration-base) var(--ease-out),box-shadow var(--duration-base) var(--ease-out);content-visibility:auto;contain-intrinsic-size:auto 340px;}
+.category-project:hover,.category-project:focus-visible{will-change:transform;}
 .category-project:hover,.category-project:focus-visible{transform:translateY(-4px);border-color:var(--color-surface-border-strong);box-shadow:var(--shadow-lg);}
 .category-project__media{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--color-bg-elevated);}
 .category-project__media img{width:100%;height:100%;object-fit:cover;transition:transform 600ms var(--ease-out);}

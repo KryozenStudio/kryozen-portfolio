@@ -210,6 +210,33 @@
   backdrop-filter: blur(10px);
 }
 
+/* Fixes the navbar's blur "wearing off" the further down the page you
+   scroll (see the note in css/navbar.css). Every repeating card in
+   this list keeps its backdrop-filter live in the DOM permanently, so
+   the number of simultaneously-composited blur surfaces only ever
+   grew as more of these scrolled into view — on the homepage that's
+   the category tiles, service cards, FAQ items, and contact methods,
+   all still "on" at once by the time you've scrolled past them; on a
+   category page with a real project count it's every single project
+   card. Eventually that exceeds the browser's internal budget for how
+   many backdrop-filter layers it will composite at once, and it
+   silently stops blurring *something* — which is sometimes the fixed
+   header, since it's just one more layer competing for the same
+   budget. `content-visibility: auto` skips rendering (and therefore
+   compositing/blurring) any instance of these once it's off-screen in
+   either direction, so the live count stays roughly "however many are
+   near the viewport" instead of climbing for the rest of the page.
+   contain-intrinsic-size gives the browser a placeholder size before
+   it has ever rendered one, and remembers the real size afterward, so
+   scroll position doesn't jump as these enter/exit rendering. */
+.category-strip__item,
+.service-card,
+.faq__item,
+.contact__method {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
+}
+
 .category-strip__item,
 .service-card,
 .faq__item,
