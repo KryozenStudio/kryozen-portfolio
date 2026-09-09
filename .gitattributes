@@ -1,0 +1,84 @@
+# =============================================================================
+# GIT ATTRIBUTES — Kryozen Studio
+#
+# WHY THIS FILE EXISTS (read this before touching it)
+# -----------------------------------------------------------------------------
+# This project had no .gitattributes at all, which is the most likely root
+# cause of "I pushed a file through Termux, GitHub shows it in the repo, but
+# the live site won't load it."
+#
+# Without an explicit `binary` declaration, Git decides for itself whether a
+# file is text or binary, and can apply *text normalization* to it — line-
+# ending conversion (CRLF <-> LF) and, depending on core.autocrlf/core.safecrlf
+# settings in the git client, content rewriting on checkout. That's exactly
+# right for .html/.css/.js, and exactly WRONG for an image, font, or video —
+# normalization run against binary bytes doesn't produce a "slightly
+# different" file, it produces a corrupted one. The file still exists in the
+# repo (so `git status`/GitHub's file browser look completely normal), it
+# still has the right name and the right byte COUNT in many cases, but the
+# bytes themselves no longer decode as a valid image — so the browser's
+# <img>/<source> silently fails to render it. That failure mode matches
+# "appears to exist but doesn't load" exactly, and it's invisible unless you
+# diff the file's bytes, not just its presence.
+#
+# This is more likely on a Termux workflow specifically because Android's
+# git client, working directory, and (if files ever pass through shared
+# storage / the SD card, which is FAT/exFAT-formatted) filesystem all differ
+# from the desktop-git assumptions this attribute file protects against by
+# default.
+#
+# THE FIX: every binary asset type used by this project is explicitly marked
+# `binary` below, which is shorthand for `-text -diff -merge` — Git will
+# never run text normalization, line-ending conversion, or a text diff/merge
+# against these files, regardless of any core.autocrlf setting on whichever
+# machine commits or checks them out. Text source files get an explicit,
+# consistent LF policy so the *editable* files behave the same way on every
+# contributor's machine too.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# TEXT SOURCE — normalize to LF on commit, checkout as LF everywhere.
+# Prevents a different but related class of bug: mixed line endings inside
+# config/site.config.js or a .html/.css/.js file (e.g. after editing on one
+# machine and pushing from Termux on another) can cause subtle diff noise,
+# and in rare cases has been known to trip up naive text-based tooling.
+# ---------------------------------------------------------------------------
+* text=auto eol=lf
+
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
+*.svg   text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+
+# ---------------------------------------------------------------------------
+# BINARY ASSETS — never text-normalized, never diffed/merged as text.
+# This is the actual fix for the reported bug. Add any new binary
+# extension you start using to this list BEFORE committing the first file
+# of that type.
+# ---------------------------------------------------------------------------
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+
+*.mp4   binary
+*.webm  binary
+*.mov   binary
+*.mp3   binary
+*.wav   binary
+
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+
+*.pdf   binary
+*.zip   binary

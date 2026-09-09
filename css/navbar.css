@@ -1,0 +1,613 @@
+/**
+ * =============================================================================
+ * NAVBAR
+ * Glass at all times — not just after scrolling. Earlier this bar was fully
+ * transparent until scrolled (background:transparent, no border, no blur),
+ * so anyone looking at the top of the page — which is most first
+ * impressions — saw a plain, glass-free bar and reasonably read that as
+ * "missing glassmorphism," even though the scrolled state genuinely had
+ * it. Now the glass treatment is always present; .navbar--scrolled (still
+ * toggled by js/navbar.js) only intensifies it once there's real page
+ * content behind the bar to add contrast against. Mobile menu is a
+ * full-width glass panel that slides down below the bar.
+ * =============================================================================
+ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding-top: env(safe-area-inset-top, 0);
+  isolation: isolate;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* All visual paint (background/blur/border/shadow) lives on this
+   dedicated layer instead of directly on .navbar. Keeping .navbar
+   itself a plain, transform-free positioning shell means it can never
+   become the containing block for its position:fixed .navbar__mobile-
+   panel child (any `transform`/`filter` on an ancestor does that,
+   silently breaking a fixed-position descendant's sizing) — a risk
+   that existed as long as the blur lived on the same element. This
+   layer is a plain absolutely-positioned rectangle with nothing else
+   painted through it, so there's no shared box for a stale composited
+   frame or a rounded-corner sample to leak through. */
+/* Two independently-composited layers, not one. Three fix attempts in
+   a row hardened this element's OWN compositing hints (translateZ,
+   backface-visibility, will-change) and it kept breaking anyway —
+   because that was never where the bug lived. Two things were true at
+   once here:
+
+   1. Site-wide budget: every .category-strip__item/.service-card/
+      .faq__item/.contact__method/.category-project also runs
+      backdrop-filter (css/ui-enhancements.css, css/category-page.css),
+      permanently, and none of them ever stopped rendering once
+      scrolled past — so by the time you'd scrolled past the category
+      section the count of simultaneously-live backdrop-filter surfaces
+      had only grown. Browsers cap how many they'll composite at once;
+      past that cap they silently drop the effect on *something*.
+      (Fixed separately: content-visibility:auto on those components,
+      so off-screen ones stop counting toward that budget.)
+
+   2. THIS element's own construction made #1 worse than it needed to
+      be: background-color and backdrop-filter were declared together
+      on one box. On the engines that hit this hardest, backdrop-filter
+      isn't composited as a separate effect sitting on top of the
+      element's own background — the element's background+filter are
+      resolved into one filtered surface. When that surface gets
+      dropped for budget reasons, the plain tint goes down with it,
+      which is why the bar reads as fully see-through rather than
+      "tinted but not blurred."
+
+   Fix for #2: the tint now lives on .navbar__glass itself with NO
+   backdrop-filter anywhere on that box. The blur is a separate
+   ::before layer with `background:transparent` — it contributes zero
+   opacity of its own. If a browser ever drops the ::before layer's
+   blur (budget, GPU driver, reduced compositing mode, whatever), the
+   host element's own solid tint is a completely independent paint
+   operation and keeps rendering regardless. Worst case becomes "looks
+   tinted, not blurred" — never "looks fully transparent". */
+.navbar__glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(10, 10, 12, 0.32);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0 0 20px 20px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.18);
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+/* Blur-only layer. Deliberately carries no background color of its
+   own — its entire visual contribution is the blur, so there is
+   nothing for it to take down with it if it fails. */
+.navbar__glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  backdrop-filter: blur(10px) saturate(1.15);
+  /* Own stable GPU compositor layer. translateZ(0) alone has been
+     reported insufficient to stop Android Chrome/WebView from
+     occasionally compositing backdrop-filter against a stale
+     snapshot during fast scroll; pairing it with backface-visibility
+     is the combination consistently cited as forcing a persistent
+     layer rather than an on-again/off-again one. Kept here (rather
+     than dropped as "didn't work last time") because it's still
+     correct hygiene for this layer — it just was never sufficient on
+     its own while background-color and backdrop-filter shared a box. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: backdrop-filter;
+  transition: backdrop-filter var(--duration-base) var(--ease-out);
+}
+
+.navbar--scrolled .navbar__glass {
+  background: var(--color-bg-glass);
+  border-bottom: 1px solid var(--color-surface-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), var(--shadow-sm);
+}
+
+.navbar--scrolled .navbar__glass::before {
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+}
+
+/* Signature red edge-glow — a very faint line just beneath the navbar's
+   own hairline border, using the site's one accent hue rather than a
+   second color. Present but barely-there while unscrolled, intensifies
+   once there's real page content behind the bar to read against —
+   same "always present, deepens on scroll" logic as the glass itself. */
+.navbar__glass::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-glow) 25%, var(--color-accent-glow) 75%, transparent);
+  opacity: .3;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+.navbar--scrolled .navbar__glass::after {
+  opacity: .6;
+}
+
+/* Root-cause fix, not a per-list patch: every nav link list in this file
+   (.navbar__links, .navbar__mobile-panel > ul, .navbar__mobile-strip > ul)
+   is built by js/content-loader.js appending raw <li> elements with no
+   list-style reset of their own — only the mobile strip's own stylesheet
+   rule happened to include one. One unconditional reset here covers all
+   three regardless of each list's own layout, instead of relying on
+   each list to remember its own. */
+.navbar li {
+  list-style: none;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  height: var(--navbar-h-desktop);
+}
+
+/* Matches the same 859px cutoff .navbar__links/.navbar__brand-word use
+   below to switch to mobile nav — previously this height rule only
+   kicked in at 640px, so 641-859px screens had mobile-style hidden links
+   but a desktop-height (72px) bar. Unified so every consumer of
+   --navbar-h-mobile (hero padding, mobile panel offset, scroll-margin)
+   is correct for the same range the nav links actually collapse in. */
+@media (max-width: 859px) {
+  .navbar__inner {
+    height: var(--navbar-h-mobile);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   BRAND MARK
+--------------------------------------------------------------------- */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+}
+
+.navbar__brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  /* Note: logo.svg is always loaded via <img src="...">, never inlined —
+     that's required so js/content-loader.js can swap it at runtime via
+     the src attribute. currentColor can't cross into an <img>-rendered
+     SVG, so this `color` has no visible effect; the mark's actual color
+     is set directly inside assets/images/logo/logo.svg instead. */
+  color: var(--color-accent);
+}
+
+.navbar__brand-mark img,
+.navbar__brand-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.navbar__brand-word {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 1.15rem;
+  letter-spacing: var(--ls-wide);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------
+   DESKTOP LINKS
+--------------------------------------------------------------------- */
+.navbar__links {
+  display: none;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.navbar__link {
+  /* Matches .navbar__strip-link's pill treatment below almost exactly —
+     same border/background/radius pattern, same aria-current colors —
+     rather than the plain-text-plus-underline treatment this used to
+     have. Mobile's nav items were always individual glass pills;
+     desktop's were just colored text with a hover underline, which is
+     why the glassmorphism looked like it "disappeared" on desktop even
+     though the navbar's own background blur was working correctly the
+     whole time — it was never about the bar, it was about each link
+     never having its own glass shape to begin with. No backdrop-filter
+     here on purpose, matching the mobile pill (which doesn't have one
+     either): the blur comes once from .navbar itself; six more blur
+     regions layered on top would be both inconsistent with mobile and
+     needlessly expensive. */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-small);
+  font-weight: 500;
+  letter-spacing: var(--ls-normal);
+  color: var(--color-text-secondary);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    transform 90ms var(--ease-out);
+}
+
+.navbar__link:hover,
+.navbar__link:focus-visible {
+  color: var(--color-text-primary);
+  border-color: var(--color-surface-border-strong);
+  background: rgba(255, 255, 255, 0.065);
+}
+
+.navbar__link:active {
+  transform: scale(0.96);
+}
+
+.navbar__link[aria-current="page"] {
+  color: var(--color-text-primary);
+  border-color: var(--color-accent-bright);
+  background: var(--color-accent-glow-soft);
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ---------------------------------------------------------------------
+   MOBILE MENU TOGGLE (hamburger)
+--------------------------------------------------------------------- */
+.navbar__toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: background-color var(--duration-fast) var(--ease-out), transform 220ms var(--ease-spring);
+}
+
+.navbar__toggle:hover {
+  background: var(--color-surface);
+}
+
+.navbar__toggle:active {
+  transition: transform 90ms var(--ease-out);
+  transform: scale(0.94);
+}
+
+.navbar__toggle-bar {
+  width: 20px;
+  height: 2px;
+  background: var(--color-text-primary);
+  border-radius: 2px;
+  transition:
+    transform var(--duration-base) var(--ease-in-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar__toggle[aria-expanded="true"] .navbar__toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---------------------------------------------------------------------
+   MOBILE PANEL
+--------------------------------------------------------------------- */
+.navbar__mobile-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-nav) - 1);
+  /* Top offset must clear the actual rendered bar: desktop-width panel
+     opens (the hamburger stays reachable at every width — see the
+     860px note below) sit under the 72px bar; mobile-width opens sit
+     under the 64px bar plus the 44px link strip. The <=859px override
+     just below supplies that second case. */
+  padding: calc(var(--navbar-h-desktop) + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
+  /* Fully opaque, not just "near-opaque": at 0.97 (the previous value)
+     the panel still let a faint blurred "ghost" of whatever bright,
+     saturated content sat behind it (the hero's white wordmark, the red
+     CTA button) show through — backdrop-filter's blur smears that
+     content spatially but doesn't reduce its contribution the way
+     lowering opacity further would, so even 3% see-through stayed
+     visible as a haze. Went unnoticed while this panel only ever
+     covered a narrow mobile viewport; restoring it on desktop (this
+     file's 860px block) means it now sits over a much wider slice of
+     the hero, including the brightest elements, where that haze reads
+     as rough rather than "atmospheric." */
+  background: rgb(8, 8, 10);
+  -webkit-backdrop-filter: blur(var(--blur-glass-strong));
+  backdrop-filter: blur(var(--blur-glass-strong));
+  border-bottom: 1px solid var(--color-surface-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 100vh;
+  max-height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base);
+}
+
+.navbar__mobile-panel.is-open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+.navbar__mobile-panel > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Staggered cascade rather than every link appearing the instant the
+   panel does — the glass panel itself still materializes in one
+   --duration-base beat (see .navbar__mobile-panel.is-open above), then
+   each link fades/lifts in slightly after the last, top to bottom. The
+   stagger lives on the <li> wrapper rather than .navbar__mobile-link
+   itself so it never fights with that element's own hover/press
+   transform. Six delay steps are defined; a seventh nav item would
+   simply inherit no delay (falls back to 0ms) rather than error. */
+.navbar__mobile-panel > ul > li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+.navbar__mobile-panel.is-open > ul > li {
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbar__mobile-panel > ul > li:nth-child(1) { transition-delay: 50ms; }
+.navbar__mobile-panel > ul > li:nth-child(2) { transition-delay: 85ms; }
+.navbar__mobile-panel > ul > li:nth-child(3) { transition-delay: 120ms; }
+.navbar__mobile-panel > ul > li:nth-child(4) { transition-delay: 155ms; }
+.navbar__mobile-panel > ul > li:nth-child(5) { transition-delay: 190ms; }
+.navbar__mobile-panel > ul > li:nth-child(6) { transition-delay: 225ms; }
+
+.navbar__mobile-link {
+  display: block;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  letter-spacing: var(--ls-tight);
+  color: var(--color-text-primary);
+  padding: 12px 0;
+  line-height: 1.2;
+  transition: color var(--duration-fast) var(--ease-out), transform 90ms var(--ease-out), opacity var(--duration-fast) var(--ease-out);
+}
+
+.navbar__mobile-link:hover,
+.navbar__mobile-link:focus-visible {
+  color: var(--color-accent-bright);
+}
+
+/* translateX rather than scale: a full-width block flush against the
+   panel's edges has no visual room to shrink toward its own center the
+   way a pill-shaped button does — a horizontal nudge reads as "pressed"
+   here without looking like it's collapsing into the edge. */
+.navbar__mobile-link:active {
+  transform: translateX(4px);
+  opacity: 0.75;
+}
+
+.navbar__mobile-link[aria-current="page"] {
+  color: var(--color-accent-bright);
+}
+
+@media (min-width: 860px) {
+  .navbar__links {
+    display: flex;
+  }
+  /* The hamburger stays visible here too — a consistent menu affordance
+     across every breakpoint rather than one that disappears once the
+     inline links row has room to show. It opens the exact same panel as
+     mobile; nothing about the panel's own logic is breakpoint-specific,
+     so there's no separate desktop code path to keep in sync. */
+}
+
+
+.navbar__mobile-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:var(--space-2xs);
+  color:var(--color-text-tertiary);
+  font:500 .68rem var(--font-mono);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.navbar__mobile-close {
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  border:1px solid var(--color-surface-border);
+  color:var(--color-text-primary);
+  background:rgba(255,255,255,.035);
+  font-size:1.5rem;
+  line-height:1;
+  transition:transform 220ms var(--ease-spring), background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.navbar__mobile-close:hover { background:rgba(255,255,255,.07); border-color:var(--color-surface-border-strong); }
+.navbar__mobile-close:active { transform:scale(.9); }
+
+/* ---------------------------------------------------------------------
+   RESPONSIVE NAVIGATION
+   Below 860px the public links collapse behind the hamburger. The mobile
+   panel still contains the public links plus the private management routes.
+--------------------------------------------------------------------- */
+@media (max-width: 859px) {
+  .navbar {
+    min-height: calc(var(--navbar-h-mobile) + var(--navbar-strip-h));
+  }
+
+  .navbar__inner {
+    gap: 8px;
+  }
+
+  /* Previously hidden below 860px ("space-saving"), which meant the
+     wordmark disappeared for every phone/tablet visitor — the vast
+     majority of first impressions. Kept visible at every width now;
+     the shrink at <=360px just below keeps it from crowding the
+     hamburger on the very smallest phones. */
+  .navbar__brand-word {
+    font-size: 1rem;
+  }
+
+  .navbar__links {
+    display: none;
+  }
+
+  /* The hamburger panel opens under a taller bar here (top row + link
+     strip) than it does at desktop widths — see the base rule above. */
+  .navbar__mobile-panel {
+    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + env(safe-area-inset-top, 0));
+  }
+}
+
+/* ---------------------------------------------------------------------
+   MOBILE LINK STRIP
+   The desktop link row is unreachable below 860px (see .navbar__links
+   above), so on mobile the same six links reappear here instead — a
+   single-line, horizontally scrollable row directly under the bar. The
+   hamburger panel keeps its own full copy of the same links too, so
+   nothing is mobile-only or desktop-only.
+--------------------------------------------------------------------- */
+.navbar__mobile-strip {
+  display: none;
+}
+
+@media (max-width: 859px) {
+  .navbar__mobile-strip {
+    display: block;
+    width: 100%;
+    height: var(--navbar-strip-h);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .navbar__mobile-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar__mobile-strip > ul {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: var(--space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--container-padding);
+    width: max-content;
+  }
+
+  .navbar__strip-link {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: var(--ls-normal);
+    color: var(--color-text-secondary);
+    padding: 6px 13px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-surface-border);
+    background: rgba(255, 255, 255, 0.03);
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .navbar__strip-link:hover,
+  .navbar__strip-link:focus-visible,
+  .navbar__strip-link:active {
+    color: var(--color-text-primary);
+    border-color: var(--color-surface-border-strong);
+    background: rgba(255, 255, 255, 0.065);
+  }
+
+  .navbar__strip-link:active {
+    transform: scale(0.94);
+    transition: transform 90ms var(--ease-out);
+  }
+
+  .navbar__strip-link[aria-current="page"] {
+    color: var(--color-text-primary);
+    border-color: var(--color-accent-bright);
+    background: var(--color-accent-glow-soft);
+  }
+}
+
+@media (max-width: 360px) {
+  .navbar__brand-mark {
+    width: 26px;
+    height: 26px;
+  }
+
+  .navbar__brand-word {
+    font-size: 0.85rem;
+  }
+}
+
+body.menu-open { overflow: hidden; }

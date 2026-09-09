@@ -1,0 +1,35 @@
+# =============================================================================
+# .gitignore — Kryozen Studio
+#
+# Kept deliberately short and narrow. This project's #1 file-loading bug
+# so far has been caused by files that SHOULD be tracked silently failing
+# to reach the deployed site — never add a broad pattern here (like a bare
+# `*.jpg`, `assets/`, or `thumbnails/`) that could exclude real portfolio
+# assets. Before adding any new rule, ask: "could this ever match a file
+# that belongs on the live site?" If there's any doubt, don't add it —
+# an untracked junk file is a much smaller problem than a silently
+# untracked thumbnail.
+# =============================================================================
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Termux / shell
+*.log
+.bash_history
+
+# Never actually needed for this project (no build step, no deps) — listed
+# only as a guard in case a future contributor ever adds tooling that
+# creates one of these.
+node_modules/
+dist/
+.env

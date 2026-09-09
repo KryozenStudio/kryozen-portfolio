@@ -1,0 +1,406 @@
+/**
+ * KRYOZEN STUDIO — PREMIUM UI ENHANCEMENTS
+ * Progressive visual layer. No content, backend, or portfolio logic lives here.
+ */
+
+:root {
+  --glass-bg: rgba(18, 18, 22, 0.46);
+  --glass-bg-strong: rgba(15, 15, 19, 0.62);
+  --glass-highlight: rgba(255, 255, 255, 0.075);
+  --glass-border: rgba(255, 255, 255, 0.105);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+}
+
+/* Site-wide ambient background */
+.site-ambient {
+  position: fixed;
+  inset: -10%;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.038), transparent 30%),
+    radial-gradient(circle at 50% 90%, rgba(195,20,50,.05), transparent 34%);
+  /* Set by js/main.js's scroll listener (rAF-throttled) to a small
+     px value — the whole ambient layer drifts opposite the scroll
+     direction at a fraction of scroll speed, the classic parallax
+     depth cue. This is what makes the background read as reactive
+     rather than just autonomously looping — the two together (self-
+     directed drift + a response to what the visitor is actually doing)
+     is what "alive" means here, not just "more motion." Falls back to
+     0px (no parallax, orbs still drift on their own) if JS hasn't run
+     yet or reduced-motion is on. */
+  transform: translate3d(0, var(--ambient-parallax, 0px), 0);
+}
+
+.site-ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(180deg, rgba(8,8,10,.04), rgba(8,8,10,.16));
+}
+
+.site-ambient__orb {
+  position: absolute;
+  width: clamp(260px, 36vw, 560px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(68px);
+  opacity: .5;
+  transform: translate3d(0,0,0);
+  /* transform-only, GPU-composited: the blur is rasterized once and the
+     compositor just moves/scales that bitmap, so animating on top of an
+     already-blurred layer is cheap — the actual filter never
+     recalculates mid-animation. Each orb gets its own duration/path
+     (not synced, not mirrored) specifically so several orbs drifting
+     together never reads as one repeating pattern. Durations are
+     mutually irregular (17-27s) — fast enough to actually notice within
+     a normal page visit (the previous 39-57s pass was, by design
+     restrained to the point of reading as static/"dead" — this is the
+     direct fix for that), while each path still runs through several
+     unequal intermediate stops (position, scale, rotation, opacity)
+     rather than a single there-and-back tween, so it reads as drifting
+     rather than mechanically oscillating. */
+  animation-play-state: running;
+}
+
+/* One accent hue only (PROJECT_RULES.md §3) — every orb is red,
+   differentiated by position/size/opacity/timing rather than hue. */
+.site-ambient__orb--one {
+  top: 6%; left: -6%;
+  background: radial-gradient(circle, rgba(226,33,63,.6), rgba(195,20,50,.22) 45%, transparent 70%);
+  animation: siteOrbDriftOne 23s ease-in-out infinite;
+}
+
+.site-ambient__orb--two {
+  top: 32%; right: -14%;
+  background: radial-gradient(circle, rgba(226,33,63,.42), rgba(195,20,50,.14) 48%, transparent 72%);
+  animation: siteOrbDriftTwo 27s ease-in-out infinite;
+}
+
+.site-ambient__orb--three {
+  bottom: -14%; left: 26%;
+  background: radial-gradient(circle, rgba(226,33,63,.34), rgba(195,20,50,.1) 48%, transparent 72%);
+  animation: siteOrbDriftThree 19s ease-in-out infinite;
+}
+
+/* Fourth orb — smaller and brighter, drifting through the upper-middle
+   of the viewport where the other three rarely reach, so the layer
+   doesn't read as "three lights orbiting the edges" but as a genuinely
+   occupied, uneven field of light the way a real bounced/practical
+   light source would look. */
+.site-ambient__orb--four {
+  top: 58%; left: 46%;
+  width: clamp(160px, 20vw, 320px);
+  filter: blur(54px);
+  background: radial-gradient(circle, rgba(226,33,63,.5), rgba(195,20,50,.16) 46%, transparent 70%);
+  animation: siteOrbDriftFour 17s ease-in-out infinite;
+}
+
+@keyframes siteOrbDriftOne {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .48; }
+  24%  { transform: translate3d(7%, 4%, 0) scale(1.08) rotate(7deg); opacity: .62; }
+  51%  { transform: translate3d(2%, 9%, 0) scale(0.96) rotate(-5deg); opacity: .52; }
+  78%  { transform: translate3d(-4%, 3%, 0) scale(1.05) rotate(4deg); opacity: .58; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .48; }
+}
+@keyframes siteOrbDriftTwo {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .34; }
+  28%  { transform: translate3d(-8%, -5%, 0) scale(1.07) rotate(-6deg); opacity: .44; }
+  60%  { transform: translate3d(-3%, -10%, 0) scale(0.97) rotate(5deg); opacity: .37; }
+  84%  { transform: translate3d(4%, -4%, 0) scale(1.04) rotate(-4deg); opacity: .41; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .34; }
+}
+@keyframes siteOrbDriftThree {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .28; }
+  32%  { transform: translate3d(5%, -6%, 0) scale(1.07) rotate(6deg); opacity: .35; }
+  63%  { transform: translate3d(9%, -1%, 0) scale(0.96) rotate(-4deg); opacity: .3; }
+  88%  { transform: translate3d(3%, -8%, 0) scale(1.04) rotate(3deg); opacity: .33; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .28; }
+}
+@keyframes siteOrbDriftFour {
+  0%   { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .38; }
+  30%  { transform: translate3d(-6%, 7%, 0) scale(1.1) rotate(-8deg); opacity: .52; }
+  58%  { transform: translate3d(-10%, 2%, 0) scale(0.94) rotate(6deg); opacity: .4; }
+  82%  { transform: translate3d(-3%, 9%, 0) scale(1.06) rotate(-4deg); opacity: .46; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: .38; }
+}
+
+/* Shared glass vocabulary */
+.glass-panel {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.052), rgba(255,255,255,.018)),
+    var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+}
+
+.glass-card {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.014)),
+    rgba(12,12,14,.38);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 10px 34px rgba(0,0,0,.18);
+}
+
+/* Hero becomes the visual anchor while remaining readable */
+.hero__content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 10% -4% -12%;
+  border-radius: 40px;
+  background: linear-gradient(145deg, rgba(255,255,255,.032), rgba(255,255,255,.01));
+  border: 1px solid rgba(255,255,255,.045);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+  opacity: .72;
+}
+
+/* Shared section rhythm */
+.category-strip,
+.services,
+.about,
+.faq,
+.contact {
+  position: relative;
+  isolation: isolate;
+}
+
+.category-strip::before,
+.services::before,
+.about::before,
+.faq::before,
+.contact::before {
+  content: "";
+  position: absolute;
+  inset: 8% 3% auto;
+  height: 180px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(195,20,50,.075), transparent 68%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* Refine existing cards without changing their DOM or JS */
+.category-strip__item,
+.service-card,
+.about__panel,
+.faq__item,
+.contact__method,
+.category-project,
+.category-page__empty,
+.category-page__search,
+.category-page__filter {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Fixes the navbar's blur "wearing off" the further down the page you
+   scroll (see the note in css/navbar.css). Every repeating card in
+   this list keeps its backdrop-filter live in the DOM permanently, so
+   the number of simultaneously-composited blur surfaces only ever
+   grew as more of these scrolled into view — on the homepage that's
+   the category tiles, service cards, FAQ items, and contact methods,
+   all still "on" at once by the time you've scrolled past them; on a
+   category page with a real project count it's every single project
+   card. Eventually that exceeds the browser's internal budget for how
+   many backdrop-filter layers it will composite at once, and it
+   silently stops blurring *something* — which is sometimes the fixed
+   header, since it's just one more layer competing for the same
+   budget. `content-visibility: auto` skips rendering (and therefore
+   compositing/blurring) any instance of these once it's off-screen in
+   either direction, so the live count stays roughly "however many are
+   near the viewport" instead of climbing for the rest of the page.
+   contain-intrinsic-size gives the browser a placeholder size before
+   it has ever rendered one, and remembers the real size afterward, so
+   scroll position doesn't jump as these enter/exit rendering. */
+.category-strip__item,
+.service-card,
+.faq__item,
+.contact__method {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 260px;
+}
+
+.category-strip__item,
+.service-card,
+.faq__item,
+.contact__method,
+.category-project {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 14px 42px rgba(0,0,0,.13);
+}
+
+.category-strip__item:hover,
+.service-card:hover,
+.contact__method:hover,
+.category-project:hover {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 18px 50px rgba(0,0,0,.22);
+}
+
+/* Micro-interaction polish */
+.navbar__link {
+  transition: color 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+.navbar__link:hover,
+.navbar__link:focus-visible {
+  transform: translateY(-1px);
+}
+
+.btn {
+  transition:
+    transform 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out),
+    background-color 220ms var(--ease-out),
+    border-color 220ms var(--ease-out);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-2px);
+}
+
+.btn:active,
+.category-strip__item:active,
+.service-card:active,
+.contact__method:active,
+.category-page__filter:active {
+  transform: scale(.985);
+}
+
+.btn:active {
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) scale(.985);
+}
+
+/* Cursor-tracked spotlight — Aceternity-style radial glow that follows
+   the pointer across a card's surface. --spotlight-x/--spotlight-y are
+   set by js/spotlight.js (delegated pointermove, fine-pointer only);
+   .has-spotlight toggles it visible only while the cursor is actually
+   over that specific card. A dedicated pseudo-element layer (not the
+   card's own background) so it never touches each card's existing
+   gradient/blur definition — position:relative + overflow:hidden
+   already present on every target below. .category-project uses
+   ::after instead of ::before like the rest: its ::before is already
+   the higher-specificity "TAKE N" badge
+   (.category-project[data-index]::before in css/category-page.css),
+   which would otherwise absorb/override this rule's properties on
+   every rendered card. */
+.service-card,
+.faq__item,
+.contact__method,
+.category-project,
+.category-strip__item,
+.about__panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before,
+.faq__item::before,
+.contact__method::before,
+.category-strip__item::before,
+.about__panel::before,
+.category-project::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    var(--spotlight-size) circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    var(--spotlight-color),
+    transparent 72%
+  );
+  transition: opacity 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.service-card.has-spotlight::before,
+.faq__item.has-spotlight::before,
+.contact__method.has-spotlight::before,
+.category-strip__item.has-spotlight::before,
+.about__panel.has-spotlight::before,
+.category-project.has-spotlight::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card::before,
+  .faq__item::before,
+  .contact__method::before,
+  .category-strip__item::before,
+  .about__panel::before,
+  .category-project::after {
+    display: none;
+  }
+}
+
+/* Stronger unsupported-backdrop fallback */
+@supports not ((backdrop-filter: blur(1px))) {
+  .glass-panel,
+  .glass-card,
+  .category-strip__item,
+  .service-card,
+  .about__panel,
+  .faq__item,
+  .contact__method,
+  .category-project,
+  .category-page__search,
+  .category-page__filter {
+    background: rgba(16,16,19,.94);
+  }
+
+  /* Same fallback for the fixed header: without backdrop-filter support,
+     its rgba background alone (.32/.55 alpha) has nothing to blur and
+     reads as "losing the glass effect" once busy page content scrolls
+     underneath it. Solid tone keeps it legible at every scroll depth. */
+  .navbar__glass {
+    background: rgba(16,16,19,.94);
+  }
+}
+
+@media (max-width: 859px) {
+  .site-ambient__orb { filter: blur(64px); }
+  .hero__content::before { inset: 8% -2% -10%; border-radius: 28px; }
+}
+
+@media (max-width: 560px) {
+  .site-ambient__orb { width: 260px; }
+  .site-ambient__orb--three,
+  .site-ambient__orb--four { display: none; }
+  .hero__content::before { opacity: .55; }
+}
+
+@media (max-width: 859px) {
+  .category-strip__item,
+  .service-card,
+  .faq__item,
+  .contact__method,
+  .category-project {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-ambient__orb { animation: none; }
+  .navbar__link:hover,
+  .navbar__link:focus-visible,
+  .btn:hover,
+  .btn:focus-visible { transform: none; }
+}

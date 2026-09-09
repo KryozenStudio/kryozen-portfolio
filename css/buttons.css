@@ -1,0 +1,100 @@
+/**
+ * =============================================================================
+ * BUTTONS
+ * Shared by primary and secondary calls-to-action across the site.
+ * =============================================================================
+ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: 48px;
+  padding: 0 var(--space-lg);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Magnetic pull toward the cursor (js/spotlight.js), composed with
+     whatever the button's own hover transform below adds — defaults to
+     0px so buttons sit still on touch/coarse-pointer/reduced-motion,
+     where the JS never sets these. */
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px));
+  /* Release transition — slightly longer, spring-eased, so the button
+     settles back with a small overshoot. The :active rule below
+     overrides this for the press itself, which stays fast and decisive
+     (no bounce going down, only coming back up). */
+  transition:
+    transform 180ms var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.btn:active {
+  transition: transform 90ms var(--ease-out);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) scale(0.97);
+}
+
+/* Primary — solid deep red, the site's single loudest element besides the
+   hero title itself. Used sparingly (one per view). */
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(155deg, var(--color-accent-bright), var(--color-accent-dim));
+  color: var(--color-text-on-accent);
+  box-shadow: var(--shadow-accent);
+}
+
+/* A single light sheen crossing the button on hover — one clean sweep,
+   not a repeating shimmer loop (this is feedback for a specific hover,
+   not ambient motion, so it plays once and stops; see
+   PROJECT_RULES.md §5 on motion needing a reason). Pure CSS pseudo-
+   element, no extra markup. */
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.32) 48%, transparent 66%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.btn--primary:hover::after,
+.btn--primary:focus-visible::after {
+  transform: translateX(120%);
+  transition: transform 620ms var(--ease-out);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  box-shadow: 0 10px 34px var(--color-accent-glow);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
+}
+
+/* Secondary — glass outline, quieter, sits next to primary. */
+.btn--secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border-strong);
+  color: var(--color-text-primary);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+}
+
+.btn--secondary:hover,
+.btn--secondary:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-accent-bright);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
+}
+
+/* Small pill variant for compact controls. */
+.btn--sm {
+  min-height: 38px;
+  padding: 0 var(--space-md);
+  font-size: 0.7rem;
+}

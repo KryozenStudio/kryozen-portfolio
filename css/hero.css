@@ -1,0 +1,308 @@
+/**
+ * KRYOZEN HERO — one connected brand reveal.
+ * The mark establishes the motion, the sweep carries that motion into the
+ * wordmark, then both settle into one quiet identity lockup.
+ */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Top clearance only needs enough room to clear the fixed navbar, not
+     a full --space-2xl (96px) on top of it — that was stacking with the
+     flex-centered content's own natural whitespace to leave ~200px of
+     dead air between the bar and the "KRYOZEN / STUDIO" eyebrow. Matches
+     the same "+16px breathing room" pattern base.css already uses for
+     [id] scroll-margin-top, kept in its own token here since this is a
+     visual gap, not a scroll offset. */
+  padding: calc(var(--navbar-h-desktop) + var(--space-sm)) 0 var(--space-2xl);
+}
+
+/* Matches the navbar's own <=859px cutoff (see navbar.css) rather than
+   the old 640px break — below 860px the bar is shorter (--navbar-h-mobile)
+   but gains the mobile link strip (--navbar-strip-h), so the hero has to
+   clear both, not just the bar. Same tightened clearance as desktop. */
+@media (max-width: 859px) {
+  .hero {
+    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + var(--space-sm));
+  }
+}
+
+.hero__backdrop {
+  position:absolute; inset:0; z-index:0; isolation:isolate;
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 18%, rgba(195,20,50,.09), transparent 72%),
+    linear-gradient(180deg,#09090b 0%, var(--color-bg) 100%);
+  /* Fixes the hard seam right above "Scroll"/the category section.
+     Two things were compounding there:
+       1. This gradient's old bottom stop (#050506) was close to but not
+          exactly --color-bg (#08080a) — the flat color the page (and
+          .category-strip, which paints no background of its own) sits
+          on right below .hero. A ~3-value difference between two
+          near-black colors is easy to miss in a color picker but very
+          visible on screen: perceptual brightness at low luminance is
+          non-linear, so tiny deltas near black read as a distinct edge
+          rather than blending in. Now it resolves to the exact same
+          token instead of an eyeballed close match.
+       2. .hero has overflow:hidden (needed to clip the ambient blobs at
+          the section edge at all), which was cutting the soft, blurred
+          .hero__ambient shapes off in a hard straight line right at
+          that boundary — a blurred edge doesn't fade to nothing at the
+          edge of its box, it just stops, so the clip line was visible
+          even with #1 fixed. The mask below fades this entire layer
+          (gradient + the ambient blobs, since they're children of it)
+          to fully transparent over the last 140px before the boundary,
+          so by the time overflow:hidden's clip line is reached there's
+          nothing left to cut — it's already faded into the matching
+          page background underneath. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 140px), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 140px), transparent 100%);
+}
+.hero__ambient {
+  position:absolute; width:46vw; height:34vw; min-width:300px; min-height:240px;
+  border-radius:58% 42% 63% 37% / 43% 61% 39% 57%;
+  background:radial-gradient(circle at 35% 35%,rgba(226,33,63,.34),rgba(195,20,50,.1) 44%,transparent 72%);
+  filter:blur(60px); opacity:.78; will-change:transform;
+  mix-blend-mode:screen;
+}
+.hero__ambient--one{top:4%;left:4%;animation:ambientDriftOne 21s ease-in-out infinite}
+.hero__ambient--two{right:-7%;top:28%;width:40vw;height:31vw;opacity:.5;animation:ambientDriftTwo 26s ease-in-out infinite}
+.hero__ambient--three{left:24%;bottom:-18%;width:52vw;height:30vw;opacity:.36;filter:blur(72px);animation:ambientDriftThree 30s ease-in-out infinite}
+
+/* Pointer-reactive ambient light — desktop only (js/hero-pointer.js sets
+   --pointer-x/--pointer-y and toggles .has-pointer-light; the class only
+   ever gets added on fine-pointer, non-reduced-motion devices, but the
+   media query below is a belt-and-braces guard against the effect
+   showing on touch or reduced-motion in case that logic ever changes). */
+.hero__backdrop::after{
+  content:"";
+  position:absolute;inset:0;z-index:1;
+  background:radial-gradient(560px circle at var(--pointer-x,50%) var(--pointer-y,32%),rgba(226,33,63,.09),transparent 62%);
+  opacity:0;
+  transition:opacity 520ms var(--ease-out);
+  pointer-events:none;
+}
+@media (hover:hover) and (pointer:fine){
+  .hero.has-pointer-light .hero__backdrop::after{opacity:1}
+}
+
+.hero__content{
+  position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:var(--space-md);
+}
+.hero__eyebrow{
+  display:inline-flex;align-items:center;gap:var(--space-2xs);
+  font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--color-text-tertiary);opacity:0;transform:translateY(8px);
+  animation:heroFadeUp 520ms var(--ease-out) 840ms forwards;
+}
+.hero__eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--color-accent-bright);box-shadow:0 0 9px 2px var(--color-accent-glow);animation:indicatorPulse 1.8s ease-in-out infinite}
+
+.hero__brand-lockup{
+  display:flex;align-items:center;justify-content:center;gap:clamp(16px,2.4vw,32px);
+  width:min(100%,760px); padding:14px 0;
+  margin:var(--space-sm) 0 var(--space-2xs);
+  isolation:isolate;
+}
+.hero__logo-intro{
+  position:relative;flex:0 0 clamp(88px,10vw,112px);
+  width:clamp(88px,10vw,112px);height:clamp(88px,10vw,112px);
+  display:grid;place-items:center;
+}
+.hero__logo-mark{
+  position:relative;z-index:2;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:rgba(8,8,10,.92);border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 18px 50px rgba(0,0,0,.42),0 0 32px rgba(195,20,50,.09);
+  /* Iris reveal: the mark opens from a closed circular mask rather than
+     just fading in, matching the "countdown-iris" brand moment this
+     lockup is meant to be (see PROJECT_RULES.md §5) and the wipe/iris
+     film-reveal metaphor used elsewhere on the site. */
+  opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82);
+  animation:brandMarkReveal 700ms var(--ease-out) 260ms forwards;
+}
+.hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
+
+.hero__logo-sweep{
+  position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
+  background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
+  box-shadow:0 0 16px rgba(226,33,63,.18);
+  transform:translateY(-50%);opacity:0;
+  animation:brandSweep 720ms var(--ease-out) 520ms forwards;
+}
+.hero__logo-intro::after{
+  content:"";position:absolute;z-index:0;right:-1px;top:50%;
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(226,33,63,.26);
+  transform:translate(50%,-50%) scale(.55);
+  opacity:0;
+  animation:brandConnector 520ms var(--ease-out) 490ms forwards;
+}
+.hero__wordmark{
+  position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
+  min-width:0;max-width:100%;overflow:visible;text-align:left;
+  opacity:1;
+}
+.hero__wordmark-line{
+  display:block;overflow:hidden;white-space:nowrap;
+  /* Wipe reveal: the line uncovers left-to-right behind a clip-path mask
+     instead of just sliding/fading, so it reads as the same "film wipe"
+     gesture as the logo iris and the sweep connecting them — one
+     continuous reveal rather than three unrelated motions. */
+  opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0);
+  will-change:clip-path,transform,opacity;
+}
+.hero__wordmark-line--main{
+  font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
+  /* Manrope needed heavy negative tracking (-.055em) to read tight
+     because it's a naturally wide, rounded grotesque. Space Grotesk is
+     already compact with squarish counters — carrying over the same
+     -.055em over-compresses it and starts colliding letterforms (K/R/Y
+     in particular) at the hero's largest clamp sizes. --ls-heading
+     (-.03em) is the same tightening intent, calibrated to a font that
+     doesn't need as much help getting there. */
+  line-height:.9;font-weight:var(--fw-bold);letter-spacing:var(--ls-heading);color:var(--color-text-primary);
+  animation:wordmarkReveal 620ms var(--ease-out) 400ms forwards;
+}
+
+/* Signature shimmer — a single bright band sweeps across the wordmark
+   every few seconds, then holds still. @supports-gated so browsers
+   without background-clip:text just keep the solid color above rather
+   than risk invisible (transparent-on-transparent) text. Paced as an
+   occasional sweep, not a continuous loop, to match this site's
+   existing "motion needs a reason" restraint (see the ticker/ring-light
+   removals and orb-drift pacing elsewhere) rather than read as
+   distracting ambient noise on the page's single loudest element. */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__wordmark-line--main{
+    background: linear-gradient(100deg,
+      var(--color-text-primary) 42%,
+      #fff 50%,
+      var(--color-text-primary) 58%
+    );
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation:
+      wordmarkReveal 620ms var(--ease-out) 400ms forwards,
+      wordmarkShimmer 7s var(--ease-in-out) 1900ms infinite;
+  }
+}
+
+@keyframes wordmarkShimmer{
+  0%{background-position:-70% 0}
+  16%{background-position:170% 0}
+  100%{background-position:170% 0}
+}
+.hero__wordmark-line--sub{
+  margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
+  line-height:1;font-weight:var(--fw-medium);letter-spacing:.48em;color:var(--color-text-secondary);
+  animation:wordmarkReveal 500ms var(--ease-out) 460ms forwards;
+}
+.hero__intro{
+  max-width:56ch;font-size:var(--fs-body-lg);line-height:var(--lh-relaxed);color:var(--color-text-secondary);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 480ms var(--ease-out) 620ms forwards;
+}
+.hero__actions{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-sm);margin-top:var(--space-sm);
+  opacity:0;transform:translateY(12px);animation:heroFadeUp 480ms var(--ease-out) 700ms forwards;
+}
+.hero__scroll{
+  position:absolute;z-index:2;bottom:var(--space-md);left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);
+  color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
+  opacity:0;animation:heroScrollIn 440ms var(--ease-out) 860ms forwards;
+}
+.hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
+
+@keyframes brandMarkReveal{
+  0%{opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82)}
+  68%{opacity:1;clip-path:circle(58% at 50% 50%);transform:translate3d(0,0,0) scale(1.015)}
+  100%{opacity:1;clip-path:circle(50% at 50% 50%);transform:translate3d(0,0,0) scale(1)}
+}
+@keyframes brandConnector{
+  0%{opacity:0;transform:translate(50%,-50%) scale(.55)}
+  55%{opacity:.9;transform:translate(50%,-50%) scale(1)}
+  100%{opacity:.18;transform:translate(50%,-50%) scale(1)}
+}
+@keyframes brandSweep{
+  0%{width:0;opacity:0}
+  16%{opacity:.82}
+  100%{width:clamp(40px,10vw,108px);opacity:.38}
+}
+@keyframes wordmarkReveal{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-16px,0,0)}
+  72%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(1px,0,0)}
+  100%{opacity:1;clip-path:inset(0 -2% 0 0);transform:translate3d(0,0,0)}
+}
+@keyframes heroFadeUp{to{opacity:1;transform:none}}
+@keyframes heroScrollIn{to{opacity:1}}
+/* Ambient drift — asymmetric, multi-stop paths rather than a single
+   there-and-back tween. A 0%/50%/100% keyframe is still technically
+   periodic, but it *reads* as a loop because the eye sees the shape
+   retrace the same two points; passing through several unequal
+   intermediate positions (with its own opacity/rotation drifting too)
+   means no two moments in the cycle look alike, only the seam itself
+   does — and each of the three shapes here uses a different, mutually
+   irregular duration (37s/49s/58s) so their combined pattern doesn't
+   even repeat together on any timescale a visitor would sit through.
+   Transform + opacity only, so this stays compositor-only work. */
+@keyframes ambientDriftOne{
+  0%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
+  21%{transform:translate3d(5%,4%,0) scale(1.04) rotate(7deg);opacity:.84}
+  49%{transform:translate3d(1%,8%,0) scale(1.01) rotate(-5deg);opacity:.75}
+  76%{transform:translate3d(-6%,2%,0) scale(1.05) rotate(4deg);opacity:.86}
+  100%{transform:translate3d(-3%,-1%,0) scale(.97) rotate(0deg);opacity:.7}
+}
+@keyframes ambientDriftTwo{
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
+  30%{transform:translate3d(-6%,-4%,0) scale(1.05) rotate(-6deg);opacity:.58}
+  58%{transform:translate3d(-2%,-9%,0) scale(.98) rotate(5deg);opacity:.5}
+  82%{transform:translate3d(4%,-3%,0) scale(1.03) rotate(-3deg);opacity:.55}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.48}
+}
+@keyframes ambientDriftThree{
+  0%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+  27%{transform:translate3d(4%,-5%,0) scale(1.04) rotate(5deg);opacity:.42}
+  55%{transform:translate3d(8%,-1%,0) scale(.99) rotate(-4deg);opacity:.36}
+  80%{transform:translate3d(2%,-7%,0) scale(1.03) rotate(3deg);opacity:.4}
+  100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
+}
+
+.no-intro .hero__eyebrow,
+.no-intro .hero__logo-mark,
+.no-intro .hero__wordmark-line,
+.no-intro .hero__intro,
+.no-intro .hero__actions,
+.no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
+.no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
+.no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
+
+@media(max-width:640px){
+  .hero__brand-lockup{gap:14px;width:100%;padding-inline:4px}
+  .hero__logo-intro{flex-basis:78px;width:78px;height:78px}
+  .hero__wordmark-line--main{font-size:clamp(2.1rem,12vw,3.5rem);letter-spacing:var(--ls-heading)}
+  .hero__wordmark-line--sub{font-size:.64rem;letter-spacing:.38em}
+  .hero__logo-sweep{left:70%}
+  .hero__intro{font-size:1rem;max-width:34ch}
+}
+@media(max-width:420px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:72px;width:72px;height:72px}
+  .hero__wordmark-line--main{font-size:clamp(1.85rem,11vw,2.8rem)}
+  .hero__wordmark-line--sub{font-size:.56rem;letter-spacing:.32em}
+}
+@media(max-width:360px){
+  .hero__brand-lockup{gap:10px}
+  .hero__logo-intro{flex-basis:68px;width:68px;height:68px}
+  .hero__wordmark-line--main{font-size:1.95rem}
+  .hero__wordmark-line--sub{font-size:.58rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero__ambient{animation:none}
+  .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
+  .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
+  .hero__backdrop::after{display:none}
+}
