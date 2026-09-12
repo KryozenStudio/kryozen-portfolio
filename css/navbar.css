@@ -96,19 +96,14 @@
   background: transparent;
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
   backdrop-filter: blur(10px) saturate(1.15);
-  /* Own stable GPU compositor layer. translateZ(0) alone has been
-     reported insufficient to stop Android Chrome/WebView from
-     occasionally compositing backdrop-filter against a stale
-     snapshot during fast scroll; pairing it with backface-visibility
-     is the combination consistently cited as forcing a persistent
-     layer rather than an on-again/off-again one. Kept here (rather
-     than dropped as "didn't work last time") because it's still
-     correct hygiene for this layer — it just was never sufficient on
-     its own while background-color and backdrop-filter shared a box. */
-  transform: translateZ(0);
+  /* Keep the blur layer composited, but do not advertise the filter itself
+     as a continuously changing property. `will-change: backdrop-filter`
+     reserves a dedicated filtered surface for the lifetime of the page,
+     which is especially costly on long category pages that already contain
+     several glass surfaces. The filter only changes between the two stable
+     navbar states, so it does not need a permanent `will-change` hint. */
+  transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  will-change: backdrop-filter;
-  transition: backdrop-filter var(--duration-base) var(--ease-out);
 }
 
 .navbar--scrolled .navbar__glass {
@@ -206,10 +201,10 @@
 }
 
 .navbar__brand-word {
-  font-family: var(--font-display);
-  font-weight: var(--fw-semibold);
+  font-family: var(--font-brand);
+  font-weight: var(--fw-bold);
   font-size: 1.15rem;
-  letter-spacing: var(--ls-wide);
+  letter-spacing: var(--ls-brand);
   color: var(--color-text-primary);
   white-space: nowrap;
 }

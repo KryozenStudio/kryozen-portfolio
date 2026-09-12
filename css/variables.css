@@ -45,8 +45,20 @@
 
   /* ---------------------------------------------------------------------
      TYPOGRAPHY
-  --------------------------------------------------------------------- */
+     --font-display drives every h1-h4/section-title in base.css — kept as
+     a distinct, readable-at-any-size grotesque. --font-brand is separate
+     and scoped ONLY to the literal "KRYOZEN"/"KRYOZEN STUDIO" wordmark
+     (navbar brand word, hero lockup, category-page intro overlay, footer
+     credit) — Rajdhani's condensed, technical letterforms suit a logotype
+     at esports-HUD intensity, but section headings ("Choose a category",
+     "Frequently Asked Questions" etc.) read worse condensed at paragraph-
+     adjacent sizes, hence the split rather than repointing --font-display
+     itself. --ls-brand is Rajdhani-specific tracking: it's already narrow,
+     so brand text uses a small POSITIVE tracking instead of the negative
+     tracking --font-display's headings use — negative tracking on an
+     already-condensed face collides uppercase letterforms (K/R/Y). */
   --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-brand: 'Rajdhani', var(--font-display);
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
 
@@ -70,6 +82,9 @@
   --ls-normal: 0;
   --ls-wide: 0.08em;
   --ls-widest: 0.24em;
+  /* Positive tracking for the Rajdhani brand wordmark — see --font-brand
+     above for why this is separate from --ls-heading's negative value. */
+  --ls-brand: 0.02em;
 
   /* Weight tokens — headings lean noticeably heavier than body copy so
      scale isn't the only thing doing the hierarchy work (see h1-h4 in

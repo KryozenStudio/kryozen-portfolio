@@ -82,8 +82,13 @@ window.SITE_CONFIG = {
   // FOOTER
   // ---------------------------------------------------------------------
   footer: {
-    // {year} is replaced automatically with the current year.
-    copyright: "© {year} Kryozen Studio. All rights reserved.",
+    // {year} is replaced automatically with the current year. {brand} is
+    // replaced with a <span class="footer__brand"> around footer.brand's
+    // value (see js/content-loader.js) so just the studio name can carry
+    // the brand typeface while "© ... All rights reserved." stays in the
+    // regular body font.
+    copyright: "© {year} {brand}. All rights reserved.",
+    brand: "Kryozen Studio",
     note: "Worldwide • Remote • Async • Built with intention.",
   },
 

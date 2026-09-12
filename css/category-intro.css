@@ -32,8 +32,8 @@
 .category-intro__line{
   display:block;clip-path:inset(0 100% 0 0);transform:translateX(-12px);filter:none;
 }
-.category-intro__line--main{font:800 clamp(2rem,5vw,3.4rem)/.9 var(--font-display);letter-spacing:-.05em;color:var(--color-text-primary);animation:categoryWordReveal 620ms var(--ease-out) 600ms both}
-.category-intro__line--sub{margin-top:.28rem;font:600 .72rem/1 var(--font-display);letter-spacing:.42em;color:var(--color-text-secondary);animation:categoryWordReveal 520ms var(--ease-out) 720ms both}
+.category-intro__line--main{font:700 clamp(2rem,5vw,3.4rem)/.9 var(--font-brand);letter-spacing:var(--ls-brand);color:var(--color-text-primary);animation:categoryWordReveal 620ms var(--ease-out) 600ms both}
+.category-intro__line--sub{margin-top:.28rem;font:600 .72rem/1 var(--font-brand);letter-spacing:.42em;color:var(--color-text-secondary);animation:categoryWordReveal 520ms var(--ease-out) 720ms both}
 .category-intro__rule{display:none}
 .category-intro.is-complete{opacity:0;visibility:hidden}
 @keyframes categoryLogoReveal{0%{opacity:0;clip-path:circle(0% at 50% 50%);transform:scale(.84);filter:none}75%{opacity:1;clip-path:circle(62% at 50% 50%);transform:scale(1.02);filter:none}100%{opacity:1;clip-path:circle(50% at 50% 50%);transform:scale(1);filter:none}}

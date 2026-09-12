@@ -23,6 +23,38 @@
     if (el && value != null) el.textContent = value;
   }
 
+  /** Escapes the handful of characters that matter in HTML text so
+      config-authored strings (footer copyright, etc.) can't break
+      markup if someone later edits config/site.config.js to include
+      a stray "<" or "&". */
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  /** Renders footer.copyright's {year}/{brand} placeholders, wrapping
+      {brand}'s replacement in <span class="footer__brand"> so
+      css/variables.css's --font-brand (Rajdhani) can be scoped to just
+      the studio name — the surrounding "© ... All rights reserved."
+      text stays in the regular body font. Falls back to plain
+      textContent (no brand span, but still correct) if footer.brand
+      isn't set, so older/simpler configs keep working. */
+  function setFooterCopyright(id, template, brand) {
+    var el = document.getElementById(id);
+    if (!el || template == null) return;
+    var year = String(new Date().getFullYear());
+    if (!brand) {
+      el.textContent = template.replace("{year}", year);
+      return;
+    }
+    var html = escapeHtml(template)
+      .replace("{year}", year)
+      .replace("{brand}", '<span class="footer__brand">' + escapeHtml(brand) + "</span>");
+    el.innerHTML = html;
+  }
+
   /**
    * The hero wordmark ("KRYOZEN" / "STUDIO") is deliberately two separate
    * <span class="hero__wordmark-line--main/--sub"> elements, not plain
@@ -198,8 +230,7 @@
      FOOTER
   ----------------------------------------------------------------- */
   if (cfg.footer) {
-    var year = String(new Date().getFullYear());
-    setText("footer-copy", (cfg.footer.copyright || "").replace("{year}", year));
+    setFooterCopyright("footer-copy", cfg.footer.copyright, cfg.footer.brand);
     setText("footer-note", cfg.footer.note);
   }
 

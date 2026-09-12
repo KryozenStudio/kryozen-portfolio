@@ -154,15 +154,16 @@
   will-change:clip-path,transform,opacity;
 }
 .hero__wordmark-line--main{
-  font-family:var(--font-display);font-size:clamp(2.35rem,6.5vw,6.6rem);
-  /* Manrope needed heavy negative tracking (-.055em) to read tight
-     because it's a naturally wide, rounded grotesque. Space Grotesk is
-     already compact with squarish counters — carrying over the same
-     -.055em over-compresses it and starts colliding letterforms (K/R/Y
-     in particular) at the hero's largest clamp sizes. --ls-heading
-     (-.03em) is the same tightening intent, calibrated to a font that
-     doesn't need as much help getting there. */
-  line-height:.9;font-weight:var(--fw-bold);letter-spacing:var(--ls-heading);color:var(--color-text-primary);
+  font-family:var(--font-brand);font-size:clamp(2.35rem,6.5vw,6.6rem);
+  /* --font-brand (Rajdhani) replaces --font-display here — see the
+     comment on --font-brand in css/variables.css for why the wordmark
+     specifically gets a different, more condensed/technical face than
+     regular section headings. Rajdhani is already narrow, so tracking
+     switches from --ls-heading's negative value (needed to tighten a
+     wider grotesque) to --ls-brand's small positive value — negative
+     tracking on a face this condensed collides letterforms (K/R/Y)
+     instead of tightening them. */
+  line-height:.9;font-weight:var(--fw-bold);letter-spacing:var(--ls-brand);color:var(--color-text-primary);
   animation:wordmarkReveal 620ms var(--ease-out) 400ms forwards;
 }
 
@@ -197,7 +198,7 @@
   100%{background-position:170% 0}
 }
 .hero__wordmark-line--sub{
-  margin-top:.32rem;font-family:var(--font-display);font-size:clamp(.78rem,1.4vw,1.15rem);
+  margin-top:.32rem;font-family:var(--font-brand);font-size:clamp(.78rem,1.4vw,1.15rem);
   line-height:1;font-weight:var(--fw-medium);letter-spacing:.48em;color:var(--color-text-secondary);
   animation:wordmarkReveal 500ms var(--ease-out) 460ms forwards;
 }
@@ -283,7 +284,7 @@
 @media(max-width:640px){
   .hero__brand-lockup{gap:14px;width:100%;padding-inline:4px}
   .hero__logo-intro{flex-basis:78px;width:78px;height:78px}
-  .hero__wordmark-line--main{font-size:clamp(2.1rem,12vw,3.5rem);letter-spacing:var(--ls-heading)}
+  .hero__wordmark-line--main{font-size:clamp(2.1rem,12vw,3.5rem);letter-spacing:var(--ls-brand)}
   .hero__wordmark-line--sub{font-size:.64rem;letter-spacing:.38em}
   .hero__logo-sweep{left:70%}
   .hero__intro{font-size:1rem;max-width:34ch}

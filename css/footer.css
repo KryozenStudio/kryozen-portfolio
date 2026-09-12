@@ -25,13 +25,26 @@
      used before — that was a deliberate choice, not literally the
      browser default, but a bare system monospace still reads as
      generic since nothing about it is actually loaded/branded for this
-     site the way Manrope and Inter are. This is the same font the rest
-     of the site's body text uses, just set small and quiet. */
+     site the way the rest of the type system is. This is the same font
+     the rest of the site's body text uses, just set small and quiet. */
   font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: var(--ls-normal);
   color: var(--color-text-secondary);
+}
+
+/* Just the studio name within .footer__copy (see setFooterCopyright in
+   js/content-loader.js) — everything else in that line ("© ...", "All
+   rights reserved.") deliberately stays in --font-body; only the brand
+   name itself switches to the Rajdhani wordmark typeface, at a size
+   that still reads quietly rather than shouting a logotype in the
+   footer. */
+.footer__brand {
+  font-family: var(--font-brand);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-brand);
+  color: var(--color-text-primary);
 }
 
 .footer__note {
