@@ -96,14 +96,28 @@
   background: transparent;
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
   backdrop-filter: blur(10px) saturate(1.15);
-  /* Keep the blur layer composited, but do not advertise the filter itself
-     as a continuously changing property. `will-change: backdrop-filter`
-     reserves a dedicated filtered surface for the lifetime of the page,
-     which is especially costly on long category pages that already contain
-     several glass surfaces. The filter only changes between the two stable
-     navbar states, so it does not need a permanent `will-change` hint. */
-  transform: translate3d(0, 0, 0);
+  /* Own stable GPU compositor layer. translateZ(0) + backface-visibility
+     is the pairing consistently cited for keeping Android Chrome/WebView
+     from compositing backdrop-filter against a stale snapshot during
+     fast scroll.
+     will-change:backdrop-filter deliberately removed (was here, plus in
+     every prior attempt at this bar): a `will-change` hint tells the
+     browser to keep a layer permanently promoted and ready, which is
+     the right call for a layer that animates continuously — this one
+     doesn't, it only transitions between two states on scroll. Holding
+     a permanent promotion request open for the entire time the page is
+     visible competes for the same limited backdrop-root budget
+     discussed above (see the earlier note on .category-strip__item
+     etc.) more aggressively than promoting on demand does, so on a long
+     page with several other backdrop-filter surfaces it was making the
+     eviction/rebuild behavior it was meant to prevent more likely, not
+     less. transform+backface-visibility below still give the browser
+     every reason to composite this as its own layer; will-change was
+     the one hint actively working against that on this specific
+     element. */
+  transform: translateZ(0);
   backface-visibility: hidden;
+  transition: backdrop-filter var(--duration-base) var(--ease-out);
 }
 
 .navbar--scrolled .navbar__glass {
@@ -113,8 +127,8 @@
 }
 
 .navbar--scrolled .navbar__glass::before {
-  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
-  backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
 }
 
 /* Signature red edge-glow — a very faint line just beneath the navbar's

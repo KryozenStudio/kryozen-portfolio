@@ -20,7 +20,22 @@
   --------------------------------------------------------------------- */
   --color-bg: #08080a;              /* page background, near-black */
   --color-bg-elevated: #101012;     /* cards / elevated panels (future use) */
-  --color-bg-glass: rgba(12, 12, 14, 0.55);   /* navbar glass on scroll */
+  --color-bg-glass: rgba(14, 14, 17, 0.64);   /* navbar glass on scroll */
+  /* Bumped from a lower alpha + saturate(1.2): backdrop-filter blur has
+     nothing of its own to render — it distorts whatever color/contrast
+     already exists behind it. Over the hero's gradient+glow it reads as
+     an obvious "frosted" effect; over .category-strip and other
+     sections that paint no background of their own (they just show
+     --color-bg, a near-flat near-black), the exact same blur radius has
+     almost nothing to visibly blur and reads as noticeably weaker glass
+     even though nothing about the effect changed. That's an inherent
+     property of backdrop-filter, not fixable by changing the blur
+     radius. This tint/saturation bump (see .navbar__glass::before in
+     css/navbar.css) is a real, if partial, compensation: a slightly
+     stronger, more saturated tint gives the bar its own visual presence
+     that reads as consistent "glass" regardless of what's scrolled
+     underneath it, rather than relying entirely on backdrop content
+     that isn't always there. */
 
   --color-surface: rgba(255, 255, 255, 0.04);
   --color-surface-border: rgba(255, 255, 255, 0.09);
