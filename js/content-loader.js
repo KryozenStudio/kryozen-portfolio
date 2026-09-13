@@ -34,35 +34,6 @@
       .replace(/>/g, "&gt;");
   }
 
-  /** Splits footer.note on its "•" separators and rebuilds it with
-      styled <span class="footer__note-divider">|</span> dividers
-      between segments (css/footer.css) — the "crisp monospace layout
-      with subtle glowing dividers" treatment from the brief. Falls back
-      to plain textContent if the string has no "•" to split on, so an
-      already-simple note (no separators at all) still renders fine. */
-  function renderFooterNote(id, note) {
-    var el = document.getElementById(id);
-    if (!el || note == null) return;
-    var segments = String(note).split("•").map(function (s) { return s.trim(); }).filter(Boolean);
-    if (segments.length < 2) {
-      el.textContent = note;
-      return;
-    }
-    el.textContent = "";
-    segments.forEach(function (segment, index) {
-      if (index > 0) {
-        var divider = document.createElement("span");
-        divider.className = "footer__note-divider";
-        divider.setAttribute("aria-hidden", "true");
-        divider.textContent = "|";
-        el.appendChild(divider);
-      }
-      var span = document.createElement("span");
-      span.textContent = segment;
-      el.appendChild(span);
-    });
-  }
-
   /** Renders footer.copyright's {year}/{brand} placeholders, wrapping
       {brand}'s replacement in <span class="footer__brand"> so
       css/variables.css's --font-brand (Rajdhani) can be scoped to just
@@ -174,6 +145,12 @@
   if (cfg.nav && Array.isArray(cfg.nav.links)) {
     var desktopList = document.getElementById("navbar-links");
     var mobileList = document.getElementById("navbar-mobile-links");
+    // Mobile link strip: the same six links, shown directly in the bar
+    // below 860px instead of only inside the hamburger panel (see
+    // .navbar__mobile-strip in navbar.css). Optional element — pages
+    // without it (there are none currently, but keep this defensive)
+    // just skip this list.
+    var stripList = document.getElementById("navbar-strip-links");
 
     // "Current page" marking: on a category page there's no exact link
     // match (category pages aren't in cfg.nav.links at all — they're
@@ -185,7 +162,7 @@
     // what's a "nice to have," not a reported bug.
     var onCategoryPage = !!document.querySelector(".category-page");
 
-    cfg.nav.links.forEach(function (link, index) {
+    cfg.nav.links.forEach(function (link) {
       var href = normalizeNavHref(link.href);
       var isCurrent = onCategoryPage && link.href === "#work";
 
@@ -204,23 +181,20 @@
         var mA = document.createElement("a");
         mA.className = "navbar__mobile-link";
         mA.href = href;
-        // Numbered index per the drawer's "01 // HOME" treatment (see
-        // .navbar__mobile-link in css/navbar.css) — the number is
-        // decorative/generated, not part of the link's accessible name,
-        // so it's a separate aria-hidden span rather than concatenated
-        // into the link text a screen reader would read as "01 Home".
-        var mNum = document.createElement("span");
-        mNum.className = "navbar__mobile-link-num";
-        mNum.setAttribute("aria-hidden", "true");
-        mNum.textContent = String(index + 1).padStart(2, "0");
-        var mLabel = document.createElement("span");
-        mLabel.className = "navbar__mobile-link-label";
-        mLabel.textContent = link.label;
-        mA.appendChild(mNum);
-        mA.appendChild(mLabel);
+        mA.textContent = link.label;
         if (isCurrent) mA.setAttribute("aria-current", "page");
         mLi.appendChild(mA);
         mobileList.appendChild(mLi);
+      }
+      if (stripList) {
+        var sLi = document.createElement("li");
+        var sA = document.createElement("a");
+        sA.className = "navbar__strip-link";
+        sA.href = href;
+        sA.textContent = link.label;
+        if (isCurrent) sA.setAttribute("aria-current", "page");
+        sLi.appendChild(sA);
+        stripList.appendChild(sLi);
       }
     });
   }
@@ -257,56 +231,20 @@
   ----------------------------------------------------------------- */
   if (cfg.footer) {
     setFooterCopyright("footer-copy", cfg.footer.copyright, cfg.footer.brand);
-    renderFooterNote("footer-note", cfg.footer.note);
+    setText("footer-note", cfg.footer.note);
   }
 
   if (Array.isArray(cfg.social)) {
-    var renderSocialLinks = function (containerId) {
-      var container = document.getElementById(containerId);
-      if (!container) return;
+    var socialContainer = document.getElementById("footer-social");
+    if (socialContainer) {
       cfg.social.forEach(function (item) {
         var a = document.createElement("a");
         a.className = "footer__social-link";
         a.href = item.href || "#";
         a.setAttribute("aria-label", item.name);
-        a.setAttribute("target", "_blank");
-        a.setAttribute("rel", "noopener noreferrer");
         a.innerHTML = ICONS[item.icon] || ICONS.link;
-        container.appendChild(a);
+        socialContainer.appendChild(a);
       });
-    };
-    // Same data renders in both the page footer and the mobile nav
-    // drawer (css/navbar.css .navbar__mobile-footer) — one array, two
-    // places it needs to appear, rather than a second copy to keep in
-    // sync by hand.
-    renderSocialLinks("footer-social");
-    renderSocialLinks("navbar-drawer-social");
-
-    // The drawer's standalone "Message on Discord" button reuses
-    // whichever entry in the same array is named "Discord" instead of a
-    // separate config field, so there's exactly one place to update the
-    // link if it ever changes.
-    var discordEntry = cfg.social.filter(function (item) {
-      return item.name === "Discord";
-    })[0];
-    var discordBtn = document.getElementById("navbar-drawer-discord");
-    if (discordBtn) {
-      if (discordEntry) {
-        discordBtn.href = discordEntry.href;
-      } else {
-        // No Discord entry configured — don't leave a dead "#" link.
-        discordBtn.remove();
-      }
     }
-  }
-
-  /* -----------------------------------------------------------------
-     MOBILE NAV DRAWER — AVAILABILITY STATUS PILL
-  ----------------------------------------------------------------- */
-  if (cfg.availability) {
-    var isOpen = cfg.availability.open !== false;
-    setText("navbar-drawer-status-text", isOpen ? cfg.availability.openLabel : cfg.availability.closedLabel);
-    var statusDot = document.getElementById("navbar-drawer-status-dot");
-    if (statusDot) statusDot.classList.toggle("navbar__mobile-status-dot--closed", !isOpen);
   }
 })();

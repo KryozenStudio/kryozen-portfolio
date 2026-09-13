@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Kryozen — Video Editing &amp; Post-Production</title>
   <meta name="description" content="Kryozen Studio — video editing for short-form, gaming, and anime/AMV content, with typography, captions, compositing, and thumbnail design." />
-  <meta name="theme-color" content="#050507" />
+  <meta name="theme-color" content="#08080a" />
   <meta name="color-scheme" content="dark" />
 
   <link rel="icon" href="assets/images/logo/logo.svg" type="image/svg+xml" />
@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
     rel="stylesheet"
   />
 
@@ -29,20 +29,20 @@
 
   <!-- CSS load order matters: tokens → reset → base → shared components →
        section files in page order -->
-  <link rel="stylesheet" href="css/variables.css?v=6" />
-  <link rel="stylesheet" href="css/reset.css?v=6" />
-  <link rel="stylesheet" href="css/base.css?v=6" />
-  <link rel="stylesheet" href="css/buttons.css?v=6" />
-  <link rel="stylesheet" href="css/player.css?v=6" />
-  <link rel="stylesheet" href="css/navbar.css?v=6" />
-  <link rel="stylesheet" href="css/hero.css?v=6" />
-  <link rel="stylesheet" href="css/category-strip.css?v=6" />
-  <link rel="stylesheet" href="css/services.css?v=6" />
-  <link rel="stylesheet" href="css/about.css?v=6" />
-  <link rel="stylesheet" href="css/faq.css?v=6" />
-  <link rel="stylesheet" href="css/contact.css?v=6" />
-  <link rel="stylesheet" href="css/footer.css?v=6" />
-  <link rel="stylesheet" href="css/ui-enhancements.css?v=6" />
+  <link rel="stylesheet" href="css/variables.css?v=5" />
+  <link rel="stylesheet" href="css/reset.css?v=5" />
+  <link rel="stylesheet" href="css/base.css?v=5" />
+  <link rel="stylesheet" href="css/buttons.css?v=5" />
+  <link rel="stylesheet" href="css/player.css?v=5" />
+  <link rel="stylesheet" href="css/navbar.css?v=5" />
+  <link rel="stylesheet" href="css/hero.css?v=5" />
+  <link rel="stylesheet" href="css/category-strip.css?v=5" />
+  <link rel="stylesheet" href="css/services.css?v=5" />
+  <link rel="stylesheet" href="css/about.css?v=5" />
+  <link rel="stylesheet" href="css/faq.css?v=5" />
+  <link rel="stylesheet" href="css/contact.css?v=5" />
+  <link rel="stylesheet" href="css/footer.css?v=5" />
+  <link rel="stylesheet" href="css/ui-enhancements.css?v=5" />
 
   <script>
     // Inline & synchronous on purpose — the only exception to "all JS lives
@@ -116,6 +116,16 @@
       </div>
     </div>
 
+    <!-- Mobile link strip: same six links as .navbar__links above, shown
+         directly below the bar on screens under 860px (where the row
+         above is hidden) instead of requiring a hamburger tap. See
+         .navbar__mobile-strip in css/navbar.css. -->
+    <nav class="navbar__mobile-strip js-only" id="navbar-mobile-strip" aria-label="Primary">
+      <ul id="navbar-strip-links">
+        <!-- injected by js/content-loader.js from config.nav.links -->
+      </ul>
+    </nav>
+
     <!-- No-JS fallback: static links, visible only when JavaScript is
          unavailable (the dynamic list above depends on config injection). -->
     <nav class="container no-js-fallback" aria-label="Primary">
@@ -131,16 +141,6 @@
       <ul id="navbar-mobile-links">
         <!-- injected by js/content-loader.js -->
       </ul>
-      <div class="navbar__mobile-footer">
-        <div class="navbar__mobile-status">
-          <span class="navbar__mobile-status-dot" id="navbar-drawer-status-dot" aria-hidden="true"></span>
-          <span id="navbar-drawer-status-text">Open for Bookings</span>
-        </div>
-        <a class="navbar__mobile-discord" id="navbar-drawer-discord" href="#" target="_blank" rel="noopener noreferrer">
-          <span>Message on Discord</span>
-        </a>
-        <div class="footer__social" id="navbar-drawer-social" aria-label="Social links"></div>
-      </div>
     </div>
   </header>
 
@@ -152,15 +152,6 @@
       <div class="hero__backdrop" aria-hidden="true"><span class="hero__ambient hero__ambient--one"></span><span class="hero__ambient hero__ambient--two"></span><span class="hero__ambient hero__ambient--three"></span></div>
 
       <div class="container hero__content">
-        <p class="hero__status-pill" aria-hidden="true">
-          <span class="hero__status-rec-dot"></span>
-          <span class="hero__status-rec-label">REC</span>
-          <span class="hero__status-sep">//</span>
-          <span>KRYOZEN STUDIO</span>
-          <span class="hero__status-sep">//</span>
-          <span>TIMELINE ACTIVE</span>
-        </p>
-
         <p class="hero__eyebrow">
           <span class="hero__eyebrow-dot" aria-hidden="true"></span>
           <span id="hero-eyebrow-text">KRYOZEN / STUDIO</span>
@@ -168,7 +159,6 @@
 
         <div class="hero__brand-lockup" aria-hidden="true">
           <div class="hero__logo-intro">
-            <span class="hero__logo-ring"></span>
             <span class="hero__logo-sweep"></span>
             <div class="hero__logo-mark">
               <img
@@ -201,9 +191,7 @@
       </div>
 
       <div class="hero__scroll" aria-hidden="true">
-        <span class="hero__scroll-capsule">
-          <span class="hero__scroll-dot"></span>
-        </span>
+        <span class="hero__scroll-line"></span>
         <span class="hero__scroll-label">Scroll</span>
       </div>
     </section>
@@ -285,10 +273,6 @@
               me, editing isn't just about effects—it's about making something people can
               actually feel.
             </p>
-
-            <!-- Authority stat strip — see cfg.about.stats in
-                 config/site.config.js. Hidden by js/about.js when empty. -->
-            <div class="about__stats" id="about-stats" hidden></div>
 
             <div class="about__software" id="about-software" hidden>
               <p class="about__software-label">Tools</p>
@@ -401,19 +385,19 @@
        others.
   ===================================================================== -->
   <script src="config/site.config.js" defer></script>
-  <script src="js/project-source.js?v=6" defer></script>
-  <script src="js/content-loader.js?v=6" defer></script>
-  <script src="js/work.js?v=6" defer></script>
-  <script src="js/category-strip.js?v=6" defer></script>
-  <script src="js/player.js?v=6" defer></script>
-  <script src="js/services.js?v=6" defer></script>
-  <script src="js/about.js?v=6" defer></script>
-  <script src="js/faq.js?v=6" defer></script>
-  <script src="js/contact.js?v=6" defer></script>
-  <script src="js/reveal.js?v=6" defer></script>
-  <script src="js/navbar.js?v=6" defer></script>
-  <script src="js/hero-pointer.js?v=6" defer></script>
-  <script src="js/spotlight.js?v=6" defer></script>
-  <script src="js/main.js?v=6" defer></script>
+  <script src="js/project-source.js?v=5" defer></script>
+  <script src="js/content-loader.js?v=5" defer></script>
+  <script src="js/work.js?v=5" defer></script>
+  <script src="js/category-strip.js?v=5" defer></script>
+  <script src="js/player.js?v=5" defer></script>
+  <script src="js/services.js?v=5" defer></script>
+  <script src="js/about.js?v=5" defer></script>
+  <script src="js/faq.js?v=5" defer></script>
+  <script src="js/contact.js?v=5" defer></script>
+  <script src="js/reveal.js?v=5" defer></script>
+  <script src="js/navbar.js?v=5" defer></script>
+  <script src="js/hero-pointer.js?v=5" defer></script>
+  <script src="js/spotlight.js?v=5" defer></script>
+  <script src="js/main.js?v=5" defer></script>
 </body>
 </html>

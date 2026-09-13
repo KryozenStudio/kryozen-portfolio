@@ -97,14 +97,6 @@
   padding: var(--space-md);
   background: linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
   border: 1px solid var(--color-surface-border);
-  /* Thin left rail, transparent at rest — lights up to the accent color
-     once the card has scrolled into view (see .service-card.is-visible
-     below), per the brief's "subtle visual rhythm" request. A visible
-     border-left set from the start would just look like a permanent
-     design detail; tying its color to the same .is-visible class
-     reveal.js (js/reveal.js) already adds for the fade/lift-in makes it
-     read as part of the same "arriving" motion instead. */
-  border-left: 3px solid transparent;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-radius: var(--radius-md);
@@ -114,14 +106,9 @@
     box-shadow var(--duration-base) var(--ease-out);
 }
 
-.service-card.is-visible {
-  border-left-color: var(--color-accent);
-}
-
 .service-card:hover {
   transform: translateY(-3px);
   border-color: var(--color-surface-border-strong);
-  border-left-color: var(--color-accent-bright);
   box-shadow: var(--shadow-sm);
 }
 
@@ -130,43 +117,19 @@
   transform: translateY(-1px) scale(0.98);
 }
 
-/* Stylized badge, not a flat filled circle: a soft gradient, a lit
-   border, and a faint glow give it presence as a piece of "hardware"
-   rather than reading as a generic colored-circle placeholder — per
-   the brief, the circles themselves (not just the glyphs inside them)
-   were the complaint. Rounded-square rather than a perfect circle for
-   the same reason: distinct from every other circular dot/pill
-   already used across the page (nav dots, status pills, etc). */
 .service-card__icon {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(155deg, var(--color-accent-glow), var(--color-accent-glow-soft));
-  border: 1px solid var(--color-accent-glow);
-  box-shadow: 0 4px 18px -4px var(--color-accent-glow);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent-glow-soft);
   color: var(--color-accent-bright);
 }
 
 .service-card__icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-/* Blinking text cursor for the captions/typography icons (see the new
-   ICONS entries in js/services.js) — a <rect> inside the SVG carries
-   this class and blinks like a real text caret, reinforcing "kinetic
-   typography" as motion, not just a static glyph. */
-.service-card__icon .icon-cursor {
-  animation: iconCursorBlink 1.1s steps(1) infinite;
-}
-@keyframes iconCursorBlink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .service-card__icon .icon-cursor { animation: none; opacity: 1; }
+  width: 22px;
+  height: 22px;
 }
 
 .service-card__title {

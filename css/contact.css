@@ -85,12 +85,10 @@
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   text-align: left;
-  cursor: pointer;
   transition:
     transform 220ms var(--ease-spring),
     border-color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+    background-color var(--duration-fast) var(--ease-out);
 }
 
 .contact__method:hover,
@@ -98,7 +96,6 @@
   transform: translateY(-2px);
   border-color: var(--color-accent-bright);
   background: rgba(255, 255, 255, 0.06);
-  box-shadow: var(--shadow-glow-accent);
 }
 
 .contact__method:active {
@@ -106,12 +103,6 @@
   transform: translateY(-1px) scale(0.98);
 }
 
-/* High-contrast badge — a solid accent-gradient fill rather than the
-   soft ~14%-opacity tint every other icon on the page already uses, so
-   these specific badges read as more prominent per the brief. Distinct
-   on purpose from .service-card__icon's quieter treatment: contact is
-   the section actively asking for a click, so its icons get the loudest
-   treatment on the page. */
 .contact__method-icon {
   display: grid;
   place-items: center;
@@ -119,10 +110,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(155deg, var(--color-accent), var(--color-accent-dim));
-  border: 1px solid var(--color-accent-bright);
-  box-shadow: 0 4px 16px -3px var(--color-accent-glow);
-  color: #fff;
+  background: var(--color-accent-glow-soft);
+  color: var(--color-accent-bright);
 }
 
 .contact__method-icon svg {
@@ -135,7 +124,6 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0; /* allow the value line to ellipsis instead of overflowing */
-  flex: 1 1 auto;
 }
 
 .contact__method-name {
@@ -151,56 +139,4 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* Directional arrow hover indicator, matching the same diagonal-slide
-   language .category-strip__arrow already uses (css/category-strip.css)
-   for consistency across the site's two "card that goes somewhere"
-   patterns. */
-.contact__method-arrow {
-  flex-shrink: 0;
-  color: var(--color-text-tertiary);
-  transition: transform var(--duration-base) var(--ease-out), color var(--duration-fast) var(--ease-out);
-}
-.contact__method:hover .contact__method-arrow,
-.contact__method:focus-visible .contact__method-arrow {
-  color: var(--color-accent-bright);
-  transform: translate(3px, -3px);
-}
-
-/* ---------------------------------------------------------------------
-   COPY-TO-CLIPBOARD TOAST (js/contact.js) — one shared element, fixed
-   to the bottom center of the viewport regardless of which method row
-   triggered it. role="status"/aria-live="polite" (set in JS) means
-   screen readers announce it without needing focus to move there.
---------------------------------------------------------------------- */
-.contact__toast {
-  position: fixed;
-  left: 50%;
-  bottom: var(--space-lg);
-  z-index: var(--z-overlay);
-  transform: translate(-50%, 12px);
-  opacity: 0;
-  pointer-events: none;
-  padding: 12px 20px;
-  border-radius: var(--radius-pill);
-  background: rgba(14, 14, 17, 0.92);
-  border: 1px solid var(--color-accent-glow);
-  box-shadow: var(--shadow-glow-accent), var(--shadow-md);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
-  color: var(--color-text-primary);
-  font-family: var(--font-body);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  transition: transform var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out);
-}
-
-.contact__toast.is-visible {
-  transform: translate(-50%, 0);
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .contact__toast { transition-duration: 1ms; }
 }

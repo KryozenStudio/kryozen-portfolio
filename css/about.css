@@ -144,41 +144,6 @@
 }
 
 /* ---------------------------------------------------------------------
-   AUTHORITY STAT STRIP — cfg.about.stats (js/about.js). Hidden entirely
-   when empty (see the config comment on why it ships empty by default).
---------------------------------------------------------------------- */
-.about__stats {
-  margin-top: var(--space-md);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--color-surface-border);
-}
-
-.about__stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.about__stat-value {
-  font-family: var(--font-display);
-  font-weight: var(--fw-black);
-  font-size: clamp(1.4rem, 2vw, 1.9rem);
-  color: var(--color-accent-bright);
-  letter-spacing: var(--ls-heading);
-}
-
-.about__stat-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: var(--ls-mono-label);
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-}
-
-/* ---------------------------------------------------------------------
    SOFTWARE / TOOLS STRIP
 --------------------------------------------------------------------- */
 .about__software {
@@ -200,43 +165,13 @@
   gap: var(--space-2xs);
 }
 
-/* Interactive pill grid, per the brief — each tag now carries its own
-   glowing status dot (a small "this tool is active/in current use"
-   signal) and a hover lift, rather than a flat static label chip. */
 .about__software-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 6px var(--space-sm);
-  border-radius: var(--radius-pill);
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--color-surface-border);
   font-size: var(--fs-small);
   color: var(--color-text-secondary);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out),
-    transform 150ms var(--ease-out);
-}
-
-.about__software-tag:hover {
-  border-color: var(--color-surface-border-strong);
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateY(-1px);
-}
-
-.about__software-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 7px 1px rgba(34, 197, 94, 0.6);
-  flex-shrink: 0;
-  animation: mobileStatusPulse 2.2s var(--ease-in-out) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about__software-dot { animation: none; }
 }
 
 /* .about__content is a plain wrapper now — no shape, no glass. It just

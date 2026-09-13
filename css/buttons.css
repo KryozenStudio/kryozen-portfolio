@@ -37,7 +37,7 @@
 
 .btn:active {
   transition: transform 90ms var(--ease-out);
-  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) scale(0.95);
+  transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) scale(0.97);
 }
 
 /* Primary — solid deep red, the site's single loudest element besides the
@@ -76,10 +76,7 @@
   transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
 }
 
-/* Secondary — glass outline, quieter, sits next to primary. Border is
-   deliberately just 1px ("razor-thin" per the brief) rather than the
-   heavier treatment primary gets, since this button is meant to read
-   as the quiet option next to it. */
+/* Secondary — glass outline, quieter, sits next to primary. */
 .btn--secondary {
   background: var(--color-surface);
   border: 1px solid var(--color-surface-border-strong);
@@ -88,13 +85,9 @@
   backdrop-filter: blur(var(--blur-glass));
 }
 
-/* Hover fill is a dark crimson tint (--color-accent-glow-soft), not a
-   plain white/glass brighten — per the brief, this button should still
-   read as part of the same red identity as the primary CTA even in its
-   quieter, outlined resting state. */
 .btn--secondary:hover,
 .btn--secondary:focus-visible {
-  background: var(--color-accent-glow-soft);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--color-accent-bright);
   transform: translate(var(--magnet-x, 0px), var(--magnet-y, 0px)) translateY(-1px) scale(1.01);
 }

@@ -70,25 +70,13 @@ window.SITE_CONFIG = {
   },
 
   // ---------------------------------------------------------------------
-  // SOCIAL LINKS — discovery links rendered in the footer AND the mobile
-  // nav drawer (js/content-loader.js renders both from this one array).
+  // SOCIAL LINKS — discovery links rendered in the footer
   // ---------------------------------------------------------------------
   social: [
     { name: "Discord", href: "https://discordapp.com/users/1375134237455417444", icon: "discord" },
     { name: "YouTube", href: "https://youtube.com/@kryozen-nv?si=t0jSVNsM5yNuyoPC", icon: "youtube" },
     { name: "Instagram", href: "https://www.instagram.com/kryozen_nv/", icon: "instagram" },
   ],
-
-  // ---------------------------------------------------------------------
-  // AVAILABILITY — the mobile nav drawer's status pill (see
-  // .navbar__mobile-status in css/navbar.css). Flip `open` to false when
-  // fully booked; the dot and label update together.
-  // ---------------------------------------------------------------------
-  availability: {
-    open: true,
-    openLabel: "Open for Bookings",
-    closedLabel: "Fully Booked",
-  },
 
   // ---------------------------------------------------------------------
   // FOOTER
@@ -163,14 +151,6 @@ window.SITE_CONFIG = {
     profileImage: "",
     intro: "The person behind the cuts.",
     bio: "I'm a video editor who enjoys experimenting with everything from AMVs and gaming edits to short-form content and motion design. I put emotion and creativity into every edit, always trying to make each piece feel as good as it possibly can. For me, editing isn't just about effects—it's about making something people can actually feel.",
-    // Authority stat strip shown below the bio (see js/about.js /
-    // .about__stats in css/about.css) — e.g. { value: "50+", label: "Projects Delivered" }.
-    // Left empty deliberately: these should be real, verifiable numbers
-    // the site owner fills in themselves, not placeholder figures
-    // (view counts, on-time %, etc.) invented with no basis. The
-    // section simply doesn't render while this stays empty, same as
-    // profileImage above.
-    stats: [],
   },
 
   // Software / tools strip shown in the About section. Only the tool name
