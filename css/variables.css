@@ -17,9 +17,15 @@
 :root {
   /* ---------------------------------------------------------------------
      COLOR — base surfaces
+     Full redesign per the "cinematic dark mode" brief: a genuinely deep,
+     near-pure-black void rather than the previous cooler dark-grey base,
+     plus a dedicated --color-surface-glass token for elevated glass
+     panels (cards), distinct from --color-bg-glass (the navbar's own
+     scroll-state tint, which has its own tuning notes below it).
   --------------------------------------------------------------------- */
-  --color-bg: #08080a;              /* page background, near-black */
+  --color-bg: #050507;              /* deep void, page background */
   --color-bg-elevated: #101012;     /* cards / elevated panels (future use) */
+  --color-surface-glass: rgba(18, 18, 22, 0.4);   /* elevated glass cards */
   --color-bg-glass: rgba(14, 14, 17, 0.64);   /* navbar glass on scroll */
   /* Bumped from a lower alpha + saturate(1.2): backdrop-filter blur has
      nothing of its own to render — it distorts whatever color/contrast
@@ -40,42 +46,63 @@
   --color-surface: rgba(255, 255, 255, 0.04);
   --color-surface-border: rgba(255, 255, 255, 0.09);
   --color-surface-border-strong: rgba(255, 255, 255, 0.16);
+  /* Multi-stop "lit edge" border for glass cards — used as the border-box
+     layer of the two-layer gradient-border technique (see .glass-panel/
+     .glass-card in css/ui-enhancements.css), since a plain CSS border
+     can't itself be a gradient. */
+  --border-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01) 40%, rgba(225,29,72,0.15) 100%);
 
   /* ---------------------------------------------------------------------
-     COLOR — accent (deep cinematic red)
+     COLOR — accent (two reds, deliberately not one)
+     --color-accent is the punchy "neon" red used for anything that
+     needs to read as a live, active, pressable signal — buttons, the
+     hero's [ REC ] dot, focus states. --color-accent-ambient is a
+     slightly deeper rose used for background glow/border gradients,
+     where the brighter neon would blow out an ambient wash instead of
+     sitting quietly behind content.
   --------------------------------------------------------------------- */
-  --color-accent: #c31432;          /* primary accent */
-  --color-accent-dim: #7a0e22;      /* deeper red, used in gradients/shadows */
-  --color-accent-bright: #e2213f;   /* hover / active state */
-  --color-accent-glow: rgba(195, 20, 50, 0.35);
-  --color-accent-glow-soft: rgba(195, 20, 50, 0.14);
+  --color-accent: #ff1e44;            /* primary neon red — buttons, REC dot, key highlights */
+  --color-accent-ambient: #e11d48;    /* rgb(225,29,72) — ambient glow / ombre borders */
+  --color-accent-dim: #7a0e22;        /* deeper red, used in gradients/shadows */
+  --color-accent-bright: #ff4064;     /* hover / active state, lighter than the primary neon */
+  --color-crimson-core: #dc2626;
+  --color-crimson-core-deep: #991b1b;
+  --color-accent-glow: rgba(255, 30, 68, 0.35);
+  --color-accent-glow-soft: rgba(255, 30, 68, 0.14);
+  --color-accent-ambient-glow: rgba(225, 29, 72, 0.08);
+  --color-accent-ambient-glow-soft: rgba(239, 68, 68, 0.03);
 
   /* ---------------------------------------------------------------------
      COLOR — text
   --------------------------------------------------------------------- */
-  --color-text-primary: #f4f2f0;
-  --color-text-secondary: #a3a1a4;
-  --color-text-tertiary: #6b696d;
-  --color-text-on-accent: #f4f2f0;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #52525b;
+  --color-text-on-accent: #ffffff;
 
   /* ---------------------------------------------------------------------
      TYPOGRAPHY
-     --font-display drives every h1-h4/section-title in base.css — kept as
-     a distinct, readable-at-any-size grotesque. --font-brand is separate
-     and scoped ONLY to the literal "KRYOZEN"/"KRYOZEN STUDIO" wordmark
-     (navbar brand word, hero lockup, category-page intro overlay, footer
-     credit) — Rajdhani's condensed, technical letterforms suit a logotype
-     at esports-HUD intensity, but section headings ("Choose a category",
-     "Frequently Asked Questions" etc.) read worse condensed at paragraph-
-     adjacent sizes, hence the split rather than repointing --font-display
-     itself. --ls-brand is Rajdhani-specific tracking: it's already narrow,
-     so brand text uses a small POSITIVE tracking instead of the negative
-     tracking --font-display's headings use — negative tracking on an
-     already-condensed face collides uppercase letterforms (K/R/Y). */
-  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-brand: 'Rajdhani', var(--font-display);
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
+     Three-role system: --font-display (headings, hero, the brand
+     wordmark, and any "loud" number/label moment) is Syne — punchy,
+     geometric, high visual energy at the weights this site actually
+     uses it at (600-800). --font-body (paragraphs, descriptions) is
+     Plus Jakarta Sans — a warmer, more distinctive neo-grotesque than a
+     neutral UI-tool face, at a relaxed --lh-relaxed line-height for
+     readability. --font-mono (numbered counters, category tags, pill
+     badges, eyebrow labels) is JetBrains Mono, uppercase + wide
+     tracking (--ls-mono-label).
+     --font-brand now simply aliases --font-display: an earlier pass
+     gave the literal "KRYOZEN" wordmark its own separate condensed face
+     (Rajdhani) distinct from section headings, but this design pass
+     folds hero/brand typography into the same "Headings & Display"
+     system the rest of the site's display text uses, per the brief —
+     kept as an alias (rather than deleting the token and hunting down
+     every place that referenced it) so nothing incorrectly falls back
+     to a hardcoded value if a rule was missed. */
+  --font-display: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-brand: var(--font-display);
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
 
   /* Fluid type scale — clamp(min, preferred, max) */
   --fs-hero: clamp(3.25rem, 7vw + 1rem, 8.25rem);
@@ -89,17 +116,31 @@
   --lh-tight: 1.05;
   --lh-snug: 1.2;
   --lh-normal: 1.5;
-  --lh-relaxed: 1.7;
+  /* Bumped 1.7 → 1.65 to match the brief's explicit body line-height —
+     close enough to the previous value that no paragraph reflows
+     awkwardly, but it's now a deliberate spec number, not a rounder
+     one that happened to look fine. */
+  --lh-relaxed: 1.65;
 
   --ls-tight: -0.02em;
-  --ls-heading: -0.03em;
+  /* Was a tightening (negative) value calibrated for Space Grotesk, a
+     wide grotesque that needed compression to read as "punchy". Syne is
+     a display face that's already expressive/wide at heavier weights —
+     the brief asks for "high tracking energy," which for Syne means
+     not fighting its natural spacing rather than tightening it further.
+     Neutral 0 lets Syne's own proportions carry the energy. */
+  --ls-heading: 0;
   --ls-heading-sm: -0.015em;
   --ls-normal: 0;
   --ls-wide: 0.08em;
   --ls-widest: 0.24em;
-  /* Positive tracking for the Rajdhani brand wordmark — see --font-brand
-     above for why this is separate from --ls-heading's negative value. */
+  /* Brand wordmark tracking — see --font-brand above; kept distinct from
+     --ls-heading in case a future pass splits the two fonts again. */
   --ls-brand: 0.02em;
+  /* Mono tech/meta labels (counters, category tags, pill badges) — the
+     brief's explicit 0.1em, its own token rather than reusing
+     --ls-wide's 0.08em so it can be tuned independently later. */
+  --ls-mono-label: 0.1em;
 
   /* Weight tokens — headings lean noticeably heavier than body copy so
      scale isn't the only thing doing the hierarchy work (see h1-h4 in
@@ -108,13 +149,11 @@
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
-  /* Space Grotesk (see --font-display) only ships up to 700 — no 800/900
-     cut exists. Loading a weight the font doesn't have makes the browser
-     synthesize (faux-bold) it instead, which looks uneven/blurry
-     compared to a real cut. --fw-black now equals --fw-bold so every
-     h1-h4 (base.css) request resolves to a weight that actually ships,
-     rather than one Space Grotesk has to fake. */
-  --fw-black: 700;
+  /* Syne ships a real 800 (unlike the previous Space Grotesk, which
+     topped out at 700 and forced this token down to avoid browser-
+     synthesized faux-bold) — h1-h4 get their intended heavier weight
+     back as an actual font cut. */
+  --fw-black: 800;
 
   /* ---------------------------------------------------------------------
      SPACING SCALE
@@ -158,16 +197,24 @@
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.55);
   --shadow-accent: 0 8px 30px var(--color-accent-glow-soft);
+  /* Hover/active edge glow for interactive cards — the brief's explicit
+     "dynamic red edge illumination". */
+  --shadow-glow-accent: 0 0 30px -5px rgba(255, 30, 68, 0.2);
 
   /* Cursor-tracked card spotlight (css/ui-enhancements.css, js/spotlight.js) */
   --spotlight-size: 380px;
-  --spotlight-color: rgba(226, 33, 63, 0.16);
+  --spotlight-color: rgba(255, 30, 68, 0.16);
 
   /* ---------------------------------------------------------------------
      GLASSMORPHISM
   --------------------------------------------------------------------- */
   --blur-glass: 16px;
   --blur-glass-strong: 28px;
+  /* Elevated glass cards (services/category/FAQ/etc.) — stronger blur +
+     saturate than the navbar's, since these sit further from the eye's
+     "is this readable" scrutiny and are meant to feel like a heavier,
+     more tactile pane of glass per the brief. */
+  --blur-card: 24px;
 
   /* ---------------------------------------------------------------------
      MOTION
@@ -200,7 +247,6 @@
   --------------------------------------------------------------------- */
   --navbar-h-desktop: 72px;   /* .navbar__inner height at >=860px */
   --navbar-h-mobile: 64px;    /* .navbar__inner height at <=859px */
-  --navbar-strip-h: 44px;     /* .navbar__mobile-strip height, <=859px only */
 
   /* ---------------------------------------------------------------------
      Z-INDEX SCALE

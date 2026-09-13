@@ -38,18 +38,31 @@
      social icons, work section play/search icons).
   ----------------------------------------------------------------- */
   var ICONS = {
+    /* Multi-frame 9:16 vertical viewport — three stacked/offset vertical
+       rectangles standing in for multiple short-form clips, rather than
+       a single play button (which reads as "video" generically, not
+       specifically "short-form/vertical"). */
     shortform:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="5" width="12" height="30" rx="3"/><polygon points="17,16 25,20 17,24" fill="currentColor" stroke="none"/></svg>',
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="11" height="22" rx="2.5" opacity=".45"/><rect x="15" y="6" width="11" height="28" rx="2.5" opacity=".75"/><rect x="24" y="9" width="11" height="22" rx="2.5"/></svg>',
+    /* Kinetic soundwave / katana-strike — a single diagonal slash with a
+       staggered soundwave rhythm underneath, reading as both "cut" and
+       "sync to music" at once. */
     amv:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="26" height="22" rx="2"/><line x1="7" y1="16" x2="33" y2="16"/><line x1="7" y1="24" x2="33" y2="24"/></svg>',
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 30 L32 10" opacity=".85"/><path d="M12 24v-4M17 26v-8M22 27v-11M27 24v-5M31 22v-2"/></svg>',
+    /* Crosshair / frame-sync reticle. */
     gaming:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="28" height="14" rx="7"/><circle cx="15" cy="21" r="1.4" fill="currentColor" stroke="none"/><circle cx="25" cy="18" r="1.4" fill="currentColor" stroke="none"/><circle cx="29" cy="21" r="1.4" fill="currentColor" stroke="none"/></svg>',
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="10"/><path d="M20 4v7M20 29v7M4 20h7M29 20h7"/><circle cx="20" cy="20" r="2" fill="currentColor" stroke="none"/></svg>',
     thumbnail:
       '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="8" width="28" height="24" rx="3"/><circle cx="14" cy="16" r="2.2" fill="currentColor" stroke="none"/><path d="M8 27 L16 19 L22 25 L27 18 L32 27"/></svg>',
+    /* Dynamic caption bar with a blinking text cursor at the end — a
+       live-captioning motif (text "typing in" in real time) rather than
+       a static subtitle rectangle. The final <rect> is the cursor;
+       .icon-cursor (css/services.css) makes it blink. */
     captions:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="30" height="24" rx="4"/><path d="M11 16h18M11 21h12M11 26h8"/></svg>',
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="30" height="24" rx="4"/><path d="M11 16h14M11 21h18M11 26h10"/><rect class="icon-cursor" x="27" y="24" width="4" height="5" rx="1" fill="currentColor" stroke="none"/></svg>',
+    /* "Aa_" kinetic typography mark with the same blinking cursor. */
     typography:
-      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h22M20 10v21M14 31h12"/><path d="M11 10l-5 21M29 10l5 21"/></svg>',
+      '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 27 L12 12 L18 27M8.4 21h7.2"/><path d="M22 27v-9a4 4 0 0 1 8 0v9M30 21h-8"/><rect class="icon-cursor" x="33" y="23" width="3" height="6" rx="1" fill="currentColor" stroke="none"/></svg>',
   };
 
   var services = Array.isArray(cfg.services) ? cfg.services : [];

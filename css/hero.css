@@ -21,19 +21,26 @@
 }
 
 /* Matches the navbar's own <=859px cutoff (see navbar.css) rather than
-   the old 640px break — below 860px the bar is shorter (--navbar-h-mobile)
-   but gains the mobile link strip (--navbar-strip-h), so the hero has to
-   clear both, not just the bar. Same tightened clearance as desktop. */
+   the old 640px break — below 860px the bar is shorter
+   (--navbar-h-mobile). It used to also add the mobile link strip's own
+   height (--navbar-strip-h) here, but that strip was removed as part of
+   the "double header" fix (see PROJECT_RULES.md → Navbar), so this is
+   just the mobile bar height plus the same clearance as desktop. */
 @media (max-width: 859px) {
   .hero {
-    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + var(--space-sm));
+    padding-top: calc(var(--navbar-h-mobile) + var(--space-sm));
   }
 }
 
 .hero__backdrop {
   position:absolute; inset:0; z-index:0; isolation:isolate;
+  /* Ambient glow now uses the brief's exact two-stop crimson/blood-red
+     wash (--color-accent-ambient-glow → --color-accent-ambient-glow-soft,
+     defined in css/variables.css) instead of the previous single-color
+     radial fade — a two-stop gradient reads as a genuine light source
+     dissipating rather than a flat tinted circle. */
   background:
-    radial-gradient(ellipse 72% 58% at 50% 18%, rgba(195,20,50,.09), transparent 72%),
+    radial-gradient(ellipse 72% 58% at 50% 18%, var(--color-accent-ambient-glow), var(--color-accent-ambient-glow-soft) 55%, transparent 72%),
     linear-gradient(180deg,#09090b 0%, var(--color-bg) 100%);
   /* Fixes the hard seam right above "Scroll"/the category section.
      Two things were compounding there:
@@ -92,6 +99,31 @@
   position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;
   gap:var(--space-md);
 }
+
+/* "[ ● REC ] KRYOZEN STUDIO // TIMELINE ACTIVE" — an authentic video-
+   editor motif sitting above the eyebrow, per the brief. Genuinely
+   decorative (aria-hidden in the HTML; the real page identity is the
+   heading below it), so it's pure CSS/no ARIA role beyond that. The REC
+   dot's pulse reuses the same indicatorPulse keyframe --hero__eyebrow-dot
+   already uses, so the two dots on the page breathe in sync. */
+.hero__status-pill{
+  display:inline-flex;align-items:center;gap:.5em;
+  padding:7px 16px;border-radius:var(--radius-pill);
+  border:1px solid var(--color-accent-glow);
+  background:var(--color-accent-glow-soft);
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:var(--ls-mono-label);text-transform:uppercase;
+  color:var(--color-text-secondary);
+  opacity:0;transform:translateY(8px);
+  animation:heroFadeUp 520ms var(--ease-out) 720ms forwards;
+}
+.hero__status-rec-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--color-accent);
+  box-shadow:0 0 9px 2px var(--color-accent-glow);
+  animation:indicatorPulse 1.8s ease-in-out infinite;
+}
+.hero__status-rec-label{color:var(--color-accent-bright);font-weight:600}
+.hero__status-sep{color:var(--color-text-tertiary);opacity:.6}
+
 .hero__eyebrow{
   display:inline-flex;align-items:center;gap:var(--space-2xs);
   font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.2em;text-transform:uppercase;
@@ -124,6 +156,25 @@
 }
 .hero__brand-art{display:block;width:100%;height:100%;object-fit:cover}
 
+/* Rotating dashed perimeter ring — the brief's "eye-catching focal
+   point" treatment for the avatar. Sized a few px larger than the mark
+   itself (inset:-8px) so it reads as an orbit around the avatar rather
+   than a border on it, and z-indexed below the mark (z-index:1 vs the
+   mark's 2) so the mark's own drop-shadow still reads as sitting above
+   it. A plain CSS rotation rather than anything JS/audio-driven — see
+   PROJECT_RULES.md §5 on this codebase's "motion needs a reason"
+   restraint; a continuous slow spin communicates "live/processing"
+   without needing an audio API dependency for a decorative loop. */
+.hero__logo-ring{
+  position:absolute;z-index:1;inset:-8px;
+  border-radius:50%;
+  border:1px dashed var(--color-accent-glow);
+  opacity:0;
+  animation:heroLogoRingIn 500ms var(--ease-out) 640ms forwards, heroLogoRingSpin 14s linear infinite;
+}
+@keyframes heroLogoRingIn{ to{ opacity:1; } }
+@keyframes heroLogoRingSpin{ to{ transform:rotate(360deg); } }
+
 .hero__logo-sweep{
   position:absolute;z-index:1;left:72%;top:50%;width:0;height:1px;
   background:linear-gradient(90deg,rgba(226,33,63,.72),rgba(226,33,63,.26),transparent);
@@ -155,14 +206,16 @@
 }
 .hero__wordmark-line--main{
   font-family:var(--font-brand);font-size:clamp(2.35rem,6.5vw,6.6rem);
-  /* --font-brand (Rajdhani) replaces --font-display here — see the
-     comment on --font-brand in css/variables.css for why the wordmark
-     specifically gets a different, more condensed/technical face than
-     regular section headings. Rajdhani is already narrow, so tracking
-     switches from --ls-heading's negative value (needed to tighten a
-     wider grotesque) to --ls-brand's small positive value — negative
-     tracking on a face this condensed collides letterforms (K/R/Y)
-     instead of tightening them. */
+  /* --font-brand now aliases --font-display (Syne, as of the cinematic-
+     overhaul pass — see css/variables.css's note on --font-brand for
+     why the wordmark and section headings share one display face now,
+     rather than the separate condensed brand face an earlier pass used
+     here). --ls-brand (a small positive tracking) is kept rather than
+     switching to --ls-heading's neutral 0 — Syne is already expressive
+     at bold weight, and a touch of extra opening gives this specific,
+     much larger occurrence of it a bit more presence than a regular
+     heading, without being enough to risk the letterform collisions
+     tight/negative tracking caused when this used a narrower face. */
   line-height:.9;font-weight:var(--fw-bold);letter-spacing:var(--ls-brand);color:var(--color-text-primary);
   animation:wordmarkReveal 620ms var(--ease-out) 400ms forwards;
 }
@@ -216,7 +269,28 @@
   color:var(--color-text-tertiary);font:500 .62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;
   opacity:0;animation:heroScrollIn 440ms var(--ease-out) 860ms forwards;
 }
-.hero__scroll-line{width:1px;height:34px;background:linear-gradient(180deg,var(--color-accent-bright),transparent)}
+/* Glowing scroll capsule — replaces the previous static fading line.
+   A small pill "track" with a dot that loops top-to-bottom inside it,
+   the classic "scroll wheel" affordance, rather than a line that just
+   sits there once drawn: it invites the actual gesture instead of only
+   hinting at a direction. */
+.hero__scroll-capsule{
+  position:relative;width:20px;height:34px;border-radius:var(--radius-pill);
+  border:1px solid var(--color-surface-border-strong);
+  background:var(--color-accent-glow-soft);
+  overflow:hidden;
+}
+.hero__scroll-dot{
+  position:absolute;left:50%;top:6px;width:4px;height:4px;border-radius:50%;
+  background:var(--color-accent-bright);
+  box-shadow:0 0 8px 1px var(--color-accent-glow);
+  animation:heroScrollDotLoop 1.8s var(--ease-in-out) infinite;
+}
+@keyframes heroScrollDotLoop{
+  0%{ transform:translate(-50%,0); opacity:1; }
+  70%{ transform:translate(-50%,16px); opacity:1; }
+  100%{ transform:translate(-50%,16px); opacity:0; }
+}
 
 @keyframes brandMarkReveal{
   0%{opacity:0;clip-path:circle(0% at 50% 50%);transform:translate3d(0,0,0) scale(.82)}
@@ -272,6 +346,7 @@
   100%{transform:translate3d(0,0,0) scale(1) rotate(0deg);opacity:.34}
 }
 
+.no-intro .hero__status-pill,
 .no-intro .hero__eyebrow,
 .no-intro .hero__logo-mark,
 .no-intro .hero__wordmark-line,
@@ -280,6 +355,12 @@
 .no-intro .hero__scroll{opacity:1;transform:none;clip-path:none;animation:none}
 .no-intro .hero__logo-sweep{opacity:.24;width:clamp(40px,10vw,108px);animation:none}
 .no-intro .hero__logo-intro::after{opacity:.12;transform:translate(50%,-50%) scale(1);animation:none}
+/* The ring's entrance fade resets like everything else above, but its
+   persistent rotation is closer to .hero__ambient's ongoing drift
+   (kept running in .no-intro, only stopped under prefers-reduced-motion
+   below) than to a one-shot reveal — so this gets its own line instead
+   of joining the blanket animation:none reset above. */
+.no-intro .hero__logo-ring{opacity:1;animation:heroLogoRingSpin 14s linear infinite}
 
 @media(max-width:640px){
   .hero__brand-lockup{gap:14px;width:100%;padding-inline:4px}
@@ -303,7 +384,9 @@
 }
 @media(prefers-reduced-motion:reduce){
   .hero__ambient{animation:none}
-  .hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
+  .hero__status-pill,.hero__eyebrow,.hero__logo-mark,.hero__wordmark-line,.hero__intro,.hero__actions,.hero__scroll{animation:none;opacity:1;transform:none;clip-path:none;filter:none}
   .hero__logo-sweep{animation:none;opacity:.35;width:clamp(32px,9vw,96px)}
+  .hero__logo-ring{animation:none;opacity:1}
+  .hero__scroll-dot{animation:none;opacity:1;transform:translate(-50%,0)}
   .hero__backdrop::after{display:none}
 }

@@ -21,9 +21,9 @@
 }
 
 .footer__copy {
-  /* Inter (--font-body) rather than the system monospace stack this
-     used before — that was a deliberate choice, not literally the
-     browser default, but a bare system monospace still reads as
+  /* --font-body (Plus Jakarta Sans) rather than the system monospace
+     stack this used before — that was a deliberate choice, not literally
+     the browser default, but a bare system monospace still reads as
      generic since nothing about it is actually loaded/branded for this
      site the way the rest of the type system is. This is the same font
      the rest of the site's body text uses, just set small and quiet. */
@@ -37,7 +37,8 @@
 /* Just the studio name within .footer__copy (see setFooterCopyright in
    js/content-loader.js) — everything else in that line ("© ...", "All
    rights reserved.") deliberately stays in --font-body; only the brand
-   name itself switches to the Rajdhani wordmark typeface, at a size
+   name itself switches to the --font-brand wordmark typeface (Syne, as
+   of the cinematic-overhaul pass — see css/variables.css), at a size
    that still reads quietly rather than shouting a logotype in the
    footer. */
 .footer__brand {
@@ -50,10 +51,22 @@
 .footer__note {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: var(--ls-wide);
+  letter-spacing: var(--ls-mono-label);
   text-transform: uppercase;
   color: var(--color-text-tertiary);
   opacity: 0.7;
+}
+
+/* "Crisp monospace layout with subtle glowing dividers" per the brief —
+   js/content-loader.js's renderFooterNote() splits the note on its "•"
+   separators and rebuilds it with one of these between each segment,
+   replacing the plain bullet character that used to be baked into the
+   string itself. */
+.footer__note-divider {
+  margin: 0 0.6em;
+  color: var(--color-accent-bright);
+  text-shadow: 0 0 6px var(--color-accent-glow);
+  opacity: 0.8;
 }
 
 /* ---------------------------------------------------------------------

@@ -153,7 +153,7 @@
 }
 
 /* Root-cause fix, not a per-list patch: every nav link list in this file
-   (.navbar__links, .navbar__mobile-panel > ul, .navbar__mobile-strip > ul)
+   (.navbar__links, .navbar__mobile-panel > ul)
    is built by js/content-loader.js appending raw <li> elements with no
    list-style reset of their own — only the mobile strip's own stylesheet
    rule happened to include one. One unconditional reset here covers all
@@ -191,6 +191,30 @@
   align-items: center;
   gap: var(--space-2xs);
   flex-shrink: 0;
+  position: relative;
+}
+
+/* "Live pulse dot" on the brand mark — a small always-on status light
+   at the mark's bottom-right corner, independent of the mobile drawer's
+   own (larger, labeled) availability pill. content-only pseudo-element
+   on .navbar__brand rather than a child of .navbar__brand-mark itself:
+   that element has overflow:hidden to clip the logo image into a
+   circle, which would clip this dot too if it lived inside it. Offset
+   is tuned for the 30px mark; the <=360px override below re-tunes it
+   for the smaller 26px mark defined in the same breakpoint. */
+.navbar__brand::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 8px 1px rgba(34, 197, 94, 0.65);
+  pointer-events: none;
+  animation: mobileStatusPulse 2.2s var(--ease-in-out) infinite;
 }
 
 .navbar__brand-mark {
@@ -233,16 +257,16 @@
 }
 
 .navbar__link {
-  /* Matches .navbar__strip-link's pill treatment below almost exactly —
-     same border/background/radius pattern, same aria-current colors —
-     rather than the plain-text-plus-underline treatment this used to
-     have. Mobile's nav items were always individual glass pills;
-     desktop's were just colored text with a hover underline, which is
-     why the glassmorphism looked like it "disappeared" on desktop even
-     though the navbar's own background blur was working correctly the
-     whole time — it was never about the bar, it was about each link
-     never having its own glass shape to begin with. No backdrop-filter
-     here on purpose, matching the mobile pill (which doesn't have one
+  /* Same glass-pill treatment the mobile drawer's nav items use — border/
+     background/radius pattern, aria-current colors — rather than the
+     plain-text-plus-underline treatment this used to have. Mobile's nav
+     items were always individual glass pills; desktop's were just
+     colored text with a hover underline, which is why the glassmorphism
+     looked like it "disappeared" on desktop even though the navbar's
+     own background blur was working correctly the whole time — it was
+     never about the bar, it was about each link never having its own
+     glass shape to begin with. No backdrop-filter here on purpose,
+     matching the mobile pill (which doesn't have one
      either): the blur comes once from .navbar itself; six more blur
      regions layered on top would be both inconsistent with mobile and
      needlessly expensive. */
@@ -343,11 +367,10 @@
   left: 0;
   right: 0;
   z-index: calc(var(--z-nav) - 1);
-  /* Top offset must clear the actual rendered bar: desktop-width panel
-     opens (the hamburger stays reachable at every width — see the
-     860px note below) sit under the 72px bar; mobile-width opens sit
-     under the 64px bar plus the 44px link strip. The <=859px override
-     just below supplies that second case. */
+  /* Top offset must clear the actual rendered bar — at desktop widths
+     that's the floating dock's own 16px top inset plus its 72px height
+     (see the 860px override below); at mobile it's just the 64px bar,
+     which sits flush at the very top of the viewport. */
   padding: calc(var(--navbar-h-desktop) + env(safe-area-inset-top, 0)) var(--container-padding) var(--space-xl);
   /* Fully opaque, not just "near-opaque": at 0.97 (the previous value)
      the panel still let a faint blurred "ghost" of whatever bright,
@@ -359,8 +382,16 @@
      covered a narrow mobile viewport; restoring it on desktop (this
      file's 860px block) means it now sits over a much wider slice of
      the hero, including the brightest elements, where that haze reads
-     as rough rather than "atmospheric." */
-  background: rgb(8, 8, 10);
+     as rough rather than "atmospheric."
+     Layered a crimson vignette on top of the opaque base per the
+     "cinematic overlay" brief — a flat black full-screen panel read as
+     inert; a soft red glow seeping in from the top edge gives it the
+     same ambient-light-source language as the hero backdrop and the
+     card hover glows, so the drawer feels like part of the same world
+     rather than a generic system sheet dropped on top of it. */
+  background:
+    radial-gradient(ellipse 85% 55% at 50% 0%, var(--color-accent-ambient-glow), transparent 68%),
+    rgb(6, 6, 8);
   -webkit-backdrop-filter: blur(var(--blur-glass-strong));
   backdrop-filter: blur(var(--blur-glass-strong));
   border-bottom: 1px solid var(--color-surface-border);
@@ -427,21 +458,70 @@
 .navbar__mobile-panel > ul > li:nth-child(5) { transition-delay: 190ms; }
 .navbar__mobile-panel > ul > li:nth-child(6) { transition-delay: 225ms; }
 
+/* Large staggered nav items, "01 // HOME" style: a monospace accent-red
+   index + separator, then the label in the display face at a much
+   larger size than the old plain 1.75rem text — the brief specifically
+   asks for ~2.5rem here. clamp() keeps it from overflowing on the
+   smallest phones while still reading as "big" on anything larger. */
 .navbar__mobile-link {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
   width: 100%;
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  letter-spacing: var(--ls-tight);
-  color: var(--color-text-primary);
-  padding: 12px 0;
-  line-height: 1.2;
-  transition: color var(--duration-fast) var(--ease-out), transform 90ms var(--ease-out), opacity var(--duration-fast) var(--ease-out);
+  padding: 14px 0;
+  line-height: 1.1;
+  position: relative;
+  transition: transform 90ms var(--ease-out), opacity var(--duration-fast) var(--ease-out);
 }
 
-.navbar__mobile-link:hover,
-.navbar__mobile-link:focus-visible {
+.navbar__mobile-link-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: var(--ls-mono-label);
   color: var(--color-accent-bright);
+  flex-shrink: 0;
+}
+
+.navbar__mobile-link-num::after {
+  content: "//";
+  margin-left: 0.5em;
+  color: var(--color-text-tertiary);
+}
+
+.navbar__mobile-link-label {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: clamp(1.9rem, 9vw, 2.6rem);
+  letter-spacing: var(--ls-heading);
+  color: var(--color-text-primary);
+  transition: color var(--duration-fast) var(--ease-out), text-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Red neon glow on the label plus a left-to-right underline wipe — the
+   underline is a ::after rather than text-decoration so its width can
+   animate (text-decoration can't be transitioned the same way). */
+.navbar__mobile-link-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  height: 2px;
+  width: 0%;
+  background: var(--color-accent-bright);
+  box-shadow: 0 0 12px 1px var(--color-accent-glow);
+  transition: width var(--duration-base) var(--ease-out);
+}
+
+.navbar__mobile-link:hover .navbar__mobile-link-label,
+.navbar__mobile-link:focus-visible .navbar__mobile-link-label {
+  color: var(--color-accent-bright);
+  text-shadow: 0 0 18px var(--color-accent-glow);
+}
+
+.navbar__mobile-link:hover .navbar__mobile-link-label::after,
+.navbar__mobile-link:focus-visible .navbar__mobile-link-label::after {
+  width: 100%;
 }
 
 /* translateX rather than scale: a full-width block flush against the
@@ -453,8 +533,11 @@
   opacity: 0.75;
 }
 
-.navbar__mobile-link[aria-current="page"] {
+.navbar__mobile-link[aria-current="page"] .navbar__mobile-link-label {
   color: var(--color-accent-bright);
+}
+.navbar__mobile-link[aria-current="page"] .navbar__mobile-link-label::after {
+  width: 100%;
 }
 
 @media (min-width: 860px) {
@@ -466,6 +549,46 @@
      inline links row has room to show. It opens the exact same panel as
      mobile; nothing about the panel's own logic is breakpoint-specific,
      so there's no separate desktop code path to keep in sync. */
+
+  /* ---------------------------------------------------------------------
+     FLOATING PILL-DOCK (desktop only)
+     Evolves the full-width bar into an inset, fully-rounded floating
+     dock per the brief — mobile deliberately keeps the plain edge-to-
+     edge bar (a floating inset dock over a 375px-wide screen leaves
+     barely any margin on either side to read as "floating" at all, and
+     costs precious vertical space on a short viewport for no gain).
+     Centered with left/right + margin-inline:auto rather than the more
+     common left:50%+transform:translateX(-50%) — .navbar must stay a
+     transform-free positioning shell (see the big comment at the top of
+     this file): .navbar__mobile-panel is a position:fixed DESCENDANT of
+     .navbar, and any transform on an ancestor becomes that descendant's
+     containing block, which would size/position the full-screen mobile
+     drawer against this small floating pill instead of the viewport.
+     left/right+margin:auto centers a fixed element with zero such risk. */
+  .navbar {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  /* .navbar__glass::before already has border-radius:inherit, so it
+     automatically matches this without a second declaration. */
+  .navbar__glass {
+    border-radius: var(--radius-pill);
+  }
+
+  .navbar__inner {
+    padding-inline: var(--space-md);
+  }
+
+  /* The drawer's own top clearance must grow to match — the bar's
+     bottom edge now sits 16px lower than it used to (the floating
+     dock's own top inset), not just at --navbar-h-desktop. */
+  .navbar__mobile-panel {
+    padding-top: calc(16px + var(--navbar-h-desktop) + env(safe-area-inset-top, 0));
+  }
 }
 
 
@@ -496,13 +619,92 @@
 .navbar__mobile-close:active { transform:scale(.9); }
 
 /* ---------------------------------------------------------------------
+   MOBILE DRAWER FOOTER — booking status, direct Discord CTA, and the
+   same social row the page footer uses (see renderSocialLinks in
+   js/content-loader.js). Anchored to the bottom of the drawer's flex
+   column with margin-top:auto so it sits at the bottom of the viewport
+   on a short link list and just after the links on a long one, rather
+   than being pinned with position:absolute (which would either overlap
+   long lists or leave a gap under short ones).
+--------------------------------------------------------------------- */
+.navbar__mobile-footer {
+  margin-top: auto;
+  padding-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--color-surface-border);
+}
+
+.navbar__mobile-status {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.navbar__mobile-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px 1px rgba(34, 197, 94, 0.6);
+  flex-shrink: 0;
+  animation: mobileStatusPulse 2.2s var(--ease-in-out) infinite;
+}
+
+.navbar__mobile-status-dot--closed {
+  background: var(--color-text-tertiary);
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes mobileStatusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+.navbar__mobile-discord {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 12px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-accent-glow);
+  background: var(--color-accent-glow-soft);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform 90ms var(--ease-out);
+}
+
+.navbar__mobile-discord:hover,
+.navbar__mobile-discord:focus-visible {
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent-bright);
+}
+
+.navbar__mobile-discord:active {
+  transform: scale(0.96);
+}
+
+/* ---------------------------------------------------------------------
    RESPONSIVE NAVIGATION
    Below 860px the public links collapse behind the hamburger. The mobile
    panel still contains the public links plus the private management routes.
 --------------------------------------------------------------------- */
 @media (max-width: 859px) {
   .navbar {
-    min-height: calc(var(--navbar-h-mobile) + var(--navbar-strip-h));
+    min-height: var(--navbar-h-mobile);
   }
 
   .navbar__inner {
@@ -522,96 +724,38 @@
     display: none;
   }
 
-  /* The hamburger panel opens under a taller bar here (top row + link
-     strip) than it does at desktop widths — see the base rule above. */
+  /* The hamburger panel used to open under a taller bar here (top row +
+     link strip) than at desktop widths — the strip is gone (see the
+     "double header" note below), so this now matches the single-row
+     bar height exactly. */
   .navbar__mobile-panel {
-    padding-top: calc(var(--navbar-h-mobile) + var(--navbar-strip-h) + env(safe-area-inset-top, 0));
+    padding-top: calc(var(--navbar-h-mobile) + env(safe-area-inset-top, 0));
   }
 }
 
 /* ---------------------------------------------------------------------
-   MOBILE LINK STRIP
-   The desktop link row is unreachable below 860px (see .navbar__links
-   above), so on mobile the same six links reappear here instead — a
-   single-line, horizontally scrollable row directly under the bar. The
-   hamburger panel keeps its own full copy of the same links too, so
-   nothing is mobile-only or desktop-only.
---------------------------------------------------------------------- */
-.navbar__mobile-strip {
-  display: none;
-}
-
-@media (max-width: 859px) {
-  .navbar__mobile-strip {
-    display: block;
-    width: 100%;
-    height: var(--navbar-strip-h);
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-  }
-
-  .navbar__mobile-strip::-webkit-scrollbar {
-    display: none;
-  }
-
-  .navbar__mobile-strip > ul {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    gap: var(--space-xs);
-    list-style: none;
-    margin: 0;
-    padding: 0 var(--container-padding);
-    width: max-content;
-  }
-
-  .navbar__strip-link {
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: var(--ls-normal);
-    color: var(--color-text-secondary);
-    padding: 6px 13px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--color-surface-border);
-    background: rgba(255, 255, 255, 0.03);
-    transition:
-      color var(--duration-fast) var(--ease-out),
-      border-color var(--duration-fast) var(--ease-out),
-      background-color var(--duration-fast) var(--ease-out);
-  }
-
-  .navbar__strip-link:hover,
-  .navbar__strip-link:focus-visible,
-  .navbar__strip-link:active {
-    color: var(--color-text-primary);
-    border-color: var(--color-surface-border-strong);
-    background: rgba(255, 255, 255, 0.065);
-  }
-
-  .navbar__strip-link:active {
-    transform: scale(0.94);
-    transition: transform 90ms var(--ease-out);
-  }
-
-  .navbar__strip-link[aria-current="page"] {
-    color: var(--color-text-primary);
-    border-color: var(--color-accent-bright);
-    background: var(--color-accent-glow-soft);
-  }
-}
+   "DOUBLE HEADER" FIX — REMOVED MOBILE LINK STRIP
+   This used to be a second, always-visible horizontal pill row sitting
+   directly under the bar on every screen below 860px, showing the same
+   six links the hamburger panel already contained in full — meaning
+   mobile visitors saw navigation twice (a scrollable pill strip AND a
+   hamburger to the exact same destinations) and lost a fixed 44px of
+   an already-short viewport to it permanently, before scrolling a single
+   pixel. There is now exactly one mobile navigation surface: the bar
+   itself (logo + hamburger) plus the hamburger's own full-screen drawer
+   below. If a compact, always-visible secondary shortcut row is wanted
+   back later, it should be a deliberate design decision made once, not
+   a redundant copy of a list that already exists one tap away. */
 
 @media (max-width: 360px) {
   .navbar__brand-mark {
     width: 26px;
     height: 26px;
+  }
+
+  .navbar__brand::after {
+    left: 17px;
+    top: 17px;
   }
 
   .navbar__brand-word {

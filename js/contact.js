@@ -86,6 +86,61 @@
     return;
   }
 
+  /* -----------------------------------------------------------------
+     CLIPBOARD + TOAST — shared by every method row below. One toast
+     element, created once and reused, rather than one per click.
+  ----------------------------------------------------------------- */
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    // Fallback for browsers/contexts without the async Clipboard API
+    // (older browsers, or a non-secure-context http:// preview).
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (ok) resolve(); else reject(new Error("execCommand copy failed"));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  var toastEl = null;
+  var toastTimer = null;
+  function showToast(message) {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "contact__toast";
+      toastEl.setAttribute("role", "status");
+      toastEl.setAttribute("aria-live", "polite");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = message;
+    // Force the entrance animation to restart on a second rapid click:
+    // removing the class, then reading offsetWidth (forces a style
+    // recalc/reflow before the class goes back on) is the standard way
+    // to make a browser treat the re-add as a fresh animation start
+    // rather than a no-op because the class was "already set".
+    toastEl.classList.remove("is-visible");
+    void toastEl.offsetWidth;
+    toastEl.classList.add("is-visible");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove("is-visible");
+    }, 2200);
+  }
+
   var fragment = document.createDocumentFragment();
   methods.forEach(function (method) {
     var link = document.createElement("a");
@@ -116,8 +171,39 @@
     text.appendChild(name);
     text.appendChild(value);
 
+    var arrow = document.createElement("span");
+    arrow.className = "contact__method-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "↗";
+
     link.appendChild(icon);
     link.appendChild(text);
+    link.appendChild(arrow);
+
+    // "Click to copy" per the brief — a plain click copies the value
+    // (email address / Discord link) and shows a toast, rather than
+    // firing the link's own default navigation. Modifier-clicks and
+    // middle-clicks are deliberately left alone (see the guard below)
+    // so opening in a new tab, or a screen reader/keyboard user's
+    // expectation of "this is a link", still works the normal way —
+    // only the plain, primary-button click is intercepted.
+    if (method.value) {
+      link.addEventListener("click", function (e) {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        copyToClipboard(method.value)
+          .then(function () {
+            showToast(method.name + " copied to clipboard!");
+          })
+          .catch(function () {
+            // Clipboard API unavailable/denied (e.g. non-secure context,
+            // permission blocked) — fall back to the link's normal
+            // behavior instead of the click silently doing nothing.
+            window.open(link.href, method.external ? "_blank" : "_self", "noopener");
+          });
+      });
+    }
+
     fragment.appendChild(link);
   });
 

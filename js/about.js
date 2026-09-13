@@ -70,6 +70,37 @@
   }
 
   /* -----------------------------------------------------------------
+     STAT STRIP — authority numbers below the bio (cfg.about.stats).
+     Same graceful-hide pattern as the portrait/software sections below:
+     no stats configured, no section rendered.
+  ----------------------------------------------------------------- */
+  var statsWrap = document.getElementById("about-stats");
+  if (statsWrap) {
+    var stats = Array.isArray(aboutCfg.stats) ? aboutCfg.stats : [];
+    if (stats.length) {
+      statsWrap.hidden = false;
+      stats.forEach(function (stat) {
+        if (!stat || !stat.value) return; // skip malformed entries
+        var item = document.createElement("div");
+        item.className = "about__stat";
+        var value = document.createElement("span");
+        value.className = "about__stat-value";
+        value.textContent = stat.value;
+        item.appendChild(value);
+        if (stat.label) {
+          var label = document.createElement("span");
+          label.className = "about__stat-label";
+          label.textContent = stat.label;
+          item.appendChild(label);
+        }
+        statsWrap.appendChild(item);
+      });
+    } else {
+      statsWrap.hidden = true;
+    }
+  }
+
+  /* -----------------------------------------------------------------
      SOFTWARE / TOOLS STRIP — reuses the existing top-level cfg.software
      array rather than a separate about.skills field.
   ----------------------------------------------------------------- */
@@ -84,7 +115,14 @@
         if (!tool || !tool.name) return; // skip malformed entries, don't break the layout
         var tag = document.createElement("span");
         tag.className = "about__software-tag";
-        tag.textContent = tool.name;
+        // Glowing status dot per the brief ("interactive pill grid...
+        // with subtle glowing status dots") — purely decorative, so a
+        // plain span rather than anything with its own semantics.
+        var dot = document.createElement("span");
+        dot.className = "about__software-dot";
+        dot.setAttribute("aria-hidden", "true");
+        tag.appendChild(dot);
+        tag.appendChild(document.createTextNode(tool.name));
         softwareList.appendChild(tag);
       });
     } else {
